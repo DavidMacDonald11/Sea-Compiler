@@ -1,31 +1,55 @@
-CC			:= g++
-CFLAGS		:= -std=c++20 -Wall -Wextra -g
-
+CFLAGS		:= -std=c++20 -Wall -Wextra -g -lfmt
 CINCLUDES	:= -Iinclude
+CC			:= g++ $(CFLAGS) $(CINCLUDES)
 
-SOURCES		:= $(wildcard $(patsubst %, %/*.cpp, src))
-OBJECTS		:= $(patsubst src%, bin%, $(SOURCES:.cpp=.o))
+BUILD		:= bin/build
+SOURCES 	:= $(shell find src -type f -name '*.cpp')
+OBJECTS		:= $(patsubst src/%.cpp, $(BUILD)/%.o, $(SOURCES))
+DEPENDS		:= $(patsubst %.o, %.d, $(OBJECTS))
 
-all: clean bin/main
+.DEFAULT_GOAL := test
 
-bin/main: $(OBJECTS)
-	$(CC) $(CFLAGS) $(CINCLUDES) $^ -o $@
-	-$(RM) $(OBJECTS)
+.PHONY: build
+build: bin/main
 
-$(OBJECTS): bin clean
-	$(eval OFILE := $@)
-	$(eval SFILE := $(patsubst bin/%.o, src/%.cpp, $(OFILE)))
-	$(CC) -c -o $(OFILE) $(SFILE)
+bin/main: $(OBJECTS) | infoLink
+	$(info $@)
+	@$(CC) $(CFLAGS) $(CINCLUDES) $^ -o $@
 
-bin:
-	mkdir bin
+$(OBJECTS): $@ | infoBuild
+
+-include $(DEPENDS)
+
+$(BUILD)/%.o: src/%.cpp
+	$(info $<)
+	@mkdir -p $(@D)
+	@$(CC) -MMD -c $< -o $@
+
+.PHONY: infoBuild
+infoBuild:
+	$(info ******BUILDING******)
+
+.PHONY: infoLink
+infoLink:
+	$(info ******LINKING*******)
+
+.PHONY: infoRun
+infoRun:
+	$(info ******RUNNING*******)
 
 .PHONY: clean
 clean:
-	-$(RM) bin/main
+	-$(RM) -r bin/*
 
-run: all
-	./bin/main
+.PHONY: test
+test: bin/main | infoRun
+	@./hyde.bash -d -o=test/bin test/src
 
-mem: all
-	valgrind ./bin/main
+.PHONY: mem
+mem: bin/main | infoRun
+	@valgrind --leak-check=full --track-origins=yes -s ./bin/main -d test/bin test/src
+
+.git:
+	git init
+	git add .
+	git commit -m "Create C++ Project"

@@ -1,2 +1,5 @@
 # Ignore compiled files
-/bin
+**/bin
+
+# Ignore IDE files
+.vscode
