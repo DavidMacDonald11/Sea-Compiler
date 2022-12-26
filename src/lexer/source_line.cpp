@@ -36,8 +36,7 @@ str SourceLine::raw() const {
     str line;
 
     for(nat i = 0; i < string.size(); i++) {
-        fmt::print("{}, {}, {}, '{}'\n", col1, col2, i, line);
-        line += (i < col1 or i > col2) ? ' ' : '^';
+        line += (i < col1 or i >= col2) ? ' ' : '^';
     }
 
     return fmt::format("{:4d}|{}    |{}", num, string, line);

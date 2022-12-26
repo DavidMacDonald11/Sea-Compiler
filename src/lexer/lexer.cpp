@@ -40,6 +40,7 @@ void Lexer::makeToken() {
         return;
     }
 
+    file.take(1);
     Token token = newToken(Token::NONE);
     throw Fault::fail(token, "Unrecognized symbol");
 }

@@ -34,6 +34,7 @@ str join(Range&& range, fmt::string_view sep) {
 }
 
 bool isSubstr(str s1, str s2);
+str replaceStr(const str& s, str s1, str s2);
 
 template<class T>
 vector<T> mergeAll(list<vector<T>> args) {

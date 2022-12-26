@@ -132,6 +132,7 @@ fi
 
 mapfile -d '' files < <(printf "%s\0" "${files[@]}" | sort -uz)
 mkdir -p "$out_dir"
+out_dir="$(realpath --relative-base=. $out_dir)"
 
 if ! eval "$main" "$options" "$out_dir" "${files[*]@Q}"
 then

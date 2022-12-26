@@ -9,7 +9,7 @@ std::map<Token::Type, char> typeLabels {
     {Token::STR, 'S'},
     {Token::IDENTIFIER, 'I'},
     {Token::KEYWORD, 'K'},
-    {Token::NONE, '\0'},
+    {Token::NONE, '?'},
 };
 
 
