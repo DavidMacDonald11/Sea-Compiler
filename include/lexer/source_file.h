@@ -6,6 +6,7 @@
 class SourceFile {
 private:
     std::ifstream file;
+    vector<SourceLine*> lines;
 public:
     const str& path;
     SourceLine* line;

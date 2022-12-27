@@ -20,6 +20,8 @@ Token::Token(SourceLine& line, Type type)
 
 str Token::toString() const {
     str string = (self.string == "") ? "EOF" : self.string;
+    string = replaceStr(string, "\n", "\\n");
+
     return fmt::format("{}'{}'", typeLabels[type], string);
 }
 
@@ -36,24 +38,28 @@ void Token::mark() {
 }
 
 
-const str Token::PUNC_SYMS = "{}()";
+const str Token::PUNC_SYMS("{}()\n");
 
-const vector<str> Token::PREFIX_UNARY_OPS = {
+const vector<str> Token::PREFIX_UNARY_OPS {
     "+", "-"
 };
 
-const vector<str> Token::BINARY_OPS = {
+const vector<str> Token::BINARY_OPS {
     "*", "/", "+", "-"
 };
 
-const vector<str> Token::COMPARE_OPS = {
+const vector<str> Token::COMPARE_OPS {
     "<", ">", "<=", ">=", "==", "!="
 };
 
 const vector<str> Token::OPERATORS(mergeAll<str>({
-    Token::PREFIX_UNARY_OPS,
-    Token::BINARY_OPS,
-    Token::COMPARE_OPS
+    PREFIX_UNARY_OPS,
+    COMPARE_OPS,
+    BINARY_OPS,
 }));
 
-const str Token::OP_SYMS(fmt::format("{}", fmt::join(Token::OPERATORS, "")));
+const str Token::OP_SYMS(fmt::format("{}", fmt::join(OPERATORS, "")));
+
+const str Token::S_NUM_SYMS("0123456789.");
+
+const str Token::NUM_SYMS(fmt::format("{}", S_NUM_SYMS));

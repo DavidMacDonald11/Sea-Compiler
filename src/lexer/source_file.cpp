@@ -8,12 +8,12 @@ SourceFile::SourceFile(const str& filePath)
 
 SourceFile::~SourceFile() {
     file.close();
+    for(SourceLine* line : lines) delete line;
 }
 
 void SourceFile::readLine() {
     nat num = (line == nullptr) ? 1 : line->num + 1;
-    delete line;
-    line = new SourceLine(num);
+    lines.push_back(line = new SourceLine(num));
 
     char c;
 
@@ -37,15 +37,15 @@ str SourceFile::take(nat num, const str& these, const str& until) {
     if(line == nullptr or num == 0) return string;
 
     for(char c : line->unreadString()) {
-        if(in(c, until) or (these != "" and in(c, these)))
-            return string;
+        if(in(c, until) or (these != "" and not in(c, these)))
+            return string; 
 
         string += c;
         line->increment();
 
-        if(line->unreadString() == "" and line->string != "") readLine();
-        if(num > 0 and string.length() == num) break;
+        if(string.length() == num) break;
     }
 
+    if(line->unreadString() == "" and line->string != "") readLine();
     return string;
 }

@@ -26,6 +26,8 @@ public:
     static const vector<str> COMPARE_OPS;
     static const vector<str> OPERATORS;
     static const str OP_SYMS;
+    static const str S_NUM_SYMS;
+    static const str NUM_SYMS;
 };
 
 #endif
