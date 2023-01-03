@@ -14,14 +14,14 @@ printu() {
 }
 
 usage() {
-    printf "Usage: hyde [OPTIONS]... [DIR|FILE]... \n"
-    printf "Compiles Hyde code in FILEs or in DIRs and subdirs.\n\n"
+    printf "Usage: sea [OPTIONS]... [DIR|FILE]... \n"
+    printf "Compiles Sea code in FILEs or in DIRs and subdirs.\n\n"
     printf "OPTIONS:\n"
 
     printu "-d, --debug" "prints compiler debug information."
-    printu "-h, --help" "prints the hyde command's usage information."
-    printu "-u, --update" "uses git to update Hyde to the latest version."
-    printu "--version" "prints the hyde command's version information."
+    printu "-h, --help" "prints the sea command's usage information."
+    printu "-u, --update" "uses git to update Sea to the latest version."
+    printu "--version" "prints the sea command's version information."
     printf "\n"
 
     printu "-o, --out=OUT" "specifies the output directory to compile to;"
@@ -80,7 +80,7 @@ do
                     update
                     exit "$?" ;;
                 "version")
-                    printf "Hyde 0.0.0\n"
+                    printf "Sea 0.0.0\n"
                     exit 0 ;;
                 "out"|"out="*)
                     get_arg "--out"
@@ -120,7 +120,7 @@ do
     fi
 
     hy_files=()
-    mapfile -d '' hy_files < <(find "${!i}" -type f -name "*.hyd" -print0)
+    mapfile -d '' hy_files < <(find "${!i}" -type f -name "*.sea" -print0)
     files+=("${hy_files[@]}")
 done
 

@@ -17,7 +17,7 @@ int main(int argc, char *argv[]) {
     for(const str& filePath : filePaths) {
         SourceFile sFile(filePath);
 
-        str outPath = replaceStr(filePath, ".hyd", ".ll");
+        str outPath = replaceStr(filePath, ".sea", ".c");
         outPath = fs::path(outPath).filename();
         outPath = fmt::format("{}/{}", outDir, outPath);
         

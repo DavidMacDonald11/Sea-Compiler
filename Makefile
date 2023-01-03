@@ -43,7 +43,7 @@ clean:
 
 .PHONY: test
 test: bin/main | infoRun
-	@./hyde.bash -d -o=test/bin test/src
+	@./sea.bash -d -o=test/bin test/src
 
 .PHONY: mem
 mem: bin/main | infoRun
