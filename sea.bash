@@ -3,9 +3,16 @@
 path="$(dirname "$0" | sed s/' '/'\\ '/g)"
 main="$path/bin/main"
 
+version() {
+    printf "Sea 0.0.0\n"
+}
+
 update() {
     eval cd "$path"
-    (git pull origin main || sudo git pull origin main) && make build
+    (git pull origin main || sudo git pull origin main) && 
+    (make -B build || sudo make -B build) && 
+    (rm -rf bin/build || sudo rm -rf bin/build) &&
+    version
 }
 
 printu() {
@@ -80,7 +87,7 @@ do
                     update
                     exit "$?" ;;
                 "version")
-                    printf "Sea 0.0.0\n"
+                    version
                     exit 0 ;;
                 "out"|"out="*)
                     get_arg "--out"
@@ -132,7 +139,7 @@ fi
 
 mapfile -d '' files < <(printf "%s\0" "${files[@]}" | sort -uz)
 mkdir -p "$out_dir"
-out_dir="$(realpath --relative-base=. $out_dir)"
+out_dir="$(realpath --relative-base=. "$out_dir")"
 
 if ! eval "$main" "$options" "$out_dir" "${files[*]@Q}"
 then
