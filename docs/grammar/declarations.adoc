@@ -1,0 +1,53 @@
+= Declarations
+
+++++
+<link rel="stylesheet" href="../style.css" type="text/css">
+++++
+
+:tab: &nbsp;&nbsp;&nbsp;&nbsp;
+:hardbreaks-option:
+
+:star: *
+:under: _
+
+`_type-specifier_`: one of
+{tab} `*any*` `*bool*` `*byte*`  `*char*`
+{tab} `*short*` `*int*` `*long*` `*nat*` `*float*` 
+
+`_type-qualifier_`: one of
+{tab} `*var*` `*invar*`
+{tab} `*unique*` `*volatile*` `*atomic*`
+
+`_type-qualifier-list_`:
+{tab} `_type-qualifier_`
+{tab} `_type-qualifier-list_` `_type-qualifier_`
+
+`_align-specifier_`:
+{tab} `*align*` `*(*` `_type-name_` `*)*`
+{tab} `*align*` `*(*` `_constant-expression_` `*)*`
+
+`_specifier-qualifier-list_`:
+{tab} `_type-specifier_` `_specifier-qualifier-list_`~opt~
+{tab} `_type-qualifier_` `_specifier-qualifier-list_`~opt~
+{tab} `_align-specifier_` `_specifier-qualifier-list_`~opt~
+
+`_direct-abstract-declarator_`:
+{tab} `*(*` `_abstract-declarator_` `*)*`
+// Continue
+
+`_pointer_`:
+{tab} `*^*` `_type-qualifier-list_`~opt~
+{tab} `*^*` `_type-qualifier-list_`~opt~ `_pointer_`
+
+`_abstract-declarator_`:
+{tab} `_pointer_`
+{tab} `_pointer_`~opt~ `_direct-abstract-declarator_`
+
+`_type-name_`:
+{tab} `_specifier-qualifier-list_` `_abstract-declarator_`~opt~
+
+`_storage-class-specifier_`: one of
+{tab} `*register*` `*static*` `*local*`
+{tab} `*type*`
+
+// Continue
