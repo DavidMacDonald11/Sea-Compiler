@@ -1,4 +1,5 @@
 #include <map>
+#include "lexer/source_line.h"
 #include "lexer/token.h"
 
 std::map<Token::Type, char> typeLabels {
@@ -18,6 +19,14 @@ Token::Token(SourceLine& line, Type type)
     string = line.string.substr(locale[0], locale[1] - locale[0]);
 }
 
+bool Token::of(list<Type> types) const {
+    return in(type, types);
+}
+
+bool Token::has(list<str> values) const {
+    return in(string, values);
+}
+
 str Token::toString() const {
     str string = (self.string == "") ? "EOF" : self.string;
     string = replaceStr(string, "\n", "\\n");
@@ -25,17 +34,13 @@ str Token::toString() const {
     return fmt::format("{}'{}'", typeLabels[type], string);
 }
 
-bool Token::of(list<Type> args) const {
-    return in(type, args);
-}
+str Token::tree(str) const { return toString(); }
 
-bool Token::has(list<str> args) const {
-    return in(string, args);
-}
+vector<SourceLine*> Token::lines() const { return {&line}; }
 
-void Token::mark() {
-    line.mark(self);
-}
+str Token::raw() const { return line.raw(); }
+
+void Token::mark() { line.mark(self); }
 
 
 const str Token::PUNC_SYMS("{}()\n");

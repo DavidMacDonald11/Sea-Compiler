@@ -3,8 +3,9 @@
 
 #include "source_line.h"
 #include "../util.h"
+#include "../util/component.h"
 
-class Token {
+class Token : public Component {
 public:
     enum Type {PUNC, OP, NUM, CHAR, STR, IDENTIFIER, KEYWORD, NONE};
 
@@ -15,10 +16,13 @@ public:
 
     Token(SourceLine& line, Type type);
 
-    str toString() const;
-    bool of(list<Type>) const;
-    bool has(list<str>) const;
-    void mark();
+    bool of(list<Type> types) const;
+    bool has(list<str> values) const;
+    str toString() const override;
+    str tree(str) const override;
+    vector<SourceLine*> lines() const override;
+    str raw() const override;
+    void mark() override;
 
     static const str PUNC_SYMS;
     static const vector<str> PREFIX_UNARY_OPS;

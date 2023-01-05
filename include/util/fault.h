@@ -2,7 +2,7 @@
 #define FAULT_H
 
 #include "../util.h"
-#include "../lexer/token.h"
+#include "../util/component.h"
 
 namespace Fault {
     extern vector<str> warnings;
@@ -12,9 +12,9 @@ namespace Fault {
     class CompilerFailure : public std::exception {};
 
     str toString();
-    void warn(Token& token, const str& message);
-    void error(Token& token, const str& message);
-    CompilerFailure fail(Token& token, const str& message);
+    void warn(Component& c, const str& message);
+    void error(Component& c, const str& message);
+    CompilerFailure fail(Component& c, const str& message);
     void check();
     void reset();
 }

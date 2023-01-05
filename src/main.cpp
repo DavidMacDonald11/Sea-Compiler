@@ -1,5 +1,7 @@
 #include <filesystem>
 #include "lexer/lexer.h"
+#include "parser/parser.h"
+#include "parser/node.h"
 #include "util/fault.h"
 #include "util/output_file.h"
 
@@ -30,11 +32,16 @@ int main(int argc, char *argv[]) {
 
 void compileFile(const str& options, SourceFile& sFile, OutputFile& oFile) {
     Lexer* lexer = nullptr;
+    Parser* parser = nullptr;
 
     try {
         fmt::print("Building {}...\n", sFile.path);
         lexer = new Lexer(sFile);
         lexer->makeTokens();
+        Fault::check();
+
+        Node::parser = parser = new Parser(lexer->tokens);
+        parser->makeTree();
         Fault::check();
 
         oFile.write(lexer->toString());
@@ -45,7 +52,9 @@ void compileFile(const str& options, SourceFile& sFile, OutputFile& oFile) {
     if(in('d', options)) {
         fmt::print("{}:\n", sFile.path);
         fmt::print("  Tokens:\n    [{}]\n", (lexer) ? lexer->toString() : "");
+        fmt::print("  AST:\n    {}\n", (parser and parser->tree) ? parser->tree->toString() : "");
     }
 
     delete lexer;
+    delete parser;
 }

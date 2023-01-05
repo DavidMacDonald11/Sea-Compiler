@@ -51,4 +51,9 @@ vector<T> mergeAll(list<vector<T>> args) {
     return result;
 }
 
+template<class T>
+str className(T* arg) {
+    return typeid(*arg).name();
+}
+
 #endif

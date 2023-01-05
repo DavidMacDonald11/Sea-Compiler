@@ -1,10 +1,10 @@
 #include "util/fault.h"
-#include "lexer/token.h"
+#include "util/component.h"
 
 namespace Fault {
-    static str act(Token& token, const str& message, const str& label) {
-        token.mark();
-        return fmt::format("{}: {}\n{}", label, message, token.line.raw());
+    static str act(Component& c, const str& message, const str& label) {
+        c.mark();
+        return fmt::format("{}: {}\n{}", label, message, c.raw());
     }
 
     vector<str> warnings;
@@ -21,16 +21,16 @@ namespace Fault {
         return string;
     }
 
-    void warn(Token& token, const str& message) {
-        warnings.push_back(act(token, message, "Warning"));
+    void warn(Component& c, const str& message) {
+        warnings.push_back(act(c, message, "Warning"));
     }
 
-    void error(Token& token, const str& message) {
-        errors.push_back(act(token, message, "Error"));
+    void error(Component& c, const str& message) {
+        errors.push_back(act(c, message, "Error"));
     }
 
-    CompilerFailure fail(Token& token, const str& message) {
-        failure = act(token, message, "Failure");
+    CompilerFailure fail(Component& c, const str& message) {
+        failure = act(c, message, "Failure");
         return CompilerFailure();
     }
 
