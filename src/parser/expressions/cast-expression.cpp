@@ -1,6 +1,5 @@
 #include "parser/expressions/bitwise-or-expression.h"
 #include "parser/expressions/cast-expression.h"
-#include "util/component.h"
 
 vector<Component*> CastExpression::nodes() const {
     return {&expression, &type};

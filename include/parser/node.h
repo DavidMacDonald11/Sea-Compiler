@@ -2,11 +2,13 @@
 #define NODE_H
 
 #include "lexer/source-line.h"
-#include "util/component.h"
+#include "transpiler/transpiler.h"
+#include "component.h"
 #include "parser.h"
 
 struct Node : public Component {
     static Parser* parser;
+    static Transpiler* transpiler;
 
     virtual vector<Component*> nodes() const = 0;
     virtual str toString() const override;

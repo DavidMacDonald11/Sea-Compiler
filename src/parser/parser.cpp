@@ -1,13 +1,17 @@
 #include "parser/node.h"
 #include "parser/parser.h"
 #include "parser/statements/file-statement.h"
-#include "util/fault.h"
+#include "fault.h"
 
 Parser::Parser(vector<Token>& tokens) 
 : tokens(tokens), i(0), tree(nullptr) {}
 
 Parser::~Parser() {
     delete tree;
+}
+
+str Parser::toString() const {
+    return tree? tree->toString() : "";
 }
 
 void Parser::makeTree() {

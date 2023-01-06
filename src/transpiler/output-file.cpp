@@ -1,5 +1,4 @@
-#include "./util/output-file.h"
-#include <fstream>
+#include "transpiler/output-file.h"
 
 OutputFile::OutputFile(const str& filePath)
 : file(std::ofstream(filePath)), path(filePath) {}

@@ -2,7 +2,6 @@
 #define CONDITIONAL_EXPRESSION_H
 
 #include "../node.h"
-#include "util/component.h"
 
 struct ConditionalExpression : public Node {
     Node& left;

@@ -14,6 +14,7 @@ public:
     Parser(vector<Token>& tokens);
     ~Parser();
 
+    str toString() const;
     void makeTree();
     Token& next() const;
     Token& take();

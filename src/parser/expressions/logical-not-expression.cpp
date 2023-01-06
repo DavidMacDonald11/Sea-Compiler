@@ -1,6 +1,5 @@
 #include "parser/expressions/comparative-expression.h"
 #include "parser/expressions/logical-not-expression.h"
-#include "util/component.h"
 
 vector<Component*> LogicalNotExpression::nodes() const { return {&expression}; }
 

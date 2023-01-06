@@ -1,6 +1,5 @@
 #include "parser/statements/statement.h"
 #include "parser/expressions/expression.h"
-#include "util/component.h"
 
 vector<Component*> Statement::nodes() const { return {&statement}; }
 

@@ -1,5 +1,4 @@
-#include "util/fault.h"
-#include "util/component.h"
+#include "fault.h"
 
 namespace Fault {
     static str act(Component& c, const str& message, const str& label) {

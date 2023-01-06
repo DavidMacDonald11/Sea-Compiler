@@ -2,10 +2,9 @@
 #include "lexer/lexer.h"
 #include "parser/parser.h"
 #include "parser/node.h"
-#include "util/fault.h"
-#include "util/output-file.h"
-
-namespace fs = std::filesystem;
+#include "transpiler/transpiler.h"
+#include "transpiler/output-file.h"
+#include "fault.h"
 
 static void compileFile(const str& options, SourceFile& sFile, OutputFile& oFile);
 
@@ -20,7 +19,7 @@ int main(int argc, char *argv[]) {
         SourceFile sFile(filePath);
 
         str outPath = replaceStr(filePath, ".sea", ".c");
-        outPath = fs::path(outPath).filename();
+        outPath = std::filesystem::path(outPath).filename();
         outPath = fmt::format("{}/{}", outDir, outPath);
         
         OutputFile oFile(outPath);
@@ -33,28 +32,31 @@ int main(int argc, char *argv[]) {
 void compileFile(const str& options, SourceFile& sFile, OutputFile& oFile) {
     Lexer* lexer = nullptr;
     Parser* parser = nullptr;
+    Transpiler* transpiler = nullptr;
 
     try {
         fmt::print("Building {}...\n", sFile.path);
         lexer = new Lexer(sFile);
         lexer->makeTokens();
-        Fault::check();
+        Fault::check(); 
 
         Node::parser = parser = new Parser(lexer->tokens);
         parser->makeTree();
         Fault::check();
 
-        oFile.write(fmt::format("/**\n{}\n**/\n", parser->tree->toString()));
+        Node::transpiler = transpiler = new Transpiler(oFile);
+        Fault::check();
     } catch(const Fault::CompilerFailure&) {
         fmt::print(stderr, "{}\n", Fault::toString());
     }
 
     if(in('d', options)) {
         fmt::print("{}:\n", sFile.path);
-        fmt::print("  Tokens:\n    [{}]\n", (lexer) ? lexer->toString() : "");
-        fmt::print("  AST:\n    {}\n", (parser and parser->tree) ? parser->tree->toString() : "");
+        fmt::print("  Tokens:\n    [{}]\n", lexer? lexer->toString() : "");
+        fmt::print("  AST:\n    {}\n", parser? parser->toString() : "");
     }
 
     delete lexer;
     delete parser;
+    delete transpiler;
 }

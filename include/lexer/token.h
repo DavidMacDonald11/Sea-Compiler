@@ -2,8 +2,8 @@
 #define TOKEN_H
 
 #include "source-line.h"
+#include "parser/component.h"
 #include "../util.h"
-#include "../util/component.h"
 
 struct Token : public Component {
     enum Type {PUNC, NUM, OP, CHAR, STR, IDENTIFIER, KEYWORD, NONE};

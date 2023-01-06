@@ -1,7 +1,7 @@
 #include "lexer/lexer.h"
 #include "lexer/source-file.h"
 #include "lexer/source-line.h"
-#include "util/fault.h"
+#include "fault.h"
 
 Lexer::Lexer(SourceFile& file)
 : tokens(), file(file) {}

@@ -2,7 +2,6 @@
 #define STATEMENT_H
 
 #include "../node.h"
-#include "util/component.h"
 
 struct Statement : public Node {
     Node& statement;

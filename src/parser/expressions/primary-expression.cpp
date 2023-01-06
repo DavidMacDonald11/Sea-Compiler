@@ -1,8 +1,7 @@
 #include "parser/expressions/expression.h"
 #include "parser/expressions/primary-expression.h"
 #include "parser/node.h"
-#include "util/component.h"
-#include "util/fault.h"
+#include "fault.h"
 
 Node* PrimaryExpression::construct() {
     Token& next = parser->next();

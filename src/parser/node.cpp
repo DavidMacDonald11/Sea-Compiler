@@ -3,9 +3,9 @@
 #include <map>
 #include "parser/node.h"
 #include "lexer/source-line.h"
-#include "util/component.h"
 
 Parser* Node::parser = nullptr;
+Transpiler* Node::transpiler = nullptr;
 
 str Node::toString() const { return tree("    "); }
 

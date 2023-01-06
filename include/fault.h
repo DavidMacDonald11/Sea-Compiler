@@ -1,8 +1,8 @@
 #ifndef FAULT_H
 #define FAULT_H
 
-#include "../util.h"
-#include "../util/component.h"
+#include "util.h"
+#include "parser/component.h"
 
 namespace Fault {
     extern vector<str> warnings;
