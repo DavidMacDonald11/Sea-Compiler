@@ -2,6 +2,7 @@
 #include "parser/expressions/primary-expression.h"
 #include "parser/node.h"
 #include "fault.h"
+#include "transpiler/transpiler.h"
 
 Node* PrimaryExpression::construct() {
     Token& next = parser->next();
@@ -26,12 +27,22 @@ Node* NumericConstant::construct() {
     return new NumericConstant(parser->take());
 }
 
+Transpiler::Expression NumericConstant::transpile() {
+    str type = in('.', token.string)? "float" : "int";
+    return {type, token.string};
+}
+
 
 Identifier::Identifier(Token& token)
 : PrimaryNode(token) {}
 
 Node* Identifier::construct() {
     return new Identifier(parser->take());
+}
+
+Transpiler::Expression Identifier::transpile() {
+    str type = "IDENTIFIER";
+    return {type, token.string};
 }
 
 
@@ -48,6 +59,12 @@ PrimaryKeyword::PrimaryKeyword(Token& token)
 
 Node* PrimaryKeyword::construct() {
     return new PrimaryKeyword(parser->take());
+}
+
+Transpiler::Expression PrimaryKeyword::transpile() {
+    str type = (token.string == "null")? "byte" : "bool";
+    str string = (token.string == "true")? "1" : "0";
+    return {type, string};
 }
 
 // TODO character, string

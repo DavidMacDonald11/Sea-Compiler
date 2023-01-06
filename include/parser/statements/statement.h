@@ -12,6 +12,7 @@ struct Statement : public Node {
     ~Statement();
 
     static Node* construct();
+    Transpiler::Expression transpile() override;
 };
 
 #endif //STATEMENT_H

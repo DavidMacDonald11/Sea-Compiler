@@ -45,6 +45,7 @@ void compileFile(const str& options, SourceFile& sFile, OutputFile& oFile) {
         Fault::check();
 
         Node::transpiler = transpiler = new Transpiler(oFile);
+        parser->tree->transpile();
         Fault::check();
     } catch(const Fault::CompilerFailure&) {
         fmt::print(stderr, "{}\n", Fault::toString());

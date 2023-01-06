@@ -4,12 +4,13 @@
 #include "../node.h"
 
 struct FileStatement : public Node {
-    vector<Component*> statements;
+    vector<Node*> statements;
 
     vector<Component*> nodes() const override;
 
     ~FileStatement();
     
+    Transpiler::Expression transpile() override;
     void makeTree();
 };
 
