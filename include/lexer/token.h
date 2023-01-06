@@ -37,6 +37,8 @@ struct Token : public Component {
     static const vector<str> PRIMARY_KEYWORDS;
     static const vector<str> TYPE_KEYWORDS;
     static const vector<str> KEYWORDS;
+
+    static const vector<str> LINE_ENDS;
 };
 
 #endif

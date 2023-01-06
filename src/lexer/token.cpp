@@ -92,3 +92,7 @@ const vector<str> Token::KEYWORDS(mergeAll<str>( {
         "not", "and", "xor", "or", "as", "if", "else"
     }
 }));
+
+const vector<str> Token::LINE_ENDS {    
+    ";", "\n", ""  
+};

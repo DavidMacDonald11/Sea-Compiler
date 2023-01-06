@@ -1,6 +1,6 @@
 #include "parser/node.h"
 #include "parser/parser.h"
-#include "parser/expressions/expression.h"
+#include "parser/statements/file-statement.h"
 #include "util/fault.h"
 
 Parser::Parser(vector<Token>& tokens) 
@@ -11,7 +11,9 @@ Parser::~Parser() {
 }
 
 void Parser::makeTree() {
-    tree = Expression::construct();
+    FileStatement* node = new FileStatement();
+    node->makeTree();
+    tree = node;
 }
 
 Token& Parser::next() const {
