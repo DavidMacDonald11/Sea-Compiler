@@ -11,7 +11,7 @@ str Lexer::toString() const {
 
     for(const Token& token : tokens) {
         str tString = token.toString();
-        string = (string == "") ? tString : fmt::format("{}, {}", string, tString);
+        string = (string == "")? tString : fmt::format("{}, {}", string, tString);
     }
 
     return string;
@@ -41,12 +41,17 @@ void Lexer::makeToken() {
         return;
     }
 
-    if(in(next, Token::OP_SYMS)) return makeOperator();
     if(in(next, Token::S_NUM_SYMS)) return makeNumber();
+    if(in(next, Token::OP_SYMS)) return makeOperator();
+    if(in(next, Token::S_IDENTIFIER_SYMS)) return makeIdentifier();
 
     file.take(1);
     Token token = newToken(Token::NONE);
-    throw Fault::fail(token, "Unrecognized symbol");
+
+    throw Fault::fail(token, fmt::format(
+        "Unrecognized symbol '{}'",
+        token.string
+    ));
 }
 
 void Lexer::ignoreSpaces() {
@@ -73,18 +78,24 @@ void Lexer::makeNewline() {
 
 void Lexer::makeOperator() {
     str string;
+    str next;
 
-    while(in(file.next(), Token::OP_SYMS)) {
-        again:
-        for(str op : Token::OPERATORS) {
-            if(isSubstr(string + file.next(), op)) {
-                string += file.take(1);
-                goto again;
-            }
+    checkNextSym:
+    next = string + file.next();
+
+    for(str op : Token::OPERATORS) {
+        if(isSubstr(next, op)) {
+            string += file.take(1);
+            goto checkNextSym;
         }
+    }
 
-        newToken(Token::OP);
-        return;
+    Token token = newToken(Token::OP);
+
+    if(not in(string, Token::OPERATORS)) {
+        throw Fault::fail(token, fmt::format(
+            "Unrecognized operator '{}'", 
+            token.string));
     }
 }
 
@@ -96,4 +107,9 @@ void Lexer::makeNumber() {
 
     file.take(-1, Token::NUM_SYMS);
     newToken(Token::NUM);
+}
+
+void Lexer::makeIdentifier() {
+    str string = file.take(-1, Token::IDENTIFIER_SYMS);
+    newToken(in(string, Token::KEYWORDS)? Token::KEYWORD : Token::IDENTIFIER);
 }

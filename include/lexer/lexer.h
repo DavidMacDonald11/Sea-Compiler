@@ -23,6 +23,7 @@ public:
     void makeNewline();
     void makeOperator();
     void makeNumber();
+    void makeIdentifier();
 };
 
 #endif

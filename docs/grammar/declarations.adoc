@@ -11,7 +11,7 @@
 :under: _
 
 `_type-specifier_`: one of
-{tab} `*any*` `*bool*` `*byte*`  `*char*`
+{tab} `*wild*` `*bool*` `*byte*`  `*char*`
 {tab} `*short*` `*int*` `*long*` `*nat*` `*float*` 
 
 `_type-qualifier_`: one of

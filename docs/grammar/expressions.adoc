@@ -23,6 +23,7 @@
 {tab} `_primary-expression_`
 {tab} `_postfix-expression_` `*.*` `_identifier_`
 {tab} `_postfix-expression_` `*?.*` `_identifier_`
+{tab} `_postfix-expression_` `*::*` `_identifier_`
 {tab} `_postfix-call-expression_`
 
 `_postfix-call-expression_`:
