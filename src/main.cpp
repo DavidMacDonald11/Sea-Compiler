@@ -3,7 +3,7 @@
 #include "parser/parser.h"
 #include "parser/node.h"
 #include "util/fault.h"
-#include "util/output_file.h"
+#include "util/output-file.h"
 
 namespace fs = std::filesystem;
 
@@ -44,7 +44,7 @@ void compileFile(const str& options, SourceFile& sFile, OutputFile& oFile) {
         parser->makeTree();
         Fault::check();
 
-        oFile.write(lexer->toString());
+        oFile.write(fmt::format("/**\n{}\n**/\n", parser->tree->toString()));
     } catch(const Fault::CompilerFailure&) {
         fmt::print(stderr, "{}\n", Fault::toString());
     }

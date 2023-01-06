@@ -3,29 +3,26 @@
 
 #include "../node.h"
 
-class PrimaryExpression : public Node {
-public:
+struct PrimaryExpression : public Node {
     static Node* construct();
 };
 
-class NumericConstant : public PrimaryNode {
-public:
+struct NumericConstant : public PrimaryNode {
     NumericConstant(Token& token);
-
     static Node* construct();
 };
 
-class Identifier : public PrimaryNode {
-public:
+struct Identifier : public PrimaryNode {
     Identifier(Token& token);
-
     static Node* construct();
 };
 
-class PrimaryKeyword : public PrimaryNode {
-public:
-    PrimaryKeyword(Token& token);
+struct ParentheseseExpression : public Node {
+    static Node* construct();
+};
 
+struct PrimaryKeyword : public PrimaryNode {
+    PrimaryKeyword(Token& token);
     static Node* construct();
 };
 

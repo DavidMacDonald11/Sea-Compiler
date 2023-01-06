@@ -1,12 +1,11 @@
 #ifndef NODE_H
 #define NODE_H
 
-#include "lexer/source_line.h"
+#include "lexer/source-line.h"
 #include "util/component.h"
 #include "parser.h"
 
-class Node : public Component {
-public:
+struct Node : public Component {
     static Parser* parser;
 
     virtual vector<Component*> nodes() const = 0;
@@ -15,16 +14,41 @@ public:
     virtual vector<SourceLine*> lines() const override; 
     virtual str raw() const override;
     virtual void mark() override;
+
+    //static virtual Node* construct();
 };
 
-class PrimaryNode : public Node {
-public:
+struct PrimaryNode : public Node {
     Token& token;
 
     virtual vector<Component*> nodes() const override;
     virtual str tree(str) const override;
 
     PrimaryNode(Token& token);
+};
+
+struct BinaryOperation : public Node {
+    Node& left;
+    Token& op;
+    Node& right;
+
+    vector<Component*> nodes() const override;
+
+    BinaryOperation(Node& left, Token& op, Node& right);
+    ~BinaryOperation();
+
+    template <class Fun, class Func>
+    static Node* construct(vector<str> hasList, Fun makeChild, Func make) {
+        Node* node = makeChild();
+
+        while(parser->next().has(hasList)) {
+            Token& op = parser->take();
+            Node& right = *makeChild();
+            node = make(*node, op, right);
+        }
+
+        return node;
+    }
 };
 
 #endif //NODE_H

@@ -1,11 +1,10 @@
 #ifndef COMPONENT_H
 #define COMPONENT_H
 
-#include "lexer/source_line.h"
+#include "lexer/source-line.h"
 #include "util.h"
 
-class Component {
-public:
+struct Component {
     virtual str toString() const = 0;
     virtual str tree(str prefix) const = 0;
     virtual vector<SourceLine*> lines() const = 0;

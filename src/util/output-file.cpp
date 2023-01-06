@@ -1,4 +1,4 @@
-#include "./util/output_file.h"
+#include "./util/output-file.h"
 #include <fstream>
 
 OutputFile::OutputFile(const str& filePath)

@@ -1,10 +1,9 @@
 #ifndef SOURCE_FILE_H
 #define SOURCE_FILE_H
 
-#include "source_line.h"
+#include "source-line.h"
 
 class SourceFile {
-private:
     std::ifstream file;
     vector<SourceLine*> lines;
 public:

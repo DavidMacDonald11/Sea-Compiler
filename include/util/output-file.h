@@ -4,7 +4,6 @@
 #include "util.h"
 
 class OutputFile {
-private:
     std::ofstream file;
 public:
     const str& path;

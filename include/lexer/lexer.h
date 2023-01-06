@@ -1,13 +1,12 @@
 #ifndef LEXER_H
 #define LEXER_H
 
-#include "lexer/source_line.h"
+#include "lexer/source-line.h"
 #include "token.h"
-#include "source_file.h"
+#include "source-file.h"
 #include "../util.h"
 
-class Lexer {
-public:
+struct Lexer {
     vector<Token> tokens;
     SourceFile& file;
 

@@ -1,5 +1,5 @@
 #include "lexer/token.h"
-#include "lexer/source_line.h"
+#include "lexer/source-line.h"
 
 SourceLine::SourceLine(nat num)
 : locale({0, 0}), num(num), string(), marks() {}

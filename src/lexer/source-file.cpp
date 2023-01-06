@@ -1,5 +1,5 @@
-#include "lexer/source_file.h"
-#include "lexer/source_line.h"
+#include "lexer/source-file.h"
+#include "lexer/source-line.h"
 
 SourceFile::SourceFile(const str& filePath)
 : file(std::ifstream(filePath)), path(filePath), line(nullptr) {

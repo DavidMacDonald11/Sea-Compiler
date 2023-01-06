@@ -47,7 +47,7 @@ test: bin/main | infoRun
 
 .PHONY: mem
 mem: bin/main | infoRun
-	@valgrind --leak-check=full --track-origins=yes -s ./bin/main -d test/bin test/src
+	@valgrind --leak-check=full --track-origins=yes -s ./bin/main -d test/bin test/src/file1.sea
 
 .git:
 	git init

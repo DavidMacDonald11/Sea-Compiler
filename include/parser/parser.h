@@ -6,7 +6,6 @@
 class Node;
 
 class Parser {
-private:
     vector<Token>& tokens;
 public:
     nat i;

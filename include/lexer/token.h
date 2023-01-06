@@ -1,12 +1,11 @@
 #ifndef TOKEN_H
 #define TOKEN_H
 
-#include "source_line.h"
+#include "source-line.h"
 #include "../util.h"
 #include "../util/component.h"
 
-class Token : public Component {
-public:
+struct Token : public Component {
     enum Type {PUNC, NUM, OP, CHAR, STR, IDENTIFIER, KEYWORD, NONE};
 
     SourceLine& line;

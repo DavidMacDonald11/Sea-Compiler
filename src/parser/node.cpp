@@ -2,7 +2,7 @@
 #include <iterator>
 #include <map>
 #include "parser/node.h"
-#include "lexer/source_line.h"
+#include "lexer/source-line.h"
 #include "util/component.h"
 
 Parser* Node::parser = nullptr;
@@ -15,11 +15,10 @@ str Node::tree(str prefix) const {
 
     for(nat i = 0; i < nodes.size(); i++) {
         bool atLast = (i == nodes.size() - 1);
-
         str symbol = atLast ? "└──" : "├──";
-        str newPrefix = fmt::format("{}{}    ", prefix, atLast ? "" : "│");
 
-        string.append(fmt::format("\n{}{} {}", prefix, symbol, nodes[i]->toString()));
+        string.append(fmt::format("\n{}{} {}", prefix, symbol, 
+            nodes[i]->tree(fmt::format("{}{}    ", prefix, atLast ? "" : "│"))));
     }
 
     return string;
@@ -64,3 +63,16 @@ str PrimaryNode::tree(str) const {
 
 PrimaryNode::PrimaryNode(Token& token)
 : token(token) {}
+
+
+vector<Component*> BinaryOperation::nodes() const { 
+    return {&left, &op, &right};
+}
+
+BinaryOperation::BinaryOperation(Node& left, Token& op, Node& right)
+: left(left), op(op), right(right) {}
+
+BinaryOperation::~BinaryOperation() {
+    delete &left;
+    delete &right;
+}

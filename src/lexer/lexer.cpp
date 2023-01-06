@@ -1,6 +1,6 @@
 #include "lexer/lexer.h"
-#include "lexer/source_file.h"
-#include "lexer/source_line.h"
+#include "lexer/source-file.h"
+#include "lexer/source-line.h"
 #include "util/fault.h"
 
 Lexer::Lexer(SourceFile& file)

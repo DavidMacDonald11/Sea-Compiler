@@ -7,7 +7,6 @@ class Token;
 using Locale = array<nat, 2>;
 
 class SourceLine {
-private:
     Locale locale;
 public:
     nat num;

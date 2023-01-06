@@ -1,5 +1,5 @@
 #include <map>
-#include "lexer/source_line.h"
+#include "lexer/source-line.h"
 #include "lexer/token.h"
 #include "util.h"
 
