@@ -16,8 +16,8 @@ public:
 
     Token(SourceLine& line, Type type);
 
-    bool of(list<Type> types) const;
-    bool has(list<str> values) const;
+    bool of(vector<Type> types) const;
+    bool has(vector<str> values) const;
     str toString() const override;
     str tree(str) const override;
     vector<SourceLine*> lines() const override;

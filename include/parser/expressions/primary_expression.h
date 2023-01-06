@@ -15,4 +15,18 @@ public:
     static Node* construct();
 };
 
+class Identifier : public PrimaryNode {
+public:
+    Identifier(Token& token);
+
+    static Node* construct();
+};
+
+class PrimaryKeyword : public PrimaryNode {
+public:
+    PrimaryKeyword(Token& token);
+
+    static Node* construct();
+};
+
 #endif //PRIMARY_EXPRESSION_H

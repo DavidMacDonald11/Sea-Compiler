@@ -18,8 +18,8 @@ public:
     void makeTree();
     Token& next() const;
     Token& take();
-    Token& expectingOf(list<Token::Type> types);
-    Token& expectingHas(list<str> values);
+    Token& expectingOf(vector<Token::Type> types);
+    Token& expectingHas(vector<str> values);
 };
 
 #endif //PARSER_H

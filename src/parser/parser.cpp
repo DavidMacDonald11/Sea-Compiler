@@ -24,14 +24,14 @@ Token& Parser::take() {
     return token;
 }
 
-Token& Parser::expectingOf(list<Token::Type> types) {
+Token& Parser::expectingOf(vector<Token::Type> types) {
     if(next().of(types)) return take();
 
     str message = fmt::format("Expecting of [{}]", join(types, ", "));
     throw Fault::fail(take(), message);
 }
 
-Token& Parser::expectingHas(list<str> values) {
+Token& Parser::expectingHas(vector<str> values) {
     if(next().has(values)) return take();
 
     str message = fmt::format("Expecting has [{}]", join(values, ", "));

@@ -3,6 +3,7 @@
 
 #include <algorithm>
 #include <array>
+#include <cctype>
 #include <initializer_list>
 #include <fmt/format.h>
 #include <fstream>
@@ -53,7 +54,14 @@ vector<T> mergeAll(list<vector<T>> args) {
 
 template<class T>
 str className(T* arg) {
-    return typeid(*arg).name();
+    str name;
+
+    for(char c : str(typeid(*arg).name())) {
+        if(std::isdigit(c) and name == "") continue;
+        name += c;
+    }
+
+    return name;
 }
 
 #endif

@@ -20,11 +20,11 @@ Token::Token(SourceLine& line, Type type)
     string = line.string.substr(locale[0], locale[1] - locale[0]);
 }
 
-bool Token::of(list<Type> types) const {
+bool Token::of(vector<Type> types) const {
     return in(type, types);
 }
 
-bool Token::has(list<str> values) const {
+bool Token::has(vector<str> values) const {
     return in(string, values);
 }
 
