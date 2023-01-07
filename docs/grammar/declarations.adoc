@@ -33,8 +33,8 @@
 
 `_direct-abstract-declarator_`:
 {tab} `*(*` `_abstract-declarator_` `*)*`
-{tab} `_direct-abstract-declarator_` `*[*` `_type-qualifier-list_`~opt~ `_expression_`~opt~ `*]*`
-{tab} `_direct-abstract-declarator_` `*[*` `_type-qualifier-list_`~opt~  `*\<=*` `_expression_` `*]*`
+{tab} `_direct-abstract-declarator_` `*[*` `_type-qualifier-list_`~opt~ `_single-expression_`~opt~ `*]*`
+{tab} `_direct-abstract-declarator_` `*[*` `_type-qualifier-list_`~opt~  `*\<=*` `_single-expression_` `*]*`
 {tab} `_direct-abstract-declarator_` `*[*` `_type-qualifier-list_`~opt~ `*{star}*` `*]*`
 
 `_pointer_`:

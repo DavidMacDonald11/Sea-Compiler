@@ -57,11 +57,11 @@ ParentheseseExpression::~ParentheseseExpression() {
 
 Node* ParentheseseExpression::construct() {
     parser->expectingHas({"("});
-    while(parser->next().has({"\n"})) parser->take();
+    parser->skipNewlines();
 
     Node* node = Expression::construct();
 
-    while(parser->next().has({"\n"})) parser->take();
+    parser->skipNewlines();
     parser->expectingHas({")"});
 
     return new ParentheseseExpression(*node);

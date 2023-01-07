@@ -18,7 +18,7 @@ Node* PostfixExpression::construct() {
     while(parser->next().has(Token::POSTFIX_OPS)) {
         Token& op = parser->take(); 
         Token& identifier = parser->expectingOf({Token::IDENTIFIER});
-
+       
         node = new PostfixExpression(*node, op, identifier);
     }
 

@@ -43,3 +43,7 @@ Token& Parser::expectingHas(vector<str> values) {
     str message = fmt::format("Expecting has [{}]", join(values, ", "));
     throw Fault::fail(take(), message);
 }
+
+void Parser::skipNewlines() {
+    while(next().has({"\n"})) take();
+}

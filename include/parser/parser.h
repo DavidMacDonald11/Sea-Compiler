@@ -20,6 +20,7 @@ public:
     Token& take();
     Token& expectingOf(vector<Token::Type> types);
     Token& expectingHas(vector<str> values);
+    void skipNewlines();
 };
 
 #endif //PARSER_H
