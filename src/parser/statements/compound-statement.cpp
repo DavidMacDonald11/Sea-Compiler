@@ -27,6 +27,8 @@ Node* CompoundStatement::construct() {
         statements.push_back(Statement::construct());
     
     parser->expectingHas({"}"});
+    parser->expectingHas(Token::LINE_ENDS);
+    
     return new CompoundStatement(statements);
 }
 

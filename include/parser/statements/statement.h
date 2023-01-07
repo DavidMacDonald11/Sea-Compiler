@@ -1,18 +1,11 @@
 #ifndef STATEMENT_H
 #define STATEMENT_H
 
-#include "../node.h"
+#include "hidden-statement.h"
 
-struct Statement : public Node {
-    Node& statement;
-
-    vector<Component*> nodes() const override;
-
+struct Statement : public HiddenStatement {
     Statement(Node& statement);
-    ~Statement();
-
     static Node* construct();
-    Transpiler::Line transpile() override;
 };
 
 #endif //STATEMENT_H

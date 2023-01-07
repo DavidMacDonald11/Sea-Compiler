@@ -12,11 +12,14 @@
 `_line-end_`: one of
 {tab} `*;*` `*\n*` `*EOF*`
 
+`_expression-statement_`:
+{tab} `_expression_` `_line-end_`
+
 `_compound-statement_`: 
 {tab} `*{*` `_statement-list_` `*}*` `_line-end_`
 
 `_statement_`:
-{tab} `_expression_` `_line-end_`
+{tab} `_expression-statement_`
 {tab} `_compound-statement_`
 
 `_statement-list_`:
