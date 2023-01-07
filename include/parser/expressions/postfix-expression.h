@@ -14,6 +14,8 @@ struct PostfixExpression : public Node {
     ~PostfixExpression();
 
     static Node* construct();
+    Transpiler::Line transpile() override;
+    Transpiler::Line staticTranspile();
 };
 
 #endif //POSTFIX_EXPRESSION_H

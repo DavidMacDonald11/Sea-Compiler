@@ -6,6 +6,7 @@
 struct ComparativeExpression : public BinaryOperation {
     ComparativeExpression(Node& left, Token& op, Node& right);
     static Node* construct();
+    Transpiler::Line transpile() override;
 };
 
 #endif //COMPARATIVE_EXPRESSION_H

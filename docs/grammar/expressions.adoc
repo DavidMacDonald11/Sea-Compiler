@@ -94,10 +94,6 @@
 {tab} `_logical-xor-expression_`
 {tab} `_logical-or-expression_` `*or*` `_logical-and-expression_`
 
-// x and y === y if x else x
-// x xor y === x if not y else not x
-// x or y === x if x else y
-
 `_conditional-expression_`:
 {tab} `_logical-or-expression_`
 {tab} `_logical-or-expression_` `*if*` `_expression_` `*else*` `_conditional-expression_`

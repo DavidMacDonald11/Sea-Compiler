@@ -25,6 +25,7 @@ class Transpiler::Line {
 public:
     str type;
     str string;
+    nat pointers;
 
     Line(str type = "", str string = "");
 
@@ -34,7 +35,10 @@ public:
     Line& replace(str string);
     Line& add(str before = "", str after = "");
     Line& cast(str type);
+    Line& castUp();
     Line& prefix(const Line& line);
+
+    static Line resolve(const Line& left, const Line& right);
 };
 
 #endif //TRANSPILER_H

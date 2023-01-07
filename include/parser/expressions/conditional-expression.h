@@ -14,6 +14,7 @@ struct ConditionalExpression : public Node {
     ~ConditionalExpression();
 
     static Node* construct();
+    Transpiler::Line transpile() override;
 };
 
 #endif //CONDITIONAL_EXPRESSION_H

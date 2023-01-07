@@ -14,3 +14,9 @@ str replaceStr(const str& s, str s1, str s2) {
 
     return result;
 }
+
+str multiplyStr(str s, nat n) {
+    str string;
+    for(nat i = 0; i < n; i++) string += s;
+    return string;
+}

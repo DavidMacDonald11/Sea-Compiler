@@ -18,3 +18,7 @@ Node* LogicalNotExpression::construct() {
     
     return ComparativeExpression::construct();
 }
+
+Transpiler::Line LogicalNotExpression::transpile() {
+    return expression.transpile().add("!(", ")").cast("bool");
+}

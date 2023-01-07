@@ -13,6 +13,7 @@ struct UnaryExpression : public Node {
     ~UnaryExpression();
 
     static Node* construct();
+    Transpiler::Line transpile() override;
 };
 
 #endif //UNARY_EXPRESSION_H

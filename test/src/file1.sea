@@ -1,13 +1,12 @@
-true; false; null; 178
-929; printf
-{1.5; 6;}
+file::num?.x
+file2::num?.x?.y
+(@^x).y
+(^x).y
+5 + 6 / 8
+!5$3|2&1
+not 1 < 2 < 3
 
-{
-    {
-        (
-            5
-            
-        )
-    }
-    2
-}
+x and y
+x xor y
+x or y
+5 if true else 6 if false else 7

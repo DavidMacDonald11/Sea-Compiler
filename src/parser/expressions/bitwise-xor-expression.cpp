@@ -17,3 +17,7 @@ Node* BitwiseXorExpression::construct() {
         make
     );
 }
+
+Transpiler::Line BitwiseXorExpression::transpile() {
+    return transpileBinary("^");
+}

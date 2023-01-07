@@ -1,5 +1,7 @@
+#include <map>
 #include "parser/node.h"
 #include "transpiler/transpiler.h"
+#include "util.h"
 
 Transpiler::Transpiler(OutputFile& file) 
 : lines(), file(file), indent(0) {}
@@ -12,10 +14,21 @@ void Transpiler::write(str string, str end) {
     lines += string + end;
 }
 
+
 using Line = Transpiler::Line;
 
+std::map<str, double> points {
+    {"wild", 100},
+    {"bool", 0}, {"byte", .5}, {"char", 1},
+    {"short nat", 2}, {"short", 2.5}, 
+    {"nat", 3}, {"int", 3.5}, 
+    {"long nat", 4}, {"long int", 4.5}, 
+    {"long long nat", 5}, {"long long int", 5.5},
+    {"short float", 6}, {"float", 7}, {"long float", 8}
+};
+
 Line::Line(str type, str string)
-: showType(false), finished(false), type(type), string(string) {}
+: showType(false), finished(false), type(type), string(string), pointers(0) {}
 
 str Line::toString() const { 
     str lines;
@@ -34,12 +47,11 @@ Line& Line::finish(const Node& node, bool semicolons) {
     if(finished) return self;
     finished = true;
 
-    str indent;
-    for(nat i = 0; i < node.transpiler->indent; i++) indent += "    ";
-
+    str indent = multiplyStr("    ", node.transpiler->indent);
     str end = semicolons? ";" : "";
-    end = showType? fmt::format("{} /*{}*/", end, type) : end;
+    str pointers = multiplyStr("^", self.pointers);
 
+    end = showType? fmt::format("{} /*{}{}*/", end, type, pointers) : end;
     return add(indent, end + "\n");
 }
 
@@ -58,7 +70,19 @@ Line& Line::cast(str type) {
     return self;
 }
 
+Line& Line::castUp() {
+    type = in(type, vector<str>{"bool", "byte", "char"})? "short nat" : type;
+    return self;
+}
+
 Line& Line::prefix(const Line& line) {
     lines.push_back(line);
     return self;
 }
+
+Line Line::resolve(const Line& left, const Line& right) {
+    str lType = left.type;
+    str rType = right.type;
+
+    return {(points[lType] > points[rType])? lType : rType};
+} 

@@ -3,6 +3,7 @@
 #include <map>
 #include "parser/node.h"
 #include "lexer/source-line.h"
+#include "transpiler/transpiler.h"
 
 Parser* Node::parser = nullptr;
 Transpiler* Node::transpiler = nullptr;
@@ -75,4 +76,17 @@ BinaryOperation::BinaryOperation(Node& left, Token& op, Node& right)
 BinaryOperation::~BinaryOperation() {
     delete &left;
     delete &right;
+}
+
+Transpiler::Line BinaryOperation::transpile() {
+    return transpileBinary(self.op.string);
+}
+
+Transpiler::Line BinaryOperation::transpileBinary(str op) {
+    Transpiler::Line left = self.left.transpile();
+    Transpiler::Line right = self.right.transpile();
+    Transpiler::Line result = Transpiler::Line::resolve(left, right).castUp();
+
+    result.replace(fmt::format("{} {} {}", left.toString(), op, right.toString()));
+    return result;
 }

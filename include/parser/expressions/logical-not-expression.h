@@ -12,6 +12,7 @@ struct LogicalNotExpression : public Node {
     ~LogicalNotExpression();
 
     static Node* construct();
+    Transpiler::Line transpile() override;
 };
 
 #endif //LOGICAL_NOT_EXPRESSION_H

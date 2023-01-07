@@ -6,6 +6,7 @@
 struct BitwiseXorExpression : public BinaryOperation {
     BitwiseXorExpression(Node& left, Token& op, Node& right);
     static Node* construct();
+    Transpiler::Line transpile() override;
 };
 
 #endif //BITWISE_XOR_EXPRESSION_H

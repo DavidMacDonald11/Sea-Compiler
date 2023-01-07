@@ -52,6 +52,9 @@ struct BinaryOperation : public Node {
 
         return node;
     }
+
+    virtual Transpiler::Line transpile() override;
+    virtual Transpiler::Line transpileBinary(str op);
 };
 
 #endif //NODE_H

@@ -25,4 +25,33 @@ Node* PostfixExpression::construct() {
     return node;
 }
 
+Transpiler::Line PostfixExpression::transpile() {
+    Transpiler::Line left = expression.transpile();
+    str op = left.pointers? "->" : ".";
+    
+    if(self.op.has({"::"})) 
+        return left.add("", "_" + identifier.string);
+
+    Transpiler::Line result = (className(&expression) != "PostfixExpression")? 
+        left : static_cast<PostfixExpression*>(&expression)->staticTranspile();
+
+    result.add("", op + identifier.string);
+    if(self.op.has({"."})) return result; 
+
+    result.add("? ", " : 0");
+    return result.add(left.toString()).add("(", ")");
+}
+
+Transpiler::Line PostfixExpression::staticTranspile() {
+    Transpiler::Line left = expression.transpile();
+    str op = left.pointers? "->" : ".";
+
+    if(self.op.has({"::"})) 
+        return left.add("", "_" + identifier.string);
+
+    Transpiler::Line result = left;
+    result.add("", op + identifier.string);
+    return result; 
+}
+
 // TODO call expression
