@@ -10,13 +10,13 @@ struct PrimaryExpression : public Node {
 struct NumericConstant : public PrimaryNode {
     NumericConstant(Token& token);
     static Node* construct();
-    Transpiler::Expression transpile() override;
+    Transpiler::Line transpile() override;
 };
 
 struct Identifier : public PrimaryNode {
     Identifier(Token& token);
     static Node* construct();
-    Transpiler::Expression transpile() override;
+    Transpiler::Line transpile() override;
 };
 
 struct ParentheseseExpression : public Node {
@@ -26,7 +26,7 @@ struct ParentheseseExpression : public Node {
 struct PrimaryKeyword : public PrimaryNode {
     PrimaryKeyword(Token& token);
     static Node* construct();
-    Transpiler::Expression transpile() override;
+    Transpiler::Line transpile() override;
 };
 
 #endif //PRIMARY_EXPRESSION_H

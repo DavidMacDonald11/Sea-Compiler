@@ -12,9 +12,16 @@
 `_line-end_`: one of
 {tab} `*;*` `*\n*` `*EOF*`
 
+`_compound-statement_`: 
+{tab} `*{*` `_statement-list_` `*}*` `_line-end_`
+
 `_statement_`:
 {tab} `_expression_` `_line-end_`
+{tab} `_compound-statement_`
+
+`_statement-list_`:
+{tab} `_statement_`
+{tab} `_statement-list_` `_statement_`
 
 `_file-statement_`:
-{tab} `_statement_`
-{tab} `_file-statement_` `_statement_`
+{tab} `_statement-list_`

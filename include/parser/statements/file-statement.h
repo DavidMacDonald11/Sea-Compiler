@@ -10,7 +10,7 @@ struct FileStatement : public Node {
 
     ~FileStatement();
     
-    Transpiler::Expression transpile() override;
+    Transpiler::Line transpile() override;
     void makeTree();
 };
 

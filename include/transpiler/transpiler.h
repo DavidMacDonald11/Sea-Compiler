@@ -8,30 +8,33 @@ class Node;
 struct Transpiler {
     str lines;
     OutputFile& file;
+    nat indent;
 
     Transpiler(OutputFile& file);
     ~Transpiler();
 
     void write(str string = "", str end = "\n");
 
-    struct Expression;
+    struct Line;
 };
 
-class Transpiler::Expression {
+class Transpiler::Line {
     bool showType;
     bool finished;
+    vector<Line> lines;
 public:
     str type;
     str string;
 
-    Expression(str type = "", str string = "");
+    Line(str type = "", str string = "");
 
     str toString() const;
-    Expression& setShowType();
-    Expression& finish(const Node& node, bool semicolons = true);
-    Expression& replace(str string);
-    Expression& add(str before = "", str after = "");
-    Expression& cast(str type);
+    Line& setShowType();
+    Line& finish(const Node& node, bool semicolons = true);
+    Line& replace(str string);
+    Line& add(str before = "", str after = "");
+    Line& cast(str type);
+    Line& prefix(const Line& line);
 };
 
 #endif //TRANSPILER_H

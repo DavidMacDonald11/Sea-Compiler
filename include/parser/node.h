@@ -18,7 +18,7 @@ struct Node : public Component {
     virtual void mark() override;
 
     //static virtual Node* construct();
-    virtual Transpiler::Expression transpile() { return {}; };
+    virtual Transpiler::Line transpile() { return {}; };
 };
 
 struct PrimaryNode : public Node {

@@ -27,7 +27,7 @@ Node* NumericConstant::construct() {
     return new NumericConstant(parser->take());
 }
 
-Transpiler::Expression NumericConstant::transpile() {
+Transpiler::Line NumericConstant::transpile() {
     str type = in('.', token.string)? "float" : "int";
     return {type, token.string};
 }
@@ -40,7 +40,7 @@ Node* Identifier::construct() {
     return new Identifier(parser->take());
 }
 
-Transpiler::Expression Identifier::transpile() {
+Transpiler::Line Identifier::transpile() {
     str type = "IDENTIFIER";
     return {type, token.string};
 }
@@ -61,7 +61,7 @@ Node* PrimaryKeyword::construct() {
     return new PrimaryKeyword(parser->take());
 }
 
-Transpiler::Expression PrimaryKeyword::transpile() {
+Transpiler::Line PrimaryKeyword::transpile() {
     str type = (token.string == "null")? "byte" : "bool";
     str string = (token.string == "true")? "1" : "0";
     return {type, string};
