@@ -20,11 +20,11 @@ using Line = Transpiler::Line;
 std::map<str, double> points {
     {"wild", 100},
     {"bool", 0}, {"byte", .5}, {"char", 1},
-    {"short nat", 2}, {"short", 2.5}, 
+    {"nat16", 2}, {"int16", 2.5}, 
     {"nat", 3}, {"int", 3.5}, 
-    {"long nat", 4}, {"long int", 4.5}, 
-    {"long long nat", 5}, {"long long int", 5.5},
-    {"short float", 6}, {"float", 7}, {"long float", 8}
+    {"nat32", 4}, {"int32", 4.5}, 
+    {"nat64", 5}, {"int64", 5.5},
+    {"float32", 6}, {"float", 7}, {"float64", 8}
 };
 
 Line::Line(str type, str string)

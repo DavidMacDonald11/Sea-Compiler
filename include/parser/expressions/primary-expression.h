@@ -26,6 +26,7 @@ struct ParentheseseExpression : public Node {
     vector<Component*> nodes() const override;
 
     ParentheseseExpression(Node& expression);
+    ~ParentheseseExpression();
 
     static Node* construct();
     Transpiler::Line transpile() override;

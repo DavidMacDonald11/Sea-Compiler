@@ -12,11 +12,13 @@
 
 `_type-specifier_`: one of
 {tab} `*wild*` `*bool*` `*byte*`  `*char*`
-{tab} `*short*` `*int*` `*long*` `*nat*` `*float*` 
+{tab} `*int16*` `*int*` `*int32*` `*int64*`
+{tab} `*nat16*` `*nat*` `*nat32*` `*nat64*`
+{tab} `*real32*` `*real*` `*real64*`
+{tab} `*cplex32*` `*cplex*` `*cplex64*`
 
 `_type-qualifier_`: one of
-{tab} `*var*` `*invar*`
-{tab} `*unique*` `*volatile*` `*atomic*`
+{tab} `*const*` `*unique*` `*volatile*` `*atomic*`
 
 `_type-qualifier-list_`:
 {tab} `_type-qualifier_`
@@ -24,16 +26,16 @@
 
 `_align-specifier_`:
 {tab} `*align*` `*(*` `_type-name_` `*)*`
-{tab} `*align*` `*(*` `_constant-expression_` `*)*`
+{tab} `*align*` `*(*` `_expression_` `*)*`
 
 `_specifier-qualifier-list_`:
-{tab} `_type-specifier_` `_specifier-qualifier-list_`~opt~
-{tab} `_type-qualifier_` `_specifier-qualifier-list_`~opt~
-{tab} `_align-specifier_` `_specifier-qualifier-list_`~opt~
+{tab} `_type-qualifier-list_`~opt~ `_align-specifier_`~opt~ `_type-specifier_`
 
 `_direct-abstract-declarator_`:
 {tab} `*(*` `_abstract-declarator_` `*)*`
-// Continue
+{tab} `_direct-abstract-declarator_` `*[*` `_type-qualifier-list_`~opt~ `_expression_`~opt~ `*]*`
+{tab} `_direct-abstract-declarator_` `*[*` `_type-qualifier-list_`~opt~  `*\<=*` `_expression_` `*]*`
+{tab} `_direct-abstract-declarator_` `*[*` `_type-qualifier-list_`~opt~ `*{star}*` `*]*`
 
 `_pointer_`:
 {tab} `*^*` `_type-qualifier-list_`~opt~
@@ -47,7 +49,7 @@
 {tab} `_specifier-qualifier-list_` `_abstract-declarator_`~opt~
 
 `_storage-class-specifier_`: one of
-{tab} `*register*` `*static*` `*local*`
+{tab} `*register*` `*static*`
 {tab} `*type*`
 
 // Continue

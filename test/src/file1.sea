@@ -10,3 +10,5 @@ x and y
 x xor y
 x or y
 5 if true else 6 if false else 7
+4 as byte as const align(int64) int32
+(4 or 5) as bool

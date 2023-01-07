@@ -1,3 +1,4 @@
+#include "parser/declarations/type-name.h"
 #include "parser/expressions/bitwise-or-expression.h"
 #include "parser/expressions/cast-expression.h"
 
@@ -16,13 +17,18 @@ CastExpression::~CastExpression() {
 Node* CastExpression::construct() {
     Node* node = BitwiseOrExpression::construct();
 
-    // while(parser->next().has({"as"})) {
-    //     Node* type = 
-    //     node = new CastExpression(*node, *type);
-    // }
+    while(parser->next().has({"as"})) {
+        parser->take();
+        Node* type = TypeName::construct();
+        node = new CastExpression(*node, *type);
+    }
 
     return node;
 }
 
-// TODO implement type-name
+Transpiler::Line CastExpression::transpile() {
+    Transpiler::Line line = type.transpile().add("(", ")");
+    Transpiler::Line expression = self.expression.transpile().add("(", ")");
+    return line.add("", expression.toString());
+}
 

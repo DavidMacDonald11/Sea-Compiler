@@ -80,14 +80,27 @@ const vector<str> Token::PRIMARY_KEYWORDS {
     "true", "false", "null"
 };
 
-const vector<str> Token::TYPE_KEYWORDS {
+const vector<str> Token::TYPE_SPECIFIER_KEYWORDS {
     "wild", "bool", "byte", "char",
-    "short", "int", "long", "nat", "float"
+    "int16", "int", "int32", "int64", 
+    "nat16", "nat", "nat32", "nat64",
+    "real32", "real", "real64",
+    "cplex32", "cplex", "cplex64"
 };
+
+const vector<str> Token::TYPE_QUALIFIER_KEYWORDS {
+    "const", "unique", "volatile", "atomic"  
+};
+
+const vector<str> Token::TYPE_NAME_KEYWORDS(mergeAll<str>({
+    TYPE_SPECIFIER_KEYWORDS,
+    TYPE_QUALIFIER_KEYWORDS,
+    {"align"}
+}));
 
 const vector<str> Token::KEYWORDS(mergeAll<str>( {
     PRIMARY_KEYWORDS,
-    TYPE_KEYWORDS,
+    TYPE_NAME_KEYWORDS,
     {
         "not", "and", "xor", "or", "as", "if", "else"
     }

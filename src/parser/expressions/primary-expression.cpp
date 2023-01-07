@@ -51,6 +51,10 @@ vector<Component*> ParentheseseExpression::nodes() const { return {&expression};
 ParentheseseExpression::ParentheseseExpression(Node& expression)
 : expression(expression) {}
 
+ParentheseseExpression::~ParentheseseExpression() {
+    delete &expression;
+}
+
 Node* ParentheseseExpression::construct() {
     parser->expectingHas({"("});
     while(parser->next().has({"\n"})) parser->take();

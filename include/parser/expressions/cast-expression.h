@@ -13,6 +13,7 @@ struct CastExpression : public Node {
     ~CastExpression();
 
     static Node* construct();
+    Transpiler::Line transpile() override;
 };
 
 #endif //CAST_EXPRESSION_H
