@@ -46,11 +46,25 @@ Transpiler::Line Identifier::transpile() {
 }
 
 
+vector<Component*> ParentheseseExpression::nodes() const { return {&expression}; }
+
+ParentheseseExpression::ParentheseseExpression(Node& expression)
+: expression(expression) {}
+
 Node* ParentheseseExpression::construct() {
     parser->expectingHas({"("});
+    while(parser->next().has({"\n"})) parser->take();
+
     Node* node = Expression::construct();
+
+    while(parser->next().has({"\n"})) parser->take();
     parser->expectingHas({")"});
-    return node;
+
+    return new ParentheseseExpression(*node);
+}
+
+Transpiler::Line ParentheseseExpression::transpile() {
+    return expression.transpile().add("(", ")");
 }
 
 

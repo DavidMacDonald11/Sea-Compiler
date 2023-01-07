@@ -8,5 +8,10 @@ ExpressionStatement::ExpressionStatement(Node& expression)
 Node* ExpressionStatement::construct() {
     Node* node = Expression::construct();
     parser->expectingHas(Token::LINE_ENDS);
-    return node;
+    return new ExpressionStatement(*node);
 }
+
+Transpiler::Line ExpressionStatement::transpile() {
+    return statement.transpile().setShowType().finish(self, true);
+}
+

@@ -6,6 +6,7 @@
 struct ExpressionStatement : public HiddenStatement {
     ExpressionStatement(Node& expression);
     static Node* construct();
+    virtual Transpiler::Line transpile() override;
 };
 
 #endif //EXPRESSION_STATEMENT_H

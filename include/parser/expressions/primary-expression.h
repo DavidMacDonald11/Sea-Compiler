@@ -2,6 +2,7 @@
 #define PRIMARY_EXPRESSION_H
 
 #include "../node.h"
+#include "transpiler/transpiler.h"
 
 struct PrimaryExpression : public Node {
     static Node* construct();
@@ -20,7 +21,14 @@ struct Identifier : public PrimaryNode {
 };
 
 struct ParentheseseExpression : public Node {
+    Node& expression;
+
+    vector<Component*> nodes() const override;
+
+    ParentheseseExpression(Node& expression);
+
     static Node* construct();
+    Transpiler::Line transpile() override;
 };
 
 struct PrimaryKeyword : public PrimaryNode {
