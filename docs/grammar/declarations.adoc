@@ -10,12 +10,27 @@
 :star: *
 :under: _
 
-`_type-specifier_`: one of
+`_type-keyword_`: one of
 {tab} `*wild*` `*bool*` `*byte*`  `*char*`
 {tab} `*int16*` `*int*` `*int32*` `*int64*`
 {tab} `*nat16*` `*nat*` `*nat32*` `*nat64*`
 {tab} `*real32*` `*real*` `*real64*`
 {tab} `*cplex32*` `*cplex*` `*cplex64*`
+
+`_type-specifier_`:
+{tab} `_type-keyword_`
+{tab} `_identifier_`
+{tab} `_file-identifier_`
+{tab} `_atomic-type-specifier_`
+{tab} `_function-type-specifier_`
+`_atomic-type-specifier_`:
+{tab} `*atomic*` `*(*` `_type-name_` `*)*`
+`_function-type-specifier_`:
+{tab} `*fun*` `*(*` `_abstract-parameters_`~opt~ `*)*`
+{tab} `*fun*` `*(*` `*(*` `_abstract-parameters_`~opt~ `*)*` `_return-type-specifier_`~opt~ `*)*`
+`_return-type-specifier_`:
+{tab} `*\->*` `_type-name_` 
+{tab} `*\->*` `*(*` `_type-name_` `*)*`
 
 `_type-qualifier_`: one of
 {tab} `*const*` `*unique*` `*volatile*` `*atomic*`
@@ -25,8 +40,8 @@
 {tab} `_type-qualifier-list_` `_type-qualifier_`
 
 `_align-specifier_`:
-{tab} `*align*` `*(*` `_type-name_` `*)*`
-{tab} `*align*` `*(*` `_expression_` `*)*`
+{tab} `*alignas*` `_expression_`
+{tab} `*alignas*` `*(*` `_type-name_` `*)*`
 
 `_specifier-qualifier-list_`:
 {tab} `_type-qualifier-list_`~opt~ `_align-specifier_`~opt~ `_type-specifier_`
@@ -48,8 +63,147 @@
 `_type-name_`:
 {tab} `_specifier-qualifier-list_` `_abstract-declarator_`~opt~
 
-`_storage-class-specifier_`: one of
-{tab} `*register*` `*static*`
-{tab} `*type*`
 
-// Continue
+
+
+`_visiblity-specifier_`: one of
+{tab} `*export*` `*local*` 
+
+`_storage-class-specifier_`: one of
+{tab} `*register*` `*static*` `*future*`
+
+`_designator_`:
+{tab} `*[*` `_single-expression_` `*]*`
+{tab} `*.*` `_identifier_`
+
+`_designator-list_`:
+{tab} `_designator_`
+{tab} `_designator-list_` `_designator_`
+
+`_designation_`:
+{tab} `_designator-list_` `*=*`
+
+`_initializer-list_`:
+{tab} `_designation_`~opt~ `_initializer_`
+{tab} `_initializer-list_` `*,*` `_designation_`~opt~ `_initializer_`
+
+`_initializer_`: 
+{tab} `_single-expression_`
+{tab} `*[*` `_initializer-list_` `*,*`~opt~ `*]*`
+
+`_direct-declarator_`:
+{tab} `_identifier_`
+{tab} `*(*` `_declarator_` `*)*`
+{tab} `_direct-declarator_` `*[*` `_type-qualifier-list_`~opt~ `_single-expression_`~opt~ `*]*`
+{tab} `_direct-declarator_` `*[*` `_type-qualifier-list_`~opt~  `*\<=*` `_single-expression_` `*]*`
+{tab} `_direct-declarator_` `*[*` `_type-qualifier-list_`~opt~ `*{star}*` `*]*`
+
+`_declarator_`:
+{tab} `_pointer_`~opt~ `_direct-declarator_`
+
+`_init-declarator_`:
+{tab} `_declarator_`
+{tab} `_declarator_` `*=*` `_initializer_`
+
+`_init-declarator-list_`: 
+{tab} `_init-declarator_`
+{tab} `_init-declarator-list_` `*,*` `_init-declarator_`
+
+`_declaration-specifiers_`:
+{tab} `_visiblity-specifier_`~opt~ `_storage-class-specifier_`~opt~ `_specifier-qualifier-list_` 
+
+`_declaration_`:
+{tab} `_declaration-specifiers_` `_init-declarator-list_` 
+{tab} `_static-assert-declaration_` 
+
+
+
+
+`_function-optimization-specifier_`:
+{tab} `*inline*` `*final*`~opt~
+{tab} `*final*` `*inline*`~opt~
+
+`_function-specifier_`:
+{tab} `_function-optimization-specifier_` `*async*`~opt~
+{tab} `*async*` `_function-optimization-specifier_`~opt~
+
+`_function-specifiers_`:
+{tab} `_visibility-specifier_`~opt~ `_function-specifier_`~opt~
+
+`_varargs_`:
+{tab} `*,*` `*\...*`
+
+`_abstract-parameter_`:
+{tab} `_declaration-specifiers_` `_abstract-declarator_`~opt~
+
+`_abstract-parameter-list_`:
+{tab} `_abstract-parameter_`
+{tab} `_abstract-parameter-list_` `*,*` `_abstract-parameter_`
+
+`_abstract-parameters_`:
+{tab} `_abstract-parameter-list_` `_varargs_`~opt~
+
+`_parameter_`:
+{tab} `_abstract-parameter_`
+{tab} `_declaration-specifiers_` `_declarator_`
+
+`_parameter-list_`:
+{tab} `_parameter_`
+{tab} `_parameter-list_` `*,*` `_parameter_`
+
+`_default-parameter_`:
+{tab} `_parameter_` `*=*` `_single-expression_`
+
+`_default-parameter-list_`:
+{tab} `_default-parameter_`
+{tab} `_default-parameter-list_` `_default-parameter_`
+
+`_parameters_`:
+{tab} `_parameter-list_` `_varargs_`~opt~
+{tab} `_parameter-list_` `*,*` `_default-parameter-list_` `_varargs_`~opt~
+{tab} `_default-parameter-list_` `_varargs_`~opt~
+
+`_function-definition_`:
+{tab} `_function-specifiers_`~opt~ `*fun*` `_identifier_` `*(*` `_parameters_`~opt~ `*)*` `_function-return_`~opt~ `_compound-statement_`
+`_function-return_`: 
+{tab} `*\->*` `_type-name_` 
+
+
+
+
+`_assert-declaration_`:
+{tab} `*assert*` `_single-expression_` `*else*` `_single-expression_` 
+
+`_static-assert-declaration_`:
+{tab} `*static*` `_assert-declaration_`
+
+`_enumerator_`:
+{tab} `_identifier_`
+{tab} `_identifier_` `*=*` `_single-expression_`
+
+`_enumerator-list_`:
+{tab} `_enumerator_`
+{tab} `_enumerator-list_` `_enumerator_`
+
+`_enum-definition_`:
+{tab} `visibility-specifier`~opt~ `*enum*` `_identifier_` `*{*` `_enumerator-list_` `*,*`~opt~ `*}*` `_line-end_`
+
+`_struct-declarator_`:
+{tab} `_declarator_`
+{tab} `_declarator_`~opt~ `*using*` `_single-expression_`
+
+`_struct-declarator-list_`:
+{tab} `_struct-declarator_`
+{tab} `_struct-declarator-list_` `*,*` `_struct-declarator_`
+
+`_struct-declaration_`:
+{tab} `_specifier-qualifier-list_` `_struct-declarator-list_`~opt~ `_line-end_`
+{tab} `_static-assert-declaration_` `_line-end_`
+
+`_struct-declaration-list_`:
+{tab} `_struct-declaration_`
+{tab} `_struct-declaration-list_` `_struct-declaration_`
+
+`_struct-definition_`:
+{tab} `visibility-specifier`~opt~ `*struct*` `_identifier_` `*{*` `_struct-declaration-list_` `*}*` `_line-end_`
+{tab} `visibility-specifier`~opt~ `*union*` `_identifier_` `*{*` `_struct-declaration-list_` `*}*` `_line-end_`

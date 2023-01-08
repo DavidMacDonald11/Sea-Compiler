@@ -12,19 +12,99 @@
 `_line-end_`: one of
 {tab} `*;*` `*\n*` `*EOF*`
 
-`_expression-statement_`:
+`_label_`:
+{tab} `_identifier_` 
+
+`_line-statement-component_`:
+{tab} `_expression_`
+{tab} `_assert-declaration_`
+{tab} `_declaration_`
+{tab} `*pass*`
+{tab} `*continue*` `_label_`~opt~
+{tab} `*break*` `_label_`~opt~
+{tab} `*return*` `_expression_`
+
+`_while-statement_`:
+{tab} `_label_`~opt~ `*while*` `_expression_` `*do*`~opt~ `_statement_`
+
+`_do-while-statement_`:
+{tab} `_label_`~opt~ `*do*` `_line-end_`~opt~ `_statement_` `*while*` `_expression_` `_line-end_`
+{tab} `_label_`~opt~ `*do*` `_line-end_`~opt~ `_line-statement-component_` `*while*` `_expression_` `_line-end_`
+
+`_for-statement_`:
+{tab} `_label_`~opt~ `*for*` `*(*` `_for-components_` `*)*` `_statement_`
+{tab} `_label_`~opt~ `*for*` `_for-components_` `_statement_`
+`_for-components_`:
+{tab} `_for-declaration_` `_for-condition_` `_for-modification_`
+`_for-declaration_`:
+{tab} `_line-statement-component_` `_line-end_`
+{tab} `_line-statement-component_` `_line-end_`~opt~ `*while*`
+`_for-condition_`:
 {tab} `_expression_` `_line-end_`
+{tab} `_expression_` `_line-end_`~opt~ `*then*`
+`_for-modification_`:
+{tab} `_line-statement-component_` `_line-end_`
+{tab} `_line-statement-component_` `_line-end_`~opt~ `*do*`
 
-`_compound-statement_`: 
-{tab} `*{*` `_statement-list_` `*}*` `_line-end_`
+`_iterative-statement_`:
+{tab} `_while-statement_`
+{tab} `_do-while-statement_`
+{tab} `_for-statement_`
 
-`_statement_`:
-{tab} `_expression-statement_`
-{tab} `_compound-statement_`
+`_if-statement_`:
+{tab} `*if*` `_expression_` `*then*`~opt~ `_statement_` `_else-if-statement_`~opt~ `_else-statement_`~opt~
+`_else-if-statement_`:
+{tab} `*else*` `*if*` `_expression_` `*then*`~opt~ `_statement_`
+{tab} `_else-if-statement_` `*else*` `*if*` `_expression_` `*then*`~opt~ `_statement_`
+`_else-statement_`:
+{tab} `*else*` `_statement_`
+
+`_compare-statement_`:
+{tab} `*compare*` `_expression_` `_comparator-statement_`~opt~ `*with*`~opt~ `_with-statement_` `_else-statement_`~opt~
+`_comparator-statement_`:
+{tab} `*using*` `_single-expression_`
+`_with-statement_`:
+{tab} `_expression_` `*?*` `*then*`~opt~ `_statement_` 
+{tab} `_with-statement_` `_expression_` `*?*` `*then*`~opt~ `_statement_` 
+
+`_declaration-statement_`:
+{tab} `_function-definition_`
+{tab} `_enum-definition_`
+{tab} `_struct-definition_`
+
+`_alias-statement_`:
+{tab} `_visiblity-specifier_`~opt~ `*alias*` `_type-name_` `*as*` `_identifier_` `_line-end_`
+
+`_partial-import_`:
+{tab} `*import*` `_identifier_`
+{tab} `*import*` `_identifier_` `*as*` `_identifier_`
+
+`_partial-import-list_`:
+{tab} `_partial-import_`
+{tab} `_partial-import-list_` `*,*` `_partial-import_`
+
+`_import-statement_`:
+{tab} `*from*` `_string-constant_` `_partial-import-list_` `_line-end_`
+{tab} `*from*` `_string-constant_` `*import*` `*{star}*` `_line-end_`
+{tab} `*import*` `_string-constant_` `_line-end_`
+{tab} `*import*` `_string-constant_` `*as*` `_identifier_` `_line-end_`
 
 `_statement-list_`:
 {tab} `_statement_`
 {tab} `_statement-list_` `_statement_`
 
+`_compound-statement_`: 
+{tab} `*{*` `_statement-list_` `*}*` `_line-end_`
+
+`_statement_`:
+{tab} `_line-statement-component_` `_line-end_`
+{tab} `_iterative-statement_`
+{tab} `_if-statement_`
+{tab} `_compare-statement_`
+{tab} `_declaration-statement_`
+{tab} `_alias-statement_`
+{tab} `_import-statement_`
+{tab} `_compound-statement_`
+ 
 `_file-statement_`:
 {tab} `_statement-list_`
