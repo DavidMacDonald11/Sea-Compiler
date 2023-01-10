@@ -25,7 +25,10 @@ bool Token::of(vector<Type> types) const {
 }
 
 bool Token::has(vector<str> values) const {
-    return in(string, values);
+    vector<str> vals;
+    for(str value : values) vals.push_back((value == "EOF")? "" : value);
+
+    return in(string, vals);
 }
 
 str Token::toString() const {
@@ -144,5 +147,5 @@ const vector<str> Token::KEYWORDS(mergeAll<str>( {
 }));
 
 const vector<str> Token::LINE_ENDS {    
-    ";", "\n", ""  
+    ";", "\n", "EOF"  
 };

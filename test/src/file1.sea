@@ -9,4 +9,4 @@ alignof 8
 
 unalloc alloc 10 null
 
-5 as (int)
+static assert true else "Major error"

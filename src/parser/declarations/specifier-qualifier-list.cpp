@@ -26,7 +26,7 @@ Node* SpecifierQualifierList::construct() {
     Node* qualifiers = (parser->next().has(Token::TYPE_QUALIFIER_KEYWORDS))? 
         TypeQualifierList::construct() : nullptr;
 
-    Node* align = (parser->next().has({"align"}))? 
+    Node* align = (parser->next().has({"alignas"}))? 
         AlignSpecifier::construct() : nullptr;
 
     Node* type = TypeSpecifier::construct();

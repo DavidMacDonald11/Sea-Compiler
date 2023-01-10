@@ -15,14 +15,17 @@
 `_label_`:
 {tab} `_identifier_` 
 
-`_line-statement-component_`:
-{tab} `_expression_`
-{tab} `_assert-declaration_`
-{tab} `_declaration_`
+`_basic-statement-component_`:
 {tab} `*pass*`
 {tab} `*continue*` `_label_`~opt~
 {tab} `*break*` `_label_`~opt~
 {tab} `*return*` `_expression_`
+
+`_line-statement-component_`:
+{tab} `_expression_`
+{tab} `_assert-declaration_`
+{tab} `_declaration_`
+{tab} `_basic-statement-component_`
 
 `_while-statement_`:
 {tab} `_label_`~opt~ `*while*` `_expression_` `*do*`~opt~ `_statement_`

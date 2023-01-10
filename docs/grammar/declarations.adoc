@@ -49,11 +49,13 @@
 `_specifier-qualifier-list_`:
 {tab} `_type-qualifier-list_`~opt~ `_align-specifier_`~opt~ `_type-specifier_`
 
+`_array-declarator_`:
+{tab} `*[*` `_type-qualifier-list_`~opt~ `_single-expression_`~opt~ `*]*`
+{tab} `*[*` `_type-qualifier-list_`~opt~  `*\<=*` `_single-expression_` `*]*`
+{tab} `*[*` `_type-qualifier-list_`~opt~ `*{star}*` `*]*`
+
 `_direct-abstract-declarator_`:
-{tab} `*(*` `_abstract-declarator_` `*)*`
-{tab} `_direct-abstract-declarator_` `*[*` `_type-qualifier-list_`~opt~ `_single-expression_`~opt~ `*]*`
-{tab} `_direct-abstract-declarator_` `*[*` `_type-qualifier-list_`~opt~  `*\<=*` `_single-expression_` `*]*`
-{tab} `_direct-abstract-declarator_` `*[*` `_type-qualifier-list_`~opt~ `*{star}*` `*]*`
+{tab} `*(*` `_abstract-declarator_` `*)*` `_array-declarator_`~opt~
 
 `_pointer_`:
 {tab} `*^*` `_type-qualifier-list_`~opt~
@@ -94,11 +96,8 @@
 {tab} `_single-expression_`
 
 `_direct-declarator_`:
-{tab} `_identifier_`
-{tab} `*(*` `_declarator_` `*)*`
-{tab} `_direct-declarator_` `*[*` `_type-qualifier-list_`~opt~ `_single-expression_`~opt~ `*]*`
-{tab} `_direct-declarator_` `*[*` `_type-qualifier-list_`~opt~  `*\<=*` `_single-expression_` `*]*`
-{tab} `_direct-declarator_` `*[*` `_type-qualifier-list_`~opt~ `*{star}*` `*]*`
+{tab} `_identifier_` `_array-declarator_`~opt~
+{tab} `*(*` `_declarator_` `*)*` `_array-declarator_`~opt~
 
 `_declarator_`:
 {tab} `_pointer_`~opt~ `_direct-declarator_`

@@ -33,14 +33,14 @@ Token& Parser::take() {
 Token& Parser::expectingOf(vector<Token::Type> types) {
     if(next().of(types)) return take();
 
-    str message = fmt::format("Expecting of [{}]", join(types, ", "));
+    str message = fmt::format("Expecting one of [{}]", join(types, ", "));
     throw Fault::fail(take(), message);
 }
 
 Token& Parser::expectingHas(vector<str> values) {
     if(next().has(values)) return take();
 
-    str message = fmt::format("Expecting has [{}]", join(values, ", "));
+    str message = fmt::format("Expecting one of [{}]", join(values, ", "));
     throw Fault::fail(take(), message);
 }
 

@@ -12,7 +12,7 @@ AlignSpecifier::~AlignSpecifier() {
 }
 
 Node* AlignSpecifier::construct() {
-    parser->expectingHas({"align"});
+    parser->expectingHas({"alignas"});
     parser->expectingHas({"("});
 
     Node* alignOf = (parser->next().has(Token::TYPE_NAME_KEYWORDS))? 

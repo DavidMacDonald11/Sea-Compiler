@@ -5,13 +5,12 @@
 
 struct TypeName : public Node {
     Node& list;
-    //Node& declarator
+    Node* declarator;
 
-    vector<Component*> nodes() const override;
-
-    TypeName(Node& list);
+    TypeName(Node& list, Node* declarator);
     ~TypeName();
 
+    Nodes nodes() const override;
     static Node* construct();
     Transpiler::Line transpile() override;
 };

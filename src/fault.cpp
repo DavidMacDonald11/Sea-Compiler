@@ -1,9 +1,11 @@
 #include "fault.h"
+#include "util.h"
 
 namespace Fault {
     static str act(Component& c, const str& message, const str& label) {
         c.mark();
-        return fmt::format("{}: {}\n{}", label, message, c.raw());
+        str newMessage = replaceStr(message, "\n", "\\n");
+        return fmt::format("{}: {}\n{}", label, newMessage, c.raw());
     }
 
     vector<str> warnings;
