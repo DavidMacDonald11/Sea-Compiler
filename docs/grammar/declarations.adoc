@@ -22,9 +22,12 @@
 {tab} `_identifier_`
 {tab} `_file-identifier_`
 {tab} `_atomic-type-specifier_`
+{tab} `_async-function-type-specifier_`
 {tab} `_function-type-specifier_`
 `_atomic-type-specifier_`:
 {tab} `*atomic*` `*(*` `_type-name_` `*)*`
+`_async-function-type-specifier_`:
+{tab} `*async*` `_function-type-specifier_`
 `_function-type-specifier_`:
 {tab} `*fun*` `*(*` `_abstract-parameters_`~opt~ `*)*`
 {tab} `*fun*` `*(*` `*(*` `_abstract-parameters_`~opt~ `*)*` `_return-type-specifier_`~opt~ `*)*`
@@ -89,7 +92,6 @@
 
 `_initializer_`: 
 {tab} `_single-expression_`
-{tab} `*[*` `_initializer-list_` `*,*`~opt~ `*]*`
 
 `_direct-declarator_`:
 {tab} `_identifier_`
@@ -120,8 +122,8 @@
 
 
 `_function-optimization-specifier_`:
-{tab} `*inline*` `*final*`~opt~
-{tab} `*final*` `*inline*`~opt~
+{tab} `*inline*` `*deviant*`~opt~
+{tab} `*deviant*` `*inline*`~opt~
 
 `_function-specifier_`:
 {tab} `_function-optimization-specifier_` `*async*`~opt~

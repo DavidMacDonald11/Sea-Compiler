@@ -19,9 +19,14 @@ struct Lexer {
     void makeTokens();
     void makeToken();
     void ignoreSpaces();
+    void ignoreComment();
+    void makePunctuator();
+    void makeLineContinue();
     void makeNewline();
-    void makeOperator();
+    void makeChar();
+    void makeString();
     void makeNumber();
+    void makeOperator();
     void makeIdentifier();
 };
 

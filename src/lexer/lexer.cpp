@@ -35,12 +35,10 @@ void Lexer::makeToken() {
     ignoreSpaces();
     char next = file.next();
 
-    if(next == '\0' or in(next, Token::PUNC_SYMS)) {
-        file.take(1);
-        newToken(Token::PUNC);
-        return;
-    }
-
+    if(next == '\0' or in(next, Token::PUNC_SYMS)) return makePunctuator();
+    if(next == '\\') return makeLineContinue();
+    if(next == '\'') return makeChar();
+    if(next == '"') return makeString();
     if(in(next, Token::S_NUM_SYMS)) return makeNumber();
     if(in(next, Token::OP_SYMS)) return makeOperator();
     if(in(next, Token::S_IDENTIFIER_SYMS)) return makeIdentifier();
@@ -66,6 +64,53 @@ void Lexer::ignoreSpaces() {
     }
 }    
 
+void Lexer::ignoreComment() {
+    if(file.take(1) == "/") {
+        file.take(-1, "", "\n");
+        file.line->ignore();
+        return;
+    } 
+
+    SourceLine& line = *file.line;
+
+    while(file.next()) {
+        if(file.next() != '*') {
+            file.take(-1, "", "*");
+            continue;
+        }
+
+        file.take(1);
+
+        if(file.next() == '/') {
+            file.take(1);
+            file.line->ignore();
+            return;
+        }
+    }
+
+    Token token = newToken(Token::NONE, line);
+    throw Fault::fail(token, "Unterminated multiline comment");
+}
+
+void Lexer::makePunctuator() {
+    file.take(1);
+    newToken(Token::PUNC);
+}
+
+void Lexer::makeLineContinue() {
+    file.take(1);
+
+    while(isspace(file.next())) {
+        if(file.take(1) == "\n") return file.line->ignore();
+    }
+
+    file.line->ignore();
+    file.take(-1, "", "\n");
+
+    Token token = newToken(Token::NONE);
+    throw Fault::fail(token, "Unexpected symbols after line continuation");
+}
+
 void Lexer::makeNewline() {
     SourceLine& line = *file.line;
 
@@ -74,6 +119,60 @@ void Lexer::makeNewline() {
     }
     
     newToken(Token::PUNC, line);
+}
+
+void Lexer::makeChar() {
+    file.take(1);
+    
+    if(file.next() == '\\') { 
+        file.take(1);
+
+        if(file.next() == '\'') file.take(1);
+        file.take(-1, "", "'");
+    } else file.take(1);
+
+    if(file.take(1) == "'") {
+        newToken(Token::CHAR);
+        return;
+    }
+        
+    Token token = newToken(Token::NONE);
+    throw Fault::fail(token, "Unterminated character");
+}
+
+void Lexer::makeString() {
+    file.take(1);
+
+    while(file.next() != '\n') {
+        str taken = file.take(1);
+        if(taken == "\\") file.take(1);
+
+        if(taken == "\"") {
+            newToken(Token::STR);
+            return;
+        }
+    }
+
+    Token token = newToken(Token::NONE);
+    throw Fault::fail(token, "Unterminated string");
+}
+
+void Lexer::makeNumber() {
+    if(file.take(1) == "." and not in(file.next(), str("0123456789"))) {
+        Token::Type type = Token::OP;
+        
+        if(file.next() == '.') {
+            type = Token::PUNC;
+            file.take(1);
+            if(file.next() == '.') file.take(1); 
+        }
+        
+        newToken(type);
+        return;
+    }
+
+    file.take(-1, Token::NUM_SYMS);
+    newToken(Token::NUM);
 }
 
 void Lexer::makeOperator() {
@@ -90,23 +189,16 @@ void Lexer::makeOperator() {
         }
     }
 
-    Token token = newToken(Token::OP);
+    if(string == "/" and in(file.next(), str("/*"))) 
+        return ignoreComment();
+
+    Token token = newToken(in(string, Token::PUNC_OPS)? Token::PUNC : Token::OP);
 
     if(not in(string, Token::OPERATORS)) {
         throw Fault::fail(token, fmt::format(
             "Unrecognized operator '{}'", 
             token.string));
     }
-}
-
-void Lexer::makeNumber() {
-    if(file.take(1) == "." and not in(file.next(), str("0123456789"))) {
-        newToken(Token::OP);
-        return;
-    }
-
-    file.take(-1, Token::NUM_SYMS);
-    newToken(Token::NUM);
 }
 
 void Lexer::makeIdentifier() {

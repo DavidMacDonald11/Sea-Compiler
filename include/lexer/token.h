@@ -30,14 +30,21 @@ struct Token : public Component {
     static const vector<str> PREFIX_UNARY_OPS;
     static const vector<str> BINARY_OPS;
     static const vector<str> COMPARE_OPS;
+    static const vector<str> ASSIGN_OPS;
+    static const vector<str> PUNC_OPS;
     static const vector<str> OPERATORS;
     static const str OP_SYMS;
     static const str S_IDENTIFIER_SYMS;
     static const str IDENTIFIER_SYMS;
+
     static const vector<str> PRIMARY_KEYWORDS;
+    static const vector<str> UNARY_KEYWORDS;
+    static const vector<str> ALLOC_KEYWORDS;
     static const vector<str> TYPE_SPECIFIER_KEYWORDS;
     static const vector<str> TYPE_QUALIFIER_KEYWORDS;
     static const vector<str> TYPE_NAME_KEYWORDS;
+    static const vector<str> VISIBILITY_KEYWORDS;
+    static const vector<str> STORAGE_KEYWORDS;
     static const vector<str> KEYWORDS;
 
     static const vector<str> LINE_ENDS;

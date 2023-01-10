@@ -72,8 +72,15 @@
 {tab} `_enum-definition_`
 {tab} `_struct-definition_`
 
+`_reassign-statement_`:
+{tab} `_unary-expression_` `_reassign-operator_` `_expression_` `_line-end_`
+`_reassign-operator_`: one of
+{tab} `*=*` `*{star}=*` `*/=*` `*%=*` `*+=*` `*-=*`
+{tab} `*<\<=*` `*>>=*` `*&=*` `*$=*` `*|=*`
+
 `_alias-statement_`:
 {tab} `_visiblity-specifier_`~opt~ `*alias*` `_type-name_` `*as*` `_identifier_` `_line-end_`
+{tab} `_visiblity-specifier_`~opt~ `*alias*` `*(*` `_type-name_` `*)*` `*as*` `_identifier_` `_line-end_`
 
 `_partial-import_`:
 {tab} `*import*` `_identifier_`
@@ -89,6 +96,9 @@
 {tab} `*import*` `_string-constant_` `_line-end_`
 {tab} `*import*` `_string-constant_` `*as*` `_identifier_` `_line-end_`
 
+`_include-statement_`:
+{tab} `*include*` `_string-constant_` `_line-end_`
+
 `_statement-list_`:
 {tab} `_statement_`
 {tab} `_statement-list_` `_statement_`
@@ -102,8 +112,10 @@
 {tab} `_if-statement_`
 {tab} `_compare-statement_`
 {tab} `_declaration-statement_`
+{tab} `_reassign-statement_`
 {tab} `_alias-statement_`
 {tab} `_import-statement_`
+{tab} `_include-statement_`
 {tab} `_compound-statement_`
  
 `_file-statement_`:

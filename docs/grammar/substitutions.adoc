@@ -1,0 +1,42 @@
+= Substitutions
+
+++++
+<link rel="stylesheet" href="../style.css" type="text/css">
+++++
+
+:tab: &nbsp;&nbsp;&nbsp;&nbsp;
+:hardbreaks-option:
+
+:star: *
+:tick: `
+:under: _
+
+`_tokens_`:
+{tab} `*{tick}*` `_token-string_` `*{tick}*`
+
+`_range-expression_`:
+{tab} `_numeric-constant_` `*to*` `_numeric-constant_` `_step_`~opt~
+{tab} `_character-constant_` `*to*` `_character-constant_` `_step_`~opt~
+`_step_`:
+{tab} `*by*` `_numeric-constant_`
+
+// `_copy-expression_`:
+// {tab} `_numeric-constant_` `*of*` `_tokens_`
+// {tab} `_numeric-constant_` `*of*` `_tokens_` `*with*` `_tokens_`
+
+`_substitutions_`:
+{tab} `_range-expression_`
+// {tab} `_copy-expression_`
+
+`_identifier-list_`:
+{tab} `_identifier_`
+{tab} `_identifier-list_` `*,*` `_identifier_`
+
+`_macro-parameters_`:
+{tab} `_identifier-list_`
+{tab} `_identifier-list_` `*,*` `*\...*`
+{tab} `*\...*`
+
+`_define-statement_`:
+{tab} `_visiblity-specifier_`~opt~ `*define*` `_identifier_` `*as*` `_tokens_` `_line-end_`
+{tab} `_visiblity-specifier_`~opt~ `*define*` `_identifier_` `*(*` `_macro-parameters_` `*)*` `*as*`~opt~ `_tokens_` `_line-end_`

@@ -1,21 +1,19 @@
-file::num?.x
-file2::num?.x?.y
-(@^x).y
-(^x).y
-5 + 6 / 8
-!5$3|2&1
-not 1 < 2 < 3
+/* This is a comment 
+5 + 5 * / 
+dfsd
+*/
 
-x and y
-x xor y
-x or y
-5 if true else 6 if false else 7
-4 as byte as const align(int64) int32
-(4 or 5) as bool
+'H'
+'\''
 
-(
-    1,
-    2,
-    3,
-    true
-)
+0x5FF + \   
+6
+
+"str\"\\df\n"
+
+include "stdio.h" // stuff
+from "file2.sea" import *
+
+async fun new(nat n) -> int[] {
+    return alloc n null
+}

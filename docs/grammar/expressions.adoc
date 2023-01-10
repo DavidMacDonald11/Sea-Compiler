@@ -16,6 +16,7 @@
 {tab} `_identifier_`
 {tab} `_file-identifier_`
 {tab} `*(*` `_expression_` `*)*`
+{tab} `*[*` `_initializer-list_` `*,*`~opt~ `*]*`
 {tab} `_primary-keyword_`
 `_file-identifier_`:
 {tab} `_identifier_` `*::*` `_identifier_`
@@ -26,21 +27,20 @@
 {tab} `_primary-expression_`
 {tab} `_postfix-expression_` `*.*` `_identifier_`
 {tab} `_postfix-expression_` `*?.*` `_identifier_`
-{tab} `_postfix-index-expression_`
+{tab} `_postfix-expression_` `*[*` `_expression_` `*]*`
 {tab} `_postfix-call-expression_`
 {tab} `_postfix-initalizer-list_`
 
-`_postfix-index-expression_`:
-{tab} `_postfix-expression_` `*[*` `_expression_` `*]*`
-
 `_postfix-call-expression_`:
-{tab} `_postfix-expression_` `*(*`  `_argument-expression-list_`~opt~ `*)*`
+{tab} `_postfix-expression_` `*(*`  `_argument-expression-list_`~opt~  `_default-arguments_`~opt~ `*)*`
 `_argument-expression-list_`:
-{tab} `_expression_`
-{tab} `_argument-expression-list_` `*,*` `_expression_`
-
-`_postfix-initailizer-list_`:
-{tab} `*(*` `_type-name_` `*)*` `*[*` `_initializer-list_` `*,*`~opt~ `*]*`
+{tab} `_single-expression_`
+{tab} `_argument-expression-list_` `*,*` `_single-expression_`
+`_default-arguments_`:
+{tab} `*,*` `_default-argument-list_`
+`_default-argument-list_`:
+{tab} `_identifier_` `*=*` `_single-expression_`
+{tab} `_default-argument-list_` `*,*` `_identifier_` `*=*` `_single-expression_`
 
 `_unary-expression_`:
 {tab} `_postfix-expression_`
@@ -91,12 +91,13 @@
 `_allocation-expression_`:
 {tab} `_bitwise-or-expression_`
 {tab} `*alloc*` `_bitwise-or-expression_` `*null*`~opt~
-{tab} `*realloc*` `_bitwise-or-expression_` `*with*` `_bitwise-or-expression_`
-{tab} `*unalloc*` `_bitwise-or-expression_`
+{tab} `*realloc*` `_allocation-expression_` `*with*` `_bitwise-or-expression_`
+{tab} `*unalloc*` `_allocation-expression_`
 
 `_cast-expression_`:
 {tab} `_allocation-expression_`
 {tab} `_cast-expression_` `*as*` `_type-name_`
+{tab} `_cast-expression_` `*as*` `*(*` `_type-name_` `*)*`
 
 `_comparative-expression_`:
 {tab} `_cast-expression_`

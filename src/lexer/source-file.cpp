@@ -28,7 +28,7 @@ void SourceFile::readLine() {
 
 char SourceFile::next() {
     str string = line->unreadString();
-    return (string != "") ? string[0] : '\0';
+    return (string != "")? string[0] : '\0';
 }
 
 str SourceFile::take(nat num, const str& these, const str& until) {
