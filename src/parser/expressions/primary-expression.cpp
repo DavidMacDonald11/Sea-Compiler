@@ -1,3 +1,4 @@
+#include "parser/component.h"
 #include "parser/expressions/expression.h"
 #include "parser/expressions/primary-expression.h"
 #include "parser/node.h"
@@ -8,7 +9,9 @@ Node* PrimaryExpression::construct() {
     Token& next = parser->next();
 
     if(next.of({Token::NUM})) return NumericConstant::construct();
-    if(next.of({Token::IDENTIFIER})) return Identifier::construct();
+    if(next.of({Token::CHAR})) return CharacterConstant::construct();
+    if(next.of({Token::STR})) return StringConstant::construct();
+    if(next.of({Token::IDENTIFIER})) return FileIdentifier::construct();
     if(next.has({"("})) return ParentheseseExpression::construct();
     if(next.has(Token::PRIMARY_KEYWORDS)) return PrimaryKeyword::construct();
 
@@ -30,6 +33,63 @@ Node* NumericConstant::construct() {
 Transpiler::Line NumericConstant::transpile() {
     str type = in('.', token.string)? "float" : "int";
     return {type, token.string};
+}
+
+
+CharacterConstant::CharacterConstant(Token& token)
+: PrimaryNode(token) {}
+
+Node* CharacterConstant::construct() {
+    return new CharacterConstant(parser->take());
+}
+
+Transpiler::Line CharacterConstant::transpile() {
+    return {"char", token.string};
+}
+
+
+StringConstant::StringConstant(Token& token)
+: PrimaryNode(token) {}
+
+Node* StringConstant::construct() {
+    return new StringConstant(parser->take());
+}
+
+Transpiler::Line StringConstant::transpile() {
+    Transpiler::Line line = {"char", token.string};
+    line.pointers = 1;
+    return line;
+}
+
+
+vector<Component*> FileIdentifier::nodes() const {
+    return {&file, &identifier};
+}
+
+FileIdentifier::FileIdentifier(Token& file, Token& identifier) 
+: file(file), identifier(identifier) {}
+
+Node* FileIdentifier::construct() {
+    Token& file = parser->take();
+
+    if(not parser->next().has({"::"})) {
+        parser->i -= 1;
+        return Identifier::construct();
+    }
+
+    parser->take();
+    Token& identifier = parser->expectingOf({Token::IDENTIFIER});
+
+    return new FileIdentifier(file, identifier);
+}
+
+Transpiler::Line FileIdentifier::transpile() {
+    Transpiler::Line line = {"?"};
+
+    if(file.string != "C" and file.string != "c") line.add(file.string + "_");
+    line.add("", identifier.string);
+
+    return line;
 }
 
 

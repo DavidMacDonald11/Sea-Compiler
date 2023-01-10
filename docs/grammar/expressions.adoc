@@ -29,7 +29,6 @@
 {tab} `_postfix-expression_` `*?.*` `_identifier_`
 {tab} `_postfix-expression_` `*[*` `_expression_` `*]*`
 {tab} `_postfix-call-expression_`
-{tab} `_postfix-initalizer-list_`
 
 `_postfix-call-expression_`:
 {tab} `_postfix-expression_` `*(*`  `_argument-expression-list_`~opt~  `_default-arguments_`~opt~ `*)*`

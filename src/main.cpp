@@ -7,6 +7,7 @@
 #include "fault.h"
 
 static void compileFile(const str& options, SourceFile& sFile, OutputFile& oFile);
+static void debugOut(str options, str path, Lexer* lexer, Parser* parser);
 
 int main(int argc, char *argv[]) {
     vector<str> args;
@@ -47,17 +48,23 @@ void compileFile(const str& options, SourceFile& sFile, OutputFile& oFile) {
         Node::transpiler = transpiler = new Transpiler(oFile);
         parser->tree->transpile();
         Fault::check();
-    } catch(const Fault::CompilerFailure&) {
-        fmt::print(stderr, "{}\n", Fault::toString());
-    }
 
-    if(in('d', options)) {
-        fmt::print("{}:\n", sFile.path);
-        fmt::print("  Tokens:\n    [{}]\n", lexer? lexer->toString() : "");
-        fmt::print("  AST:\n    {}\n", parser? parser->toString() : "");
+        debugOut(options, sFile.path, lexer, parser);
+    } catch(const Fault::CompilerFailure&) {
+        debugOut(options, sFile.path, lexer, parser);
+        fmt::print(stderr, "{}\n", Fault::toString());
     }
 
     delete lexer;
     delete parser;
     delete transpiler;
+}
+
+void debugOut(str options, str path, Lexer* lexer, Parser* parser) {
+    if(not in('d', options)) return;
+
+    fmt::print("{}:\n", path);
+    fmt::print("  Tokens:\n    [{}]\n", lexer? lexer->toString() : "");
+    fmt::print("  AST:\n    {}\n", parser? parser->toString() : "");
+    fmt::print("\n");
 }

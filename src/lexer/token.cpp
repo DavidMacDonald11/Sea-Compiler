@@ -49,7 +49,7 @@ const str Token::S_NUM_SYMS("0123456789.");
 const str Token::NUM_SYMS(fmt::format("{}xXabcdefABCDEF", S_NUM_SYMS));
 
 const vector<str> Token::POSTFIX_OPS {
-    ".", "?." 
+    ".", "?."
 };
 
 const vector<str> Token::PREFIX_UNARY_OPS {

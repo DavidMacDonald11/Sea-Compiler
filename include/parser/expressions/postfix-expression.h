@@ -8,7 +8,7 @@ struct PostfixExpression : public Node {
     Token& op;
     Token& identifier;
 
-    vector<Component*> nodes() const override;
+    Nodes nodes() const override;
 
     PostfixExpression(Node& expression, Token& op, Token& identifier);
     ~PostfixExpression();
@@ -16,6 +16,18 @@ struct PostfixExpression : public Node {
     static Node* construct();
     Transpiler::Line transpile() override;
     Transpiler::Line staticTranspile();
+};
+
+struct PostfixIndexExpression : public Node {
+    Node* expression;
+    Node& index;
+
+    Nodes nodes() const override;
+
+    PostfixIndexExpression(Node& index);
+    ~PostfixIndexExpression();
+
+    static Node* construct();
 };
 
 #endif //POSTFIX_EXPRESSION_H

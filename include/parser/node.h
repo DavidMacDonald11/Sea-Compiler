@@ -6,11 +6,13 @@
 #include "component.h"
 #include "parser.h"
 
+using Nodes = vector<Component*>;
+
 struct Node : public Component {
     static Parser* parser;
     static Transpiler* transpiler;
 
-    virtual vector<Component*> nodes() const = 0;
+    virtual Nodes nodes() const = 0;
     virtual str toString() const override;
     virtual str tree(str prefix) const override;
     virtual vector<SourceLine*> lines() const override; 
@@ -24,7 +26,7 @@ struct Node : public Component {
 struct PrimaryNode : public Node {
     Token& token;
 
-    virtual vector<Component*> nodes() const override;
+    virtual Nodes nodes() const override;
     virtual str tree(str) const override;
 
     PrimaryNode(Token& token);
@@ -35,7 +37,7 @@ struct BinaryOperation : public Node {
     Token& op;
     Node& right;
 
-    vector<Component*> nodes() const override;
+    Nodes nodes() const override;
 
     BinaryOperation(Node& left, Token& op, Node& right);
     ~BinaryOperation();

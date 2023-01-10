@@ -1,19 +1,12 @@
-/* This is a comment 
-5 + 5 * / 
-dfsd
-*/
+c::printf
+lib::var[1, 2][3]
 
-'H'
-'\''
+await func(1, 2, x = 5, y = 6)
 
-0x5FF + \   
-6
+sizeof(18 + 2)
+sizeof(const int)
+alignof 8
 
-"str\"\\df\n"
+unalloc alloc 10 null
 
-include "stdio.h" // stuff
-from "file2.sea" import *
-
-async fun new(nat n) -> int[] {
-    return alloc n null
-}
+5 as (int)

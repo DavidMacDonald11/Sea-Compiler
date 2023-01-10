@@ -1,5 +1,5 @@
 #include "parser/declarations/type-name.h"
-#include "parser/expressions/bitwise-or-expression.h"
+#include "parser/expressions/allocation-expression.h"
 #include "parser/expressions/cast-expression.h"
 
 vector<Component*> CastExpression::nodes() const {
@@ -15,12 +15,16 @@ CastExpression::~CastExpression() {
 }
 
 Node* CastExpression::construct() {
-    Node* node = BitwiseOrExpression::construct();
+    Node* node = AllocationExpression::construct();
 
     while(parser->next().has({"as"})) {
         parser->take();
+        bool hasParen = parser->next().has({"("});
+
+        if(hasParen) parser->take();
         Node* type = TypeName::construct();
         node = new CastExpression(*node, *type);
+        if(hasParen) parser->expectingHas({")"});
     }
 
     return node;

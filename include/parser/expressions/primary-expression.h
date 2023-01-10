@@ -2,6 +2,7 @@
 #define PRIMARY_EXPRESSION_H
 
 #include "../node.h"
+#include "parser/component.h"
 #include "transpiler/transpiler.h"
 
 struct PrimaryExpression : public Node {
@@ -10,6 +11,30 @@ struct PrimaryExpression : public Node {
 
 struct NumericConstant : public PrimaryNode {
     NumericConstant(Token& token);
+    static Node* construct();
+    Transpiler::Line transpile() override;
+};
+
+struct CharacterConstant : public PrimaryNode {
+    CharacterConstant(Token& token);
+    static Node* construct();
+    Transpiler::Line transpile() override;
+};
+
+struct StringConstant : public PrimaryNode {
+    StringConstant(Token& token);
+    static Node* construct();
+    Transpiler::Line transpile() override;
+};
+
+struct FileIdentifier : public Node {
+    Token& file;
+    Token& identifier;
+
+    vector<Component*> nodes() const override;
+
+    FileIdentifier(Token& file, Token& identifier);
+
     static Node* construct();
     Transpiler::Line transpile() override;
 };

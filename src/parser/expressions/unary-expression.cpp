@@ -1,4 +1,5 @@
 #include <map>
+#include "parser/declarations/type-name.h"
 #include "parser/expressions/unary-expression.h"
 #include "parser/expressions/postfix-expression.h"
 
@@ -23,12 +24,30 @@ UnaryExpression::~UnaryExpression() {
 }
 
 Node* UnaryExpression::construct() {
-    if(parser->next().has(Token::PREFIX_UNARY_OPS)) {
+    Token& next = parser->next();
+
+    if(next.has(Token::PREFIX_UNARY_OPS) or next.has({"await"})) {
         Token& op = parser->take();
         return new UnaryExpression(op, *UnaryExpression::construct());
     }
 
-    return PostfixExpression::construct();
+    if(not next.has({"sizeof", "alignof"})) return PostfixExpression::construct();
+    Token& op = parser->take();
+
+    if(not parser->next().has({"("})) 
+        return new UnaryExpression(op, *UnaryExpression::construct());
+
+    parser->take();
+
+    if(not parser->next().has(Token::TYPE_NAME_KEYWORDS)) {
+        parser->i -= 1;
+        return new UnaryExpression(op, *UnaryExpression::construct());
+    }
+
+    Node* expression = TypeName::construct();
+    parser->expectingHas({")"});
+
+    return new UnaryExpression(op, *expression);
 }
 
 Transpiler::Line UnaryExpression::transpile() {
