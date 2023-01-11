@@ -17,9 +17,18 @@ TypeQualifierList::~TypeQualifierList() {
 Node* TypeQualifierList::construct() {
     vector<Node*> nodes;
 
-    while(parser->next().has(Token::TYPE_QUALIFIER_KEYWORDS)) 
-        nodes.push_back(TypeQualifier::construct());
+    while(parser->next().has(Token::TYPE_QUALIFIER_KEYWORDS)) {
+        TypeQualifier* node = static_cast<TypeQualifier*>(TypeQualifier::construct());
+        
+        if(node->token.has({"atomic"}) and parser->next().has({"("})) {
+            parser->i -= 1;
+            break;
+        }
+        
+        nodes.push_back(node);
+    } 
 
+    if(nodes.size() == 0) return nullptr;
     return new TypeQualifierList(nodes);
 }
 

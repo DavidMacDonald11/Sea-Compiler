@@ -3,6 +3,7 @@
 #include "parser/declarations/declaration.h"
 #include "parser/expressions/expression.h"
 #include "parser/statements/hidden-statement.h"
+#include "parser/statements/reassign-statement-component.h"
 #include "transpiler/transpiler.h"
 
 LineStatementComponent::LineStatementComponent(Node& statement)
@@ -14,8 +15,19 @@ Node* LineStatementComponent::construct() {
 
     if(next.has({"assert"})) node = AssertDeclaration::construct();
     else if(next.has(Token::DECLARATION_KEYWORDS)) node = Declaration::construct();
-    else node = Expression::construct();
+    else {
+        node = Expression::construct();
 
+        if(parser->next().has(Token::ASSIGN_OPS)) 
+            node = ReassignStatementComponent::construct(*node);
+    }
+
+    if(in(className(node), vector<str>{"Identifier", "FileIdentifier"
+        }) and not parser->next().has(Token::LINE_ENDS)) {
+        parser->i -= (className(node) == "Identifier")? 1 : 3;
+        node = Declaration::construct();
+    } 
+    
     return new LineStatementComponent(*node);
 }
 

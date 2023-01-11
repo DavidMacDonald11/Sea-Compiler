@@ -25,6 +25,7 @@ class Transpiler::Line {
 public:
     str type;
     str string;
+    bool future;
     nat pointers;
 
     Line(str type = "", str string = "");

@@ -1,5 +1,7 @@
 #include <map>
+#include "parser/declarations/atomic-type-specifier.h"
 #include "parser/declarations/type-specifier.h"
+#include "parser/expressions/primary-expression.h"
 #include "parser/node.h"
 
 std::map<str, str> typeMap {
@@ -24,14 +26,27 @@ std::map<str, str> typeMap {
 };
 
 
-TypeSpecifier::TypeSpecifier(Token& token) 
-: PrimaryNode(token) {}
+TypeSpecifier::TypeSpecifier(Token* token, Node* node) 
+: token(token), node(node) {}
+
+TypeSpecifier::~TypeSpecifier() {
+    delete node;
+}
+
+Nodes TypeSpecifier::nodes() const {
+    return token? Nodes{token} : Nodes{node};
+}
 
 Node* TypeSpecifier::construct() {
-    Token& token = parser->expectingHas(Token::TYPE_SPECIFIER_KEYWORDS);
-    return new TypeSpecifier(token);
+    if(parser->next().has(Token::TYPE_SPECIFIER_KEYWORDS)) 
+        return new TypeSpecifier(&parser->take());
+
+    if(parser->next().has({"atomic"})) return AtomicTypeSpecifier::construct();
+    
+    return new TypeSpecifier(nullptr, FileIdentifier::construct());
 }
 
 Transpiler::Line TypeSpecifier::transpile() {
-    return {token.string, typeMap[token.string]};
+    if(token) return {token->string, typeMap[token->string]};
+    return node->transpile();
 }

@@ -3,8 +3,14 @@
 
 #include "../node.h"
 
-struct TypeSpecifier : public PrimaryNode {
-    TypeSpecifier(Token& token);
+struct TypeSpecifier : public Node {
+    Token* token;
+    Node* node;
+
+    TypeSpecifier(Token* token, Node* node = nullptr);
+    ~TypeSpecifier();
+
+    Nodes nodes() const override;
     static Node* construct();
     Transpiler::Line transpile() override;
 };

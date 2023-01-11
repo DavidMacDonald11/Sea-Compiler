@@ -33,8 +33,8 @@ Node* DeclarationSpecifiers::construct() {
 Transpiler::Line DeclarationSpecifiers::transpile() {
     Transpiler::Line line;
 
-    if(storage and not storage->has({"future"})) line.replace(storage->string);
-    line.add("", " " + list.transpile().toString());
+    if(storage and not storage->has({"future"})) 
+        line.replace(storage->string + " ");
 
-    return line.add("", " ");
+    return line.add("", list.transpile().toString() + " ");
 }
