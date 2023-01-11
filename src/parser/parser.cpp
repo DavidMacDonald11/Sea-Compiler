@@ -21,7 +21,12 @@ void Parser::makeTree() {
 }
 
 Token& Parser::next() const {
-    return tokens[i > tokens.size() - 1 ? tokens.size() - 1: i];
+    return tokens[(i > tokens.size() - 1)? tokens.size() - 1: i];
+}
+
+Token& Parser::ahead(nat pos) const {
+    nat i = self.i + pos;
+    return tokens[(i > tokens.size() - 1)? tokens.size() - 1: i];
 }
 
 Token& Parser::take() {

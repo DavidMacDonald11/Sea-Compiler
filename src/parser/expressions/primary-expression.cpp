@@ -72,13 +72,9 @@ FileIdentifier::FileIdentifier(Token& file, Token& identifier)
 : file(file), identifier(identifier) {}
 
 Node* FileIdentifier::construct() {
+    if(not parser->ahead(1).has({"::"})) return Identifier::construct();
+
     Token& file = parser->take();
-
-    if(not parser->next().has({"::"})) {
-        parser->i -= 1;
-        return Identifier::construct();
-    }
-
     parser->take();
     Token& identifier = parser->expectingOf({Token::IDENTIFIER});
 

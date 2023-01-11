@@ -57,13 +57,10 @@ DefaultArgument::~DefaultArgument() {
 
 Node* DefaultArgument::construct() {
     if(not parser->next().of({Token::IDENTIFIER})) return SingleExpression::construct();
+    if(not parser->ahead(1).has({"="})) return SingleExpression::construct();
+    
     Token& identifier = parser->take();
-
-    if(not parser->next().has({"="})) {
-        parser->i -= 1;
-        return SingleExpression::construct();
-    }
-
     parser->take();
+    
     return new DefaultArgument(identifier, *SingleExpression::construct());
 }

@@ -37,13 +37,10 @@ Node* UnaryExpression::construct() {
     if(not parser->next().has({"("})) 
         return new UnaryExpression(op, *UnaryExpression::construct());
 
-    parser->take();
-
-    if(not parser->next().has(Token::TYPE_NAME_KEYWORDS)) {
-        parser->i -= 1;
+    if(not parser->ahead(1).has(Token::TYPE_NAME_KEYWORDS)) 
         return new UnaryExpression(op, *UnaryExpression::construct());
-    }
-
+    
+    parser->take();
     Node* expression = TypeName::construct();
     parser->expectingHas({")"});
 

@@ -22,13 +22,7 @@ Nodes Declaration::nodes() const {
 }
 
 Node* Declaration::construct() {
-    if(parser->next().has({"static"})) {
-        parser->take();
-        Token& next = parser->next();
-        parser->i -= 1;
-
-        if(next.has({"assert"})) return AssertDeclaration::construct();
-    }
+    if(parser->ahead(1).has({"assert"})) return AssertDeclaration::construct();
 
     Node* specifiers = DeclarationSpecifiers::construct();
     vector<Node*> nodes;

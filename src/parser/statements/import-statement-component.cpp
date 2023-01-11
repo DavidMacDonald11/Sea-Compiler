@@ -48,12 +48,11 @@ Node* FromImportStatementComponent::construct() {
     parser->expectingHas({"from"});
     Token& file = parser->expectingOf({Token::STR});
 
-    parser->expectingHas({"import"});
-
-    if(parser->next().has({"*"})) 
+    if(parser->ahead(1).has({"*"})) {
+        parser->expectingHas({"import"});
         return new FromImportStatementComponent(file, &parser->take());
-    
-    parser->i -= 1;
+    }
+        
     vector<Node*> nodes;
 
     while(true) {

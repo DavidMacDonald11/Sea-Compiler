@@ -22,14 +22,13 @@ Nodes AliasStatementComponent::nodes() const {
 
 Node* AliasStatementComponent::construct() {
     Token* visibility = nullptr;
+
+    if(not parser->next().has({"alias"}) and not parser->ahead(1).has({"alias"})) 
+        return nullptr;
+
     if(parser->next().has({Token::VISIBILITY_KEYWORDS})) visibility = &parser->take();
 
-    if(not parser->next().has({"alias"})) {
-        parser->i -= (visibility)? 1 : 0;
-        return nullptr;
-    }
-
-    parser->take();
+    parser->expectingHas({"alias"});
     Node* type = TypeName::construct();
     parser->expectingHas({"as"});
     Token& identifier = parser->expectingOf({Token::IDENTIFIER});

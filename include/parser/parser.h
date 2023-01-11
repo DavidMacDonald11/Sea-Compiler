@@ -17,6 +17,7 @@ public:
     str toString() const;
     void makeTree();
     Token& next() const;
+    Token& ahead(nat pos) const;
     Token& take();
     Token& expectingOf(vector<Token::Type> types);
     Token& expectingHas(vector<str> values);

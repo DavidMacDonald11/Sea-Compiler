@@ -1,19 +1,10 @@
-include "stdio.h"
-from "file2" import *
-from "file3" import x as X, 
-             import y
+func(1, 2, x = 3)
 
-import "file4" 
+identifier
+file::identifier
+sizeof(int^)
 
-c::size_t sizeNum = 10 as int64
+static assert true else "How is true false?"
+atomic int x; const atomic(int ^ const) y
 
-export alias nat as CustomType
-CustomType s;
-s;
-
-atomic int ^x;
-atomic(int ^)x;
-
-int x = 5;
-x = 6;
-x += 7; x $= 1;
+local alias const int as Cint
