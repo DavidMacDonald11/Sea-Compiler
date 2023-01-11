@@ -15,6 +15,23 @@
 `_label_`:
 {tab} `_identifier_` 
 
+`_partial-import_`:
+{tab} `*import*` `_identifier_`
+{tab} `*import*` `_identifier_` `*as*` `_identifier_`
+
+`_partial-import-list_`:
+{tab} `_partial-import_`
+{tab} `_partial-import-list_` `*,*` `_partial-import_`
+
+`_import-statement-component_`:
+{tab} `*from*` `_string-constant_` `_partial-import-list_` `_line-end_`
+{tab} `*from*` `_string-constant_` `*import*` `*{star}*` `_line-end_`
+{tab} `*import*` `_string-constant_` `_line-end_`
+{tab} `*import*` `_string-constant_` `*as*` `_identifier_` `_line-end_`
+
+`_include-statement-component_`:
+{tab} `*include*` `_string-constant_` `_line-end_`
+
 `_basic-statement-component_`:
 {tab} `*pass*`
 {tab} `*continue*` `_label_`~opt~
@@ -27,11 +44,18 @@
 {tab} `*=*` `*{star}=*` `*/=*` `*%=*` `*+=*` `*-=*`
 {tab} `*<\<=*` `*>>=*` `*&=*` `*$=*` `*|=*`
 
+`_alias-statement-component_`:
+{tab} `_visiblity-specifier_`~opt~ `*alias*` `_type-name_` `*as*` `_identifier_` 
+{tab} `_visiblity-specifier_`~opt~ `*alias*` `*(*` `_type-name_` `*)*` `*as*` `_identifier_` 
+
 `_line-statement-component_`:
 {tab} `_expression_`
 {tab} `_assert-declaration_`
 {tab} `_declaration_`
 {tab} `_basic-statement-component_`
+{tab} `_alias-statement-component_`
+{tab} `_include-statement-component_`
+{tab} `_import-statement-component_`
 {tab} `_reassign-statement-component_`
 
 `_while-statement_`:
@@ -82,27 +106,6 @@
 {tab} `_enum-definition_`
 {tab} `_struct-definition_`
 
-`_alias-statement_`:
-{tab} `_visiblity-specifier_`~opt~ `*alias*` `_type-name_` `*as*` `_identifier_` `_line-end_`
-{tab} `_visiblity-specifier_`~opt~ `*alias*` `*(*` `_type-name_` `*)*` `*as*` `_identifier_` `_line-end_`
-
-`_partial-import_`:
-{tab} `*import*` `_identifier_`
-{tab} `*import*` `_identifier_` `*as*` `_identifier_`
-
-`_partial-import-list_`:
-{tab} `_partial-import_`
-{tab} `_partial-import-list_` `*,*` `_partial-import_`
-
-`_import-statement_`:
-{tab} `*from*` `_string-constant_` `_partial-import-list_` `_line-end_`
-{tab} `*from*` `_string-constant_` `*import*` `*{star}*` `_line-end_`
-{tab} `*import*` `_string-constant_` `_line-end_`
-{tab} `*import*` `_string-constant_` `*as*` `_identifier_` `_line-end_`
-
-`_include-statement_`:
-{tab} `*include*` `_string-constant_` `_line-end_`
-
 `_statement-list_`:
 {tab} `_statement_`
 {tab} `_statement-list_` `_statement_`
@@ -116,9 +119,6 @@
 {tab} `_if-statement_`
 {tab} `_compare-statement_`
 {tab} `_declaration-statement_`
-{tab} `_alias-statement_`
-{tab} `_import-statement_`
-{tab} `_include-statement_`
 {tab} `_compound-statement_`
  
 `_file-statement_`:

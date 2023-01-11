@@ -1,7 +1,4 @@
-#include "parser/declarations/declaration.h"
-#include "parser/statements/alias-statement.h"
 #include "parser/statements/compound-statement.h"
-#include "parser/statements/include-statement.h"
 #include "parser/statements/line-statement-component.h"
 #include "parser/statements/statement.h"
 
@@ -13,8 +10,6 @@ Node* Statement::construct() {
     if(parser->next().has({"EOF"})) return nullptr;
 
     Node* node = CompoundStatement::construct();
-    node = node? node : IncludeStatement::construct();
-    node = node? node : AliasStatement::construct();
     node = node? node : newLineStatement();
 
     return new Statement(*node);

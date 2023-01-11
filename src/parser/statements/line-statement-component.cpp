@@ -2,7 +2,9 @@
 #include "parser/declarations/assert-declaration.h"
 #include "parser/declarations/declaration.h"
 #include "parser/expressions/expression.h"
+#include "parser/statements/alias-statement-component.h"
 #include "parser/statements/hidden-statement.h"
+#include "parser/statements/include-statement-component.h"
 #include "parser/statements/reassign-statement-component.h"
 #include "transpiler/transpiler.h"
 
@@ -12,6 +14,11 @@ LineStatementComponent::LineStatementComponent(Node& statement)
 Node* LineStatementComponent::construct() {
     Node* node;
     Token& next = parser->next();
+
+    node = AliasStatementComponent::construct();
+    node = node? node : IncludeStatementComponent::construct();
+
+    if(node) return new LineStatementComponent(*node);
 
     if(next.has({"assert"})) node = AssertDeclaration::construct();
     else if(next.has(Token::DECLARATION_KEYWORDS)) node = Declaration::construct();
