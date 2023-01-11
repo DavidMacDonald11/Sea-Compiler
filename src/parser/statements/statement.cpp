@@ -7,6 +7,7 @@ Statement::Statement(Node& statement)
 
 Node* Statement::construct() {
     while(parser->next().has({"\n", ";"})) parser->take();
+    if(parser->next().has({"EOF"})) return nullptr;
 
     Node* node = CompoundStatement::construct();
     node = node? node : newLineStatement();

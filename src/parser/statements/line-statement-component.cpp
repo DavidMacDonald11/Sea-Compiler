@@ -10,9 +10,10 @@ LineStatementComponent::LineStatementComponent(Node& statement)
 
 Node* LineStatementComponent::construct() {
     Node* node;
+    Token& next = parser->next();
 
-    if(parser->next().has({"assert"})) node = AssertDeclaration::construct();
-    else if(parser->next().has({"static"})) node = Declaration::construct();
+    if(next.has({"assert"})) node = AssertDeclaration::construct();
+    else if(next.has(Token::DECLARATION_KEYWORDS)) node = Declaration::construct();
     else node = Expression::construct();
 
     return new LineStatementComponent(*node);

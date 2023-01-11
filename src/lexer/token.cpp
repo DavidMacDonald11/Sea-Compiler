@@ -14,6 +14,16 @@ std::map<Token::Type, char> typeLabels {
     {Token::NONE, '?'},
 };
 
+std::map<Token::Type, str> typeNames {
+    {Token::PUNC, "Punctuator"},
+    {Token::OP, "Operator"},
+    {Token::NUM, "Number"},
+    {Token::CHAR, "Character"},
+    {Token::STR, "String"},
+    {Token::IDENTIFIER, "Identifier"},
+    {Token::KEYWORD, "Keyword"}
+};
+
 
 Token::Token(SourceLine& line, Type type)
 : line(line), type(type), locale(line.newLocale()) {
@@ -39,12 +49,10 @@ str Token::toString() const {
 }
 
 str Token::tree(str) const { return toString(); }
-
 vector<SourceLine*> Token::lines() const { return {&line}; }
-
 str Token::raw() const { return line.raw(); }
-
 void Token::mark() { line.mark(self); }
+str Token::typeToString(Type type) { return typeNames[type]; }
 
 
 const str Token::PUNC_SYMS("{}[](),;`#");
@@ -128,6 +136,12 @@ const vector<str> Token::VISIBILITY_KEYWORDS {
 const vector<str> Token::STORAGE_KEYWORDS {
     "register", "static", "future"  
 };
+
+const vector<str> Token::DECLARATION_KEYWORDS(mergeAll<str>({
+    TYPE_NAME_KEYWORDS,
+    VISIBILITY_KEYWORDS,
+    STORAGE_KEYWORDS
+}));
 
 const vector<str> Token::KEYWORDS(mergeAll<str>( {
     PRIMARY_KEYWORDS,

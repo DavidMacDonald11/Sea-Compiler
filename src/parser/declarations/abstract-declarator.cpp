@@ -20,7 +20,7 @@ Nodes AbstractDeclarator::nodes() const {
 }
 
 Node* AbstractDeclarator::construct() {
-    Node* pointer = Pointer::contruct();
+    Node* pointer = Pointer::construct();
     Node* declarator = DirectAbstractDeclarator::construct();
     
     if(not pointer and not declarator) return nullptr;

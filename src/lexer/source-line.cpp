@@ -33,11 +33,14 @@ str SourceLine::raw() const {
         if(col2 == 0 or locale[1] > col2) col2 = locale[1];
     }
 
-    str line;
+    str underline;
 
     for(nat i = 0; i < string.size(); i++) {
-        line += (i < col1 or i >= col2) ? ' ' : '^';
+        underline += (i < col1 or i >= col2) ? ' ' : '^';
     }
 
-    return fmt::format("{:4d}|{}    |{}", num, string, line);
+    str line = (string == "")? "EOF\n" : string;
+    if(string == "") underline = "^^^";
+    
+    return fmt::format("{:4d}|{}    |{}", num, line, underline);
 }

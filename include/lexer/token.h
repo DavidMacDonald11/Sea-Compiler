@@ -23,6 +23,8 @@ struct Token : public Component {
     str raw() const override;
     void mark() override;
 
+    static str typeToString(Type type);
+    
     static const str PUNC_SYMS;
     static const str S_NUM_SYMS;
     static const str NUM_SYMS;
@@ -45,6 +47,7 @@ struct Token : public Component {
     static const vector<str> TYPE_NAME_KEYWORDS;
     static const vector<str> VISIBILITY_KEYWORDS;
     static const vector<str> STORAGE_KEYWORDS;
+    static const vector<str> DECLARATION_KEYWORDS;
     static const vector<str> KEYWORDS;
 
     static const vector<str> LINE_ENDS;

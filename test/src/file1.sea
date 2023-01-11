@@ -18,3 +18,6 @@ static assert true else "Major error"
     [1, 2],
     [3, 4],
 ]
+
+future int x, y;
+int ^ptr = alloc 5 null

@@ -16,7 +16,7 @@ Nodes Pointer::nodes() const {
     return nodes;
 }
 
-Node* Pointer::contruct() {
+Node* Pointer::construct() {
     if(not parser->next().has({"^"})) return nullptr;
 
     Token& token = parser->take();
@@ -25,7 +25,7 @@ Node* Pointer::contruct() {
     if(parser->next().has(Token::TYPE_QUALIFIER_KEYWORDS)) 
         qualifiers = TypeQualifierList::construct();
 
-    return new Pointer(token, qualifiers, Pointer::contruct());
+    return new Pointer(token, qualifiers, Pointer::construct());
 }
 
 Transpiler::Line Pointer::transpile() {

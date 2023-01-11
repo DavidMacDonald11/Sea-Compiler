@@ -88,12 +88,9 @@
 `_designation_`:
 {tab} `_designator-list_` `*=*`
 
-`_initializer_`: 
-{tab} `_single-expression_`
-
 `_initializer-list_`:
-{tab} `_designation_`~opt~ `_initializer_`
-{tab} `_initializer-list_` `*,*` `_designation_`~opt~ `_initializer_`
+{tab} `_designation_`~opt~ `_single-expression_`
+{tab} `_initializer-list_` `*,*` `_designation_`~opt~ `_single-expression_`
 
 `_direct-declarator_`:
 {tab} `_identifier_` `_array-declarator_`~opt~
@@ -104,7 +101,7 @@
 
 `_init-declarator_`:
 {tab} `_declarator_`
-{tab} `_declarator_` `*=*` `_initializer_`
+{tab} `_declarator_` `*=*` `_single-expression_`
 
 `_init-declarator-list_`: 
 {tab} `_init-declarator_`

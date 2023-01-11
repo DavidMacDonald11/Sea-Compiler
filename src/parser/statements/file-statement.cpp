@@ -24,6 +24,9 @@ Transpiler::Line FileStatement::transpile() {
 }
 
 void FileStatement::makeTree() {
-    while(not parser->next().has({""})) 
-        statements.push_back(Statement::construct());
+    while(not parser->next().has({""})) {
+        Node* node = Statement::construct();
+        if(not node) return;
+        statements.push_back(node);
+    }
 }

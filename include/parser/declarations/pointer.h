@@ -13,7 +13,7 @@ struct Pointer : public Node {
     ~Pointer();
 
     Nodes nodes() const override;
-    static Node* contruct();
+    static Node* construct();
     Transpiler::Line transpile() override;
 };
 
