@@ -39,9 +39,9 @@ Transpiler::Line CompoundStatement::transpile() {
     start.finish(self, false);
     line.prefix(start).finish(self);
 
-    transpiler->indent += 1;
+    transpiler->context.indent += 1;
     for(Node* node : statements) line.prefix(node->transpile());
-    transpiler->indent -= 1;
+    transpiler->context.indent -= 1;
 
     return line;
 }

@@ -8,8 +8,13 @@ class Node;
 class Parser {
     vector<Token>& tokens;
 public:
+    struct Context {
+        nat mustEndLineStatement = true;
+    };
+
     nat i;
     Node* tree;
+    Context context;
 
     Parser(vector<Token>& tokens);
     ~Parser();

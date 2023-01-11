@@ -3,7 +3,7 @@
 #include "fault.h"
 
 Nodes PostfixCallExpression::nodes() const {
-    Nodes nodes;
+    Nodes nodes = {expression};
     nodes.reserve(parameters.size() + defaults.size());
 
     for(Node* node : parameters) nodes.push_back(node);

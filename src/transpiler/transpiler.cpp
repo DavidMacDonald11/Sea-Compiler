@@ -4,7 +4,7 @@
 #include "util.h"
 
 Transpiler::Transpiler(OutputFile& file) 
-: lines(), file(file), indent(0) {}
+: lines(), file(file), context() {}
 
 Transpiler::~Transpiler() {
     file.write(lines);
@@ -47,7 +47,7 @@ Line& Line::finish(const Node& node, bool semicolons) {
     if(finished) return self;
     finished = true;
 
-    str indent = multiplyStr("    ", node.transpiler->indent);
+    str indent = multiplyStr("    ", node.transpiler->context.indent);
     str end = semicolons? ";" : "";
     str pointers = multiplyStr("^", self.pointers);
 

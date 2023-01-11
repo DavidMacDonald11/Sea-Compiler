@@ -8,3 +8,18 @@ static assert true else "How is true false?"
 atomic int x; const atomic(int ^ const) y
 
 local alias const int as Cint
+
+while true func()
+while true do func()
+
+while true
+    func()
+
+while true {
+    func()
+}
+
+while true
+do func()
+
+do alias int as pie while false

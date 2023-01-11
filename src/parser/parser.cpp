@@ -4,7 +4,7 @@
 #include "fault.h"
 
 Parser::Parser(vector<Token>& tokens) 
-: tokens(tokens), i(0), tree(nullptr) {}
+: tokens(tokens), i(0), tree(nullptr), context() {}
 
 Parser::~Parser() {
     delete tree;

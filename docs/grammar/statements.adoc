@@ -62,8 +62,8 @@
 {tab} `_label_`~opt~ `*while*` `_expression_` `*do*`~opt~ `_statement_`
 
 `_do-while-statement_`:
-{tab} `_label_`~opt~ `*do*` `_line-end_`~opt~ `_statement_` `*while*` `_expression_` `_line-end_`
-{tab} `_label_`~opt~ `*do*` `_line-end_`~opt~ `_line-statement-component_` `*while*` `_expression_` `_line-end_`
+{tab} `_label_`~opt~ `*do*`  `_statement_` `*while*` `_expression_` `_line-end_`
+{tab} `_label_`~opt~ `*do*` `_line-statement-component_` `*while*` `_expression_` `_line-end_`
 
 `_for-statement_`:
 {tab} `_label_`~opt~ `*for*` `*(*` `_for-components_` `*)*` `_statement_`

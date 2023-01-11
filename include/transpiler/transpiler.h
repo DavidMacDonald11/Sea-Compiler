@@ -6,17 +6,24 @@
 class Node;
 
 struct Transpiler {
+    struct Context {
+        nat indent;
+    };
+
     str lines;
     OutputFile& file;
-    nat indent;
+    Context context;
 
     Transpiler(OutputFile& file);
     ~Transpiler();
 
     void write(str string = "", str end = "\n");
 
+    
     struct Line;
 };
+
+
 
 class Transpiler::Line {
     bool showType;
