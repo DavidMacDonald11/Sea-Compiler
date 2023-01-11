@@ -78,7 +78,7 @@
 {tab} `*register*` `*static*` `*future*`
 
 `_designator_`:
-{tab} `*[*` `_single-expression_` `*]*`
+{tab} `*#*` `_single-expression_`
 {tab} `*.*` `_identifier_`
 
 `_designator-list_`:
@@ -88,12 +88,12 @@
 `_designation_`:
 {tab} `_designator-list_` `*=*`
 
+`_initializer_`: 
+{tab} `_single-expression_`
+
 `_initializer-list_`:
 {tab} `_designation_`~opt~ `_initializer_`
 {tab} `_initializer-list_` `*,*` `_designation_`~opt~ `_initializer_`
-
-`_initializer_`: 
-{tab} `_single-expression_`
 
 `_direct-declarator_`:
 {tab} `_identifier_` `_array-declarator_`~opt~

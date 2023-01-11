@@ -47,7 +47,7 @@ str Token::raw() const { return line.raw(); }
 void Token::mark() { line.mark(self); }
 
 
-const str Token::PUNC_SYMS("{}[](),;`");
+const str Token::PUNC_SYMS("{}[](),;`#");
 const str Token::S_NUM_SYMS("0123456789.");
 const str Token::NUM_SYMS(fmt::format("{}xXabcdefABCDEF", S_NUM_SYMS));
 

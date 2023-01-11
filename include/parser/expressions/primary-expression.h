@@ -57,6 +57,17 @@ struct ParentheseseExpression : public Node {
     Transpiler::Line transpile() override;
 };
 
+struct InitializerListExpression : public Node {
+    Node& initializerList;
+
+    InitializerListExpression(Node& initializerList);
+    ~InitializerListExpression();
+
+    Nodes nodes() const override;
+    static Node* construct();
+    Transpiler::Line transpile() override;
+};
+
 struct PrimaryKeyword : public PrimaryNode {
     PrimaryKeyword(Token& token);
     static Node* construct();

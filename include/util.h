@@ -23,6 +23,7 @@ template<class T> using set = std::set<T>;
 template<class T> using vector = std::vector<T>;
 template<class T> using list = std::initializer_list<T>;
 template<class T, size_t Nm> using array = std::array<T, Nm>;
+template<class T1, class T2> using pair = std::pair<T1, T2>;
 
 template<class T, class Container>
 bool in(T i, Container cont) {

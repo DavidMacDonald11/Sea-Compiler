@@ -1,4 +1,5 @@
 #include "parser/component.h"
+#include "parser/declarations/initializer-list.h"
 #include "parser/expressions/expression.h"
 #include "parser/expressions/primary-expression.h"
 #include "parser/node.h"
@@ -13,6 +14,7 @@ Node* PrimaryExpression::construct() {
     if(next.of({Token::STR})) return StringConstant::construct();
     if(next.of({Token::IDENTIFIER})) return FileIdentifier::construct();
     if(next.has({"("})) return ParentheseseExpression::construct();
+    if(next.has({"["})) return InitializerListExpression::construct();
     if(next.has(Token::PRIMARY_KEYWORDS)) return PrimaryKeyword::construct();
 
     Token& failure = parser->take();
@@ -132,6 +134,35 @@ Transpiler::Line ParentheseseExpression::transpile() {
 }
 
 
+InitializerListExpression::InitializerListExpression(Node& initializerList)
+: initializerList(initializerList) {}
+
+InitializerListExpression::~InitializerListExpression() {
+    delete &initializerList;
+}
+
+Nodes InitializerListExpression::nodes() const {
+    return {&initializerList};
+}
+
+Node* InitializerListExpression::construct() {
+    parser->expectingHas({"["});
+    parser->skipNewlines();
+
+    Node* node = InitializerList::construct();
+    if(parser->next().has({","})) parser->take();
+
+    parser->skipNewlines();
+    parser->expectingHas({"]"});
+    
+    return new InitializerListExpression(*node);
+}
+
+Transpiler::Line InitializerListExpression::transpile() {
+    return initializerList.transpile().add("{", "}");
+}
+
+
 PrimaryKeyword::PrimaryKeyword(Token& token)
 : PrimaryNode(token) {}
 
@@ -144,5 +175,3 @@ Transpiler::Line PrimaryKeyword::transpile() {
     str string = (token.string == "true")? "1" : "0";
     return {type, string};
 }
-
-// TODO character, string

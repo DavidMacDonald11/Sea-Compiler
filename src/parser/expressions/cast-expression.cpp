@@ -32,7 +32,11 @@ Node* CastExpression::construct() {
 
 Transpiler::Line CastExpression::transpile() {
     Transpiler::Line line = type.transpile().add("(", ")");
-    Transpiler::Line expression = self.expression.transpile().add("(", ")");
+    Transpiler::Line expression = self.expression.transpile();
+
+    if(className(&self.expression) != "InitializerListExpression") 
+        expression.add("(", ")");
+
     return line.add("", expression.toString());
 }
 
