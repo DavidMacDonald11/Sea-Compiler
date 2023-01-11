@@ -21,11 +21,9 @@ Nodes AliasStatementComponent::nodes() const {
 }
 
 Node* AliasStatementComponent::construct() {
+    if(not parser->nextOrAfterHas({"alias"})) return nullptr;
+    
     Token* visibility = nullptr;
-
-    if(not parser->next().has({"alias"}) and not parser->ahead(1).has({"alias"})) 
-        return nullptr;
-
     if(parser->next().has({Token::VISIBILITY_KEYWORDS})) visibility = &parser->take();
 
     parser->expectingHas({"alias"});

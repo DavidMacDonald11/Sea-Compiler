@@ -35,6 +35,10 @@ Token& Parser::take() {
     return token;
 }
 
+bool Parser::nextOrAfterHas(vector<str> values) {
+    return next().has(values) or ahead(1).has(values);
+}
+
 Token& Parser::expectingOf(vector<Token::Type> types) {
     if(next().of(types)) return take();
 

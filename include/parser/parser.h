@@ -19,6 +19,7 @@ public:
     Token& next() const;
     Token& ahead(nat pos) const;
     Token& take();
+    bool nextOrAfterHas(vector<str> values);
     Token& expectingOf(vector<Token::Type> types);
     Token& expectingHas(vector<str> values);
     void skipNewlines();
