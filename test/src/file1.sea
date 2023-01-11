@@ -1,4 +1,9 @@
 include "stdio.h"
+from "file2" import *
+from "file3" import x as X, 
+             import y
+
+import "file4" 
 
 c::size_t sizeNum = 10 as int64
 
