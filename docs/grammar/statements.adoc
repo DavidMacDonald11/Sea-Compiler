@@ -114,7 +114,7 @@
 {tab} `_statement-list_` `_statement_`
 
 `_compound-statement_`: 
-{tab} `*{*` `_statement-list_`~opt~ `*}*` `_line-end_`
+{tab} `*{*` `_statement-list_`~opt~ `*}*` 
 
 `_statement_`:
 {tab} `_line-statement-component_` `_line-end_`

@@ -31,7 +31,7 @@ Node* CompoundStatement::construct() {
     }
     
     parser->expectingHas({"}"});
-    parser->expectingHas(Token::LINE_ENDS);
+    parser->skipNewlines();
     
     return new CompoundStatement(statements);
 }

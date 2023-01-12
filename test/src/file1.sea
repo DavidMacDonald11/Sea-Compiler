@@ -10,3 +10,7 @@ for int i = 0
 while true
 then i += 1
 do {}; 
+
+do {
+
+} while(true)
