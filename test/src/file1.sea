@@ -16,9 +16,9 @@ else {
 
 
 compare 10 with {
-    1? then {}
-    2? then {}
-    else {}
+    1? then pass
+    2? then pass
+    else pass
 }
 
 compare "Hello" using c::strcmp with {

@@ -36,7 +36,7 @@
 {tab} `*pass*`
 {tab} `*continue*` `_label_`~opt~
 {tab} `*break*` `_label_`~opt~
-{tab} `*return*` `_expression_`
+{tab} `*return*` `_expression_`~opt~
 
 `_reassign-statement-component_`:
 {tab} `_chain-reassign-statement-component_`

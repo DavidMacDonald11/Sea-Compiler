@@ -3,6 +3,7 @@
 #include "parser/declarations/declaration.h"
 #include "parser/expressions/expression.h"
 #include "parser/statements/alias-statement-component.h"
+#include "parser/statements/basic-statement-component.h"
 #include "parser/statements/hidden-statement.h"
 #include "parser/statements/import-statement-component.h"
 #include "parser/statements/include-statement-component.h"
@@ -18,6 +19,7 @@ Node* LineStatementComponent::construct() {
 
     node = AliasStatementComponent::construct();
     node = node? node : IncludeStatementComponent::construct();
+    node = node? node : BasicStatementComponent::construct();
 
     if(node) return new LineStatementComponent(*node);
 
