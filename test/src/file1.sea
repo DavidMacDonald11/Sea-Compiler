@@ -1,3 +1,6 @@
 int arr[22] = [-5 to 5, 5 to -5]
 int arr2[1] = [100 to 100 by -1]
 char arr3[30] = ['\n' to '\r']
+
+int x, y, z;
+x = y = z = 5 

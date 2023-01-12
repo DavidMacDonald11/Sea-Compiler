@@ -2,6 +2,7 @@
 #include "parser/expressions/expression.h"
 #include "parser/node.h"
 #include "transpiler/transpiler.h"
+#include "fault.h"
 
 ReassignStatementComponent::ReassignStatementComponent(Node& left, Token& op, Node& right)
 : BinaryOperation(left, op, right) {}
@@ -9,7 +10,22 @@ ReassignStatementComponent::ReassignStatementComponent(Node& left, Token& op, No
 Node* ReassignStatementComponent::construct(Node& left) {
     Token& op = parser->expectingHas(Token::ASSIGN_OPS);
     Node* right = Expression::construct();
-    return new ReassignStatementComponent(left, op, *right);
+
+    if(not parser->next().has(Token::ASSIGN_OPS)) 
+        return new ReassignStatementComponent(left, op, *right);
+        
+    if(not op.has({"="})) throw Fault::fail(op, fmt::format(
+        "Cannot chain '{}' reassignment", op.string));
+
+    if(not parser->next().has({"="})) {
+        Token& op = parser->take();
+
+        throw Fault::fail(op, fmt::format("Cannot chain '{}' reassignment", 
+            op.string));
+    }
+
+    return new ReassignStatementComponent(left, op, 
+        *ReassignStatementComponent::construct(*right));
 }
 
 Transpiler::Line ReassignStatementComponent::transpile() {

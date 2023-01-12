@@ -39,7 +39,11 @@
 {tab} `*return*` `_expression_`
 
 `_reassign-statement-component_`:
+{tab} `_chain-reassign-statement-component_`
 {tab} `_unary-expression_` `_reassign-operator_` `_expression_` 
+`_chain-reassign-statement-component_`:
+{tab} `_unary-expresion_` `*=*` `_expression_`
+{tab} `_chain-reassign-statement-component_` `*=*` `_expression_`
 `_reassign-operator_`: one of
 {tab} `*=*` `*{star}=*` `*/=*` `*%=*` `*+=*` `*-=*`
 {tab} `*<\<=*` `*>>=*` `*&=*` `*$=*` `*|=*`
@@ -64,8 +68,6 @@
 `_do-while-statement_`:
 {tab} `_label_`~opt~ `*do*`  `_statement_` `*while*` `_expression_` `_line-end_`
 {tab} `_label_`~opt~ `*do*` `_line-statement-component_` `*while*` `_expression_` `_line-end_`
-
-ADD CHAIN X = Y = Z
 
 `_for-statement_`:
 {tab} `_label_`~opt~ `*for*` `*(*` `_for-components_` `*)*` `_statement_`
