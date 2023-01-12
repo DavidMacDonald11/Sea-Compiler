@@ -7,6 +7,7 @@
 #include <initializer_list>
 #include <fmt/format.h>
 #include <fstream>
+#include <map>
 #include <memory>
 #include <set>
 #include <string>
@@ -76,6 +77,13 @@ str vectorToString(const vector<T>& items) {
     }
 
     return string;
+}
+
+template<class T1, class T2>
+std::map<T2, T1> invertMap(std::map<T1, T2> map) {
+    std::map<T2, T1> result;
+    for(std::pair<T1, T2> pair : map) result.insert({pair.second, pair.first});
+    return result;
 }
 
 #endif

@@ -17,10 +17,13 @@ public:
     Token& take();
     void skip();
     void add(Token token);
+    Token combineSign(Token* sign, Token token);
 
     void replaceTokens();
     void checkToken();
-    void replaceRangeExpression();
+    void replaceRange();
+    void replaceIntRange(Token left, Token right, long long* step = nullptr);
+    void replaceCharRange(Token left, Token right, long long* step = nullptr);
 };
 
 #endif //SUBSTITUTOR_H

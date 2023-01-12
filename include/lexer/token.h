@@ -8,6 +8,7 @@
 struct Token : public Component {
     using Locale = SourceLine::Locale;
     enum Type {PUNC, NUM, OP, CHAR, STR, IDENTIFIER, KEYWORD, NONE};
+    class CopyError : public std::exception {};
 
     SourceLine& line;
     Type type;
@@ -16,6 +17,8 @@ struct Token : public Component {
 
     Token(SourceLine& line, Type type);
     Token(SourceLine& line, Type type, str string, Locale locale);
+    Token(const Token& token);
+    Token& operator=(const Token& token);
 
     bool of(vector<Type> types) const;
     bool has(vector<str> values) const;

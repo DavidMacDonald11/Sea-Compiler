@@ -18,7 +18,7 @@
 {tab} `_sign_`~opt~ `_numeric-constant_` `*to*` `_sign_`~opt~  `_numeric-constant_` `_step_`~opt~
 {tab} `_character-constant_` `*to*` `_character-constant_` `_step_`~opt~
 `_step_`:
-{tab} `*by*` `_numeric-constant_`
+{tab} `*by*` `_sign_`~opt~ `_numeric-constant_`
 `_sign_`: one of
 {tab} `*+*` `*-*`
 
