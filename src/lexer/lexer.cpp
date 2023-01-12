@@ -2,20 +2,12 @@
 #include "lexer/source-file.h"
 #include "lexer/source-line.h"
 #include "fault.h"
+#include "util.h"
 
 Lexer::Lexer(SourceFile& file)
 : tokens(), file(file) {}
 
-str Lexer::toString() const {
-    str string;
-
-    for(const Token& token : tokens) {
-        str tString = token.toString();
-        string = (string == "")? tString : fmt::format("{}, {}", string, tString);
-    }
-
-    return string;
-}
+str Lexer::toString() const { return vectorToString(tokens); }
 
 Token Lexer::newToken(Token::Type type, SourceLine& line) {
     Token token(line, type);

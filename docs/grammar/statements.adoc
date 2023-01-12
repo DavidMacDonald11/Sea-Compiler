@@ -65,6 +65,8 @@
 {tab} `_label_`~opt~ `*do*`  `_statement_` `*while*` `_expression_` `_line-end_`
 {tab} `_label_`~opt~ `*do*` `_line-statement-component_` `*while*` `_expression_` `_line-end_`
 
+ADD CHAIN X = Y = Z
+
 `_for-statement_`:
 {tab} `_label_`~opt~ `*for*` `*(*` `_for-components_` `*)*` `_statement_`
 {tab} `_label_`~opt~ `*for*` `_for-components_` `_statement_`

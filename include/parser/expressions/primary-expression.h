@@ -58,9 +58,9 @@ struct ParentheseseExpression : public Node {
 };
 
 struct InitializerListExpression : public Node {
-    Node& initializerList;
+    Node* initializerList;
 
-    InitializerListExpression(Node& initializerList);
+    InitializerListExpression(Node* initializerList);
     ~InitializerListExpression();
 
     Nodes nodes() const override;

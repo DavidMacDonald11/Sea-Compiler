@@ -1,6 +1,8 @@
 #include "lexer/token.h"
 #include "lexer/source-line.h"
 
+using Locale = SourceLine::Locale;
+
 SourceLine::SourceLine(nat num)
 : locale({0, 0}), num(num), string(), marks() {}
 
@@ -8,9 +10,8 @@ void SourceLine::ignore() {
     locale[0] = locale[1];
 }
 
-void SourceLine::mark(Token& token) {
-    marks.push_back(token.locale);
-}
+void SourceLine::mark(Token& token) { mark(token.locale); }
+void SourceLine::mark(Locale locale) { marks.push_back(locale); }
 
 void SourceLine::increment() { locale[1] += 1; }
 

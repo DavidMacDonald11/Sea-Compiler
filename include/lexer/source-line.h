@@ -4,10 +4,10 @@
 #include "../util.h"
 
 class Token;
-using Locale = array<nat, 2>;
 
 class SourceLine {
-    Locale locale;
+public: using Locale = array<nat, 2>;
+private: Locale locale;
 public:
     nat num;
     str string;
@@ -17,6 +17,7 @@ public:
 
     void ignore();
     void mark(Token& token);
+    void mark(Locale locale);
     void increment();
     Locale newLocale();
     str unreadString() const;

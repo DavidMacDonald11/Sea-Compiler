@@ -130,20 +130,25 @@ Transpiler::Line ParentheseseExpression::transpile() {
 }
 
 
-InitializerListExpression::InitializerListExpression(Node& initializerList)
+InitializerListExpression::InitializerListExpression(Node* initializerList)
 : initializerList(initializerList) {}
 
 InitializerListExpression::~InitializerListExpression() {
-    delete &initializerList;
+    delete initializerList;
 }
 
 Nodes InitializerListExpression::nodes() const {
-    return {&initializerList};
+    return initializerList? Nodes{initializerList} : Nodes{};
 }
 
 Node* InitializerListExpression::construct() {
     parser->expectingHas({"["});
     parser->skipNewlines();
+
+    if(parser->next().has({"]"})) {
+        parser->take();
+        return new InitializerListExpression(nullptr);
+    }
 
     Node* node = InitializerList::construct();
     if(parser->next().has({","})) parser->take();
@@ -151,11 +156,12 @@ Node* InitializerListExpression::construct() {
     parser->skipNewlines();
     parser->expectingHas({"]"});
     
-    return new InitializerListExpression(*node);
+    return new InitializerListExpression(node);
 }
 
 Transpiler::Line InitializerListExpression::transpile() {
-    return initializerList.transpile().add("{", "}");
+    if(not initializerList) return {"", "{}"};
+    return initializerList->transpile().add("{", "}");
 }
 
 

@@ -52,7 +52,10 @@ Token& Parser::expectingOf(vector<Token::Type> types) {
 Token& Parser::expectingHas(vector<str> values) {
     if(next().has(values)) return take();
 
-    str message = fmt::format("Expecting one of [{}]", join(values, ", "));
+    vector<str> escaped;
+    for(str value : values) escaped.push_back(fmt::format("\"{}\"", value));
+
+    str message = fmt::format("Expecting one of [{}]", join(escaped, ", "));
     throw Fault::fail(take(), message);
 }
 

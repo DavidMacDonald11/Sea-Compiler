@@ -15,10 +15,12 @@
 {tab} `*{tick}*` `_token-string_` `*{tick}*`
 
 `_range-expression_`:
-{tab} `_numeric-constant_` `*to*` `_numeric-constant_` `_step_`~opt~
+{tab} `_sign_`~opt~ `_numeric-constant_` `*to*` `_sign_`~opt~  `_numeric-constant_` `_step_`~opt~
 {tab} `_character-constant_` `*to*` `_character-constant_` `_step_`~opt~
 `_step_`:
 {tab} `*by*` `_numeric-constant_`
+`_sign_`: one of
+{tab} `*+*` `*-*`
 
 // `_copy-expression_`:
 // {tab} `_numeric-constant_` `*of*` `_tokens_`

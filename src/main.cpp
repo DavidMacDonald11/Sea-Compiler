@@ -1,5 +1,7 @@
 #include <filesystem>
+#include <fmt/core.h>
 #include "lexer/lexer.h"
+#include "substitutor/substitutor.h"
 #include "parser/parser.h"
 #include "parser/node.h"
 #include "transpiler/transpiler.h"
@@ -7,7 +9,7 @@
 #include "fault.h"
 
 static void compileFile(const str& options, SourceFile& sFile, OutputFile& oFile);
-static void debugOut(str options, str path, Lexer* lexer, Parser* parser);
+static void debugOut(str options, str path, Lexer* lexer, Substitutor* sub, Parser* parser);
 
 int main(int argc, char *argv[]) {
     vector<str> args;
@@ -33,6 +35,7 @@ int main(int argc, char *argv[]) {
 void compileFile(const str& options, SourceFile& sFile, OutputFile& oFile) {
     Lexer* lexer = nullptr;
     Parser* parser = nullptr;
+    Substitutor* substitutor = nullptr;
     Transpiler* transpiler = nullptr;
 
     try {
@@ -41,7 +44,11 @@ void compileFile(const str& options, SourceFile& sFile, OutputFile& oFile) {
         lexer->makeTokens();
         Fault::check(); 
 
-        Node::parser = parser = new Parser(lexer->tokens);
+        substitutor = new Substitutor(lexer->tokens);
+        substitutor->replaceTokens();
+        Fault::check();
+
+        Node::parser = parser = new Parser(substitutor->tokens);
         parser->makeTree();
         Fault::check();
 
@@ -49,22 +56,24 @@ void compileFile(const str& options, SourceFile& sFile, OutputFile& oFile) {
         parser->tree->transpile();
         Fault::check();
 
-        debugOut(options, sFile.path, lexer, parser);
+        debugOut(options, sFile.path, lexer, substitutor, parser);
     } catch(const Fault::CompilerFailure&) {
-        debugOut(options, sFile.path, lexer, parser);
+        debugOut(options, sFile.path, lexer, substitutor, parser);
         fmt::print(stderr, "{}\n", Fault::toString());
     }
 
     delete lexer;
+    delete substitutor;
     delete parser;
     delete transpiler;
 }
 
-void debugOut(str options, str path, Lexer* lexer, Parser* parser) {
+void debugOut(str options, str path, Lexer* lexer, Substitutor* sub, Parser* parser) {
     if(not in('d', options)) return;
 
     fmt::print("{}:\n", path);
-    fmt::print("  Tokens:\n    [{}]\n", lexer? lexer->toString() : "");
+    fmt::print("  Pre-Tokens:\n    [{}]\n", lexer? lexer->toString() : "");
+    fmt::print("  Tokens:\n    [{}]\n", sub? sub->toString() : "");
     fmt::print("  AST:\n    {}\n", parser? parser->toString() : "");
     fmt::print("\n");
 }

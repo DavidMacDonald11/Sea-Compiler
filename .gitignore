@@ -3,6 +3,7 @@
 
 # Ignore IDE files
 .vscode
+.clangd
 
 # Ignore core dumps
 vgcore.*

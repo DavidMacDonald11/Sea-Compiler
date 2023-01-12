@@ -6,6 +6,7 @@
 #include "../util.h"
 
 struct Token : public Component {
+    using Locale = SourceLine::Locale;
     enum Type {PUNC, NUM, OP, CHAR, STR, IDENTIFIER, KEYWORD, NONE};
 
     SourceLine& line;
@@ -14,9 +15,11 @@ struct Token : public Component {
     Locale locale;
 
     Token(SourceLine& line, Type type);
+    Token(SourceLine& line, Type type, str string, Locale locale);
 
     bool of(vector<Type> types) const;
     bool has(vector<str> values) const;
+    bool isInt() const;
     str toString() const override;
     str tree(str) const override;
     vector<SourceLine*> lines() const override;

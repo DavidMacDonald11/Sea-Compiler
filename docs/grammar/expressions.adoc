@@ -16,10 +16,13 @@
 {tab} `_identifier_`
 {tab} `_file-identifier_`
 {tab} `*(*` `_expression_` `*)*`
-{tab} `*[*` `_initializer-list_` `*,*`~opt~ `*]*`
+{tab} `_initializer-list-expression_`
 {tab} `_primary-keyword_`
 `_file-identifier_`:
 {tab} `_identifier_` `*::*` `_identifier_`
+`_initializer-list-expression_`:
+{tab} `*[*` `*]*`
+{tab} `*[*` `_initializer-list_` `*,*`~opt~ `*]*`
 `_primary-keyword_`: one of
 {tab} `*true*` `*false*` `*null*`
 

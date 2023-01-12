@@ -66,4 +66,16 @@ str className(T* arg) {
     return name;
 }
 
+template<class T>
+str vectorToString(const vector<T>& items) {
+    str string;
+
+    for(const T& item : items) {
+        str iString = item.toString();
+        string = (string == "")? iString : fmt::format("{}, {}", string, iString);
+    }
+
+    return string;
+}
+
 #endif

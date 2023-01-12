@@ -30,6 +30,9 @@ Token::Token(SourceLine& line, Type type)
     string = line.string.substr(locale[0], locale[1] - locale[0]);
 }
 
+Token::Token(SourceLine& line, Type type, str string, Locale locale)
+: line(line), type(type), string(string), locale(locale) {}
+
 bool Token::of(vector<Type> types) const {
     return in(type, types);
 }
@@ -39,6 +42,10 @@ bool Token::has(vector<str> values) const {
     for(str value : values) vals.push_back((value == "EOF")? "" : value);
 
     return in(string, vals);
+}
+
+bool Token::isInt() const {
+    return of({NUM}) and not in('.', string);
 }
 
 str Token::toString() const {
