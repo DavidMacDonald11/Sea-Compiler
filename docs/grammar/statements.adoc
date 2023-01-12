@@ -70,8 +70,8 @@
 {tab} `_label_`~opt~ `*do*` `_line-statement-component_` `*while*` `_expression_` `_line-end_`
 
 `_for-statement_`:
-{tab} `_label_`~opt~ `*for*` `*(*` `_for-components_` `*)*` `_statement_`
-{tab} `_label_`~opt~ `*for*` `_for-components_` `_statement_`
+{tab} `_label_`~opt~ `*for*` `*(*` `_for-components_` `*)*` `*do*`~opt~ `_statement_`
+{tab} `_label_`~opt~ `*for*` `_for-components_` `*do*`~opt~ `_statement_`
 `_for-components_`:
 {tab} `_for-declaration_` `_for-condition_` `_for-modification_`
 `_for-declaration_`:
@@ -81,8 +81,7 @@
 {tab} `_expression_` `_line-end_`
 {tab} `_expression_` `_line-end_`~opt~ `*then*`
 `_for-modification_`:
-{tab} `_line-statement-component_` `_line-end_`
-{tab} `_line-statement-component_` `_line-end_`~opt~ `*do*`
+{tab} `_line-statement-component_`
 
 `_iterative-statement_`:
 {tab} `_while-statement_`
@@ -115,7 +114,7 @@
 {tab} `_statement-list_` `_statement_`
 
 `_compound-statement_`: 
-{tab} `*{*` `_statement-list_` `*}*` `_line-end_`
+{tab} `*{*` `_statement-list_`~opt~ `*}*` `_line-end_`
 
 `_statement_`:
 {tab} `_line-statement-component_` `_line-end_`

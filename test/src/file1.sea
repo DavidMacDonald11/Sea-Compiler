@@ -1,6 +1,12 @@
-int arr[22] = [-5 to 5, 5 to -5]
-int arr2[1] = [100 to 100 by -1]
-char arr3[30] = ['\n' to '\r']
+loop1 for int i = 5 while true then i += 1 do {
+    
+}
 
-int x, y, z;
-x = y = z = 5 
+for(int i = 0; i < 5; i += 1) {
+    // c style for loop
+}
+
+for int i = 0
+while true
+then i += 1
+do {}; 

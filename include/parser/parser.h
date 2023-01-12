@@ -10,6 +10,7 @@ class Parser {
 public:
     struct Context {
         nat mustEndLineStatement = true;
+        nat allowNullStatements = true;
     };
 
     nat i;

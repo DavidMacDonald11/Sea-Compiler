@@ -21,10 +21,14 @@ Node* CompoundStatement::construct() {
     if(not parser->next().has({"{"})) return nullptr;
 
     parser->take();
+
     vector<Node*> statements;
 
-    while(not parser->next().has({"}", ""})) 
+    while(not parser->next().has({"}", ""})) {
+        parser->skipNewlines();
+        if(parser->next().has({"}", ""})) break;
         statements.push_back(Statement::construct());
+    }
     
     parser->expectingHas({"}"});
     parser->expectingHas(Token::LINE_ENDS);
