@@ -1,16 +1,27 @@
-loop1 for int i = 5 while true then i += 1 do {
-    
+if true then
+    func()
+else 
+    func2()
+
+if(true) {
+    // C style if statement
+} else if(1) {
+
+} else if(2) {
+
+} 
+else {
+
 }
 
-for(int i = 0; i < 5; i += 1) {
-    // c style for loop
+
+compare 10 with {
+    1? then {}
+    2? then {}
+    else {}
 }
 
-for int i = 0
-while true
-then i += 1
-do {}; 
-
-do {
-
-} while(true)
+compare "Hello" using c::strcmp with {
+    "Hi"? {}
+    else {}
+}

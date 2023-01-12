@@ -1,6 +1,8 @@
+#include "parser/statements/compare-statement.h"
 #include "parser/statements/compound-statement.h"
 #include "parser/statements/do-while-statement.h"
 #include "parser/statements/for-statement.h"
+#include "parser/statements/if-statement.h"
 #include "parser/statements/line-statement-component.h"
 #include "parser/statements/statement.h"
 #include "parser/statements/while-statement.h"
@@ -22,6 +24,8 @@ Node* Statement::construct() {
     node = node? node : WhileStatement::construct();
     node = node? node : DoWhileStatement::construct();
     node = node? node : ForStatement::construct();
+    node = node? node : IfStatement::construct();
+    node = node? node : CompareStatement::construct();
     node = node? node : newLineStatement();
     parser->context.allowNullStatements = true;
 

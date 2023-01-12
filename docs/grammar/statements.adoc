@@ -98,6 +98,7 @@
 
 `_compare-statement_`:
 {tab} `*compare*` `_expression_` `_comparator-statement_`~opt~ `*with*`~opt~ `_with-statement_` `_else-statement_`~opt~
+{tab} `*compare*` `_expression_` `_comparator-statement_`~opt~ `*with*`~opt~ `*{*` `_with-statement_` `_else-statement_`~opt~ `*}*`
 `_comparator-statement_`:
 {tab} `*using*` `_single-expression_`
 `_with-statement_`:
