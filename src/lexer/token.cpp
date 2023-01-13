@@ -34,7 +34,10 @@ Token::Token(SourceLine& line, Type type, str string, Locale locale)
 : line(line), type(type), string(string), locale(locale) {}
 
 Token::Token(const Token& token)
-: line(token.line), type(token.type), string(token.string), locale(token.locale) {}
+: Token(token, token.line) {}
+
+Token::Token(const Token& token, SourceLine& line) 
+: line(line), type(token.type), string(token.string), locale(token.locale) {}
 
 Token& Token::operator=(const Token& token) {
     if(&line != &token.line) throw CopyError();

@@ -174,7 +174,7 @@
 {tab} `_enumerator-list_` `_enumerator_`
 
 `_enum-definition_`:
-{tab} `visibility-specifier`~opt~ `*enum*` `_identifier_` `*{*` `_enumerator-list_` `*,*`~opt~ `*}*` `_line-end_`
+{tab} `visibility-specifier`~opt~ `*enum*` `_identifier_` `*{*` `_enumerator-list_` `*,*`~opt~ `*}*` 
 
 `_struct-declarator_`:
 {tab} `_declarator_`
@@ -193,5 +193,5 @@
 {tab} `_struct-declaration-list_` `_struct-declaration_`
 
 `_struct-definition_`:
-{tab} `visibility-specifier`~opt~ `*struct*` `_identifier_` `*{*` `_struct-declaration-list_` `*}*` `_line-end_`
-{tab} `visibility-specifier`~opt~ `*union*` `_identifier_` `*{*` `_struct-declaration-list_` `*}*` `_line-end_`
+{tab} `visibility-specifier`~opt~ `*struct*` `_identifier_` `*{*` `_struct-declaration-list_` `*}*` 
+{tab} `visibility-specifier`~opt~ `*union*` `_identifier_` `*{*` `_struct-declaration-list_` `*}*` 

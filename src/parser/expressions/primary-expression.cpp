@@ -73,8 +73,8 @@ FileIdentifier::FileIdentifier(Token& file, Token& identifier)
 
 Node* FileIdentifier::construct() {
     if(not parser->ahead(1).has({"::"})) return Identifier::construct();
-
-    Token& file = parser->take();
+    
+    Token& file = parser->expectingOf({Token::IDENTIFIER});
     parser->take();
     Token& identifier = parser->expectingOf({Token::IDENTIFIER});
 
@@ -95,7 +95,7 @@ Identifier::Identifier(Token& token)
 : PrimaryNode(token) {}
 
 Node* Identifier::construct() {
-    return new Identifier(parser->take());
+    return new Identifier(parser->expectingOf({Token::IDENTIFIER}));
 }
 
 Transpiler::Line Identifier::transpile() {

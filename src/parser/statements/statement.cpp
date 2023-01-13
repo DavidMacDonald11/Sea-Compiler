@@ -1,4 +1,6 @@
+#include "parser/declarations/enum-definition.h"
 #include "parser/declarations/function-definition.h"
+#include "parser/declarations/struct-definition.h"
 #include "parser/statements/compare-statement.h"
 #include "parser/statements/compound-statement.h"
 #include "parser/statements/do-while-statement.h"
@@ -28,6 +30,8 @@ Node* Statement::construct() {
     node = node? node : IfStatement::construct();
     node = node? node : CompareStatement::construct();
     node = node? node : FunctionDefinition::construct();
+    node = node? node : EnumDefinition::construct();
+    node = node? node : StructDefinition::construct();
     node = node? node : newLineStatement();
     parser->context.allowNullStatements = true;
 

@@ -18,6 +18,7 @@ struct Token : public Component {
     Token(SourceLine& line, Type type);
     Token(SourceLine& line, Type type, str string, Locale locale);
     Token(const Token& token);
+    Token(const Token& token, SourceLine& line);
     Token& operator=(const Token& token);
 
     bool of(vector<Type> types) const;

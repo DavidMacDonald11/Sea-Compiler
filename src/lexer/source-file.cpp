@@ -19,9 +19,13 @@ void SourceFile::readLine() {
 
     while(file.good()) {
         c = file.get();
-        if(c == EOF) return;
-        line->string += c;
 
+        if(c == EOF) {
+            line->string += '\n';
+            return;
+        }
+
+        line->string += c;
         if(c == '\n') return;
     }
 }

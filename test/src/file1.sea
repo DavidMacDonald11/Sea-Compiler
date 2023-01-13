@@ -1,13 +1,1 @@
-async fun((int)) funPtr;
-fun(char^, ...) pointer;
-fun() empty;
-export async fun(() -> int) intEmp;
-
-fun add(int a, int b = 10) -> int {
-    return a + b;
-}
-
-export async inline fun replace(int a) { return a; } 
-deviant fun foo() -> int ^ {}
-
-const int i = 5
+5 + 5 / 2 * 3
