@@ -1,7 +1,16 @@
 #include "parser/expressions/expression.h"
 #include "parser/expressions/postfix-call-expression.h"
+#include "parser/expressions/postfix-istype-expression.h"
 #include "parser/expressions/primary-expression.h"
 #include "parser/expressions/postfix-expression.h"
+
+template<class T>
+static Node* constructExternalNode(Node* node) {
+    Node* newNode = T::construct();
+    static_cast<T*>(newNode)->expression = node;
+    return newNode;
+}
+
 
 Nodes  PostfixExpression::nodes() const {
     return {&expression, &op, &identifier};
@@ -17,20 +26,21 @@ PostfixExpression::~PostfixExpression() {
 Node* PostfixExpression::construct() {
     Node* node = PrimaryExpression::construct();
 
-    while(parser->next().has({".", "?.", "[", "("})) {
+    while(parser->next().has({".", "?.", "[", "(", "istype"})) {
         Token& op = parser->take(); 
 
         if(op.has({"["})) {
-            Node* newNode = PostfixIndexExpression::construct();
-            static_cast<PostfixIndexExpression*>(newNode)->expression = node;
-            node = newNode;
+            node = constructExternalNode<PostfixIndexExpression>(node);
             continue;
         }
 
         if(op.has({"("})) {
-            Node* newNode = PostfixCallExpression::construct();
-            static_cast<PostfixCallExpression*>(newNode)->expression = node;
-            node = newNode;
+            node = constructExternalNode<PostfixCallExpression>(node);
+            continue;
+        }
+
+        if(op.has({"istype"})) {
+            node = constructExternalNode<PostfixIstypeExpression>(node);
             continue;
         }
 

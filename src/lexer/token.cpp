@@ -183,7 +183,7 @@ const vector<str> Token::KEYWORDS(mergeAll<str>( {
         "while", "do", "for", "then",
         "compare", "using", "with",
         "alias", "import", "include", "from",
-        "to", "by", "define"
+        "to", "by", "define", "istype"
     }
 }));
 
