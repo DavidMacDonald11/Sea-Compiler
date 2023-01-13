@@ -1,4 +1,5 @@
 #include "parser/declarations/abstract-declarator.h"
+#include "parser/declarations/direct-declarator.h"
 #include "parser/declarations/direct-abstract-declarator.h"
 #include "parser/declarations/pointer.h"
 #include "transpiler/transpiler.h"
@@ -22,7 +23,10 @@ Nodes AbstractDeclarator::nodes() const {
 Node* AbstractDeclarator::construct() {
     Node* pointer = Pointer::construct();
     Node* declarator = DirectAbstractDeclarator::construct();
-    
+
+    if(not declarator and parser->context.allowDirectAbstractDeclarator)
+        declarator = DirectDeclarator::construct();
+
     if(not pointer and not declarator) return nullptr;
     return new AbstractDeclarator(pointer, declarator);
 }

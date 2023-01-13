@@ -22,21 +22,18 @@
 {tab} `_identifier_`
 {tab} `_file-identifier_`
 {tab} `_atomic-type-specifier_`
-{tab} `_async-function-type-specifier_`
 {tab} `_function-type-specifier_`
 `_atomic-type-specifier_`:
 {tab} `*atomic*` `*(*` `_type-name_` `*)*`
-`_async-function-type-specifier_`:
-{tab} `*async*` `_function-type-specifier_`
 `_function-type-specifier_`:
-{tab} `*fun*` `*(*` `_abstract-parameters_`~opt~ `*)*`
-{tab} `*fun*` `*(*` `*(*` `_abstract-parameters_`~opt~ `*)*` `_return-type-specifier_`~opt~ `*)*`
+{tab} `*async*`~opt~ `*fun*` `*(*` `_abstract-parameters_`~opt~ `*)*`
+{tab} `*async*`~opt~ `*fun*` `*(*` `*(*` `_abstract-parameters_`~opt~ `*)*` `_return-type-specifier_`~opt~ `*)*`
 `_return-type-specifier_`:
 {tab} `*\->*` `_type-name_` 
 {tab} `*\->*` `*(*` `_type-name_` `*)*`
 
 `_type-qualifier_`: one of
-{tab} `*const*` `*unique*` `*volatile*` `*atomic*`
+{tab} `*const*` `*unique*` `*volatile*` `*atomic*` `*future*`
 
 `_type-qualifier-list_`:
 {tab} `_type-qualifier_`
@@ -75,7 +72,7 @@
 {tab} `*export*` `*local*` 
 
 `_storage-class-specifier_`: one of
-{tab} `*register*` `*static*` `*future*`
+{tab} `*register*` `*static*` 
 
 `_designator_`:
 {tab} `*#*` `_single-expression_`
@@ -131,23 +128,16 @@
 `_varargs_`:
 {tab} `*,*` `*\...*`
 
-`_abstract-parameter_`:
-{tab} `_declaration-specifiers_` `_abstract-declarator_`~opt~
-
-`_abstract-parameter-list_`:
-{tab} `_abstract-parameter_`
-{tab} `_abstract-parameter-list_` `*,*` `_abstract-parameter_`
-
-`_abstract-parameters_`:
-{tab} `_abstract-parameter-list_` `_varargs_`~opt~
-
 `_parameter_`:
-{tab} `_abstract-parameter_`
+{tab} `_declaration-specifiers_` `_abstract-declarator_`
 {tab} `_declaration-specifiers_` `_declarator_`
 
 `_parameter-list_`:
 {tab} `_parameter_`
 {tab} `_parameter-list_` `*,*` `_parameter_`
+
+`_abstract-parameters_`:
+{tab} `_parameter-list_` `_varargs_`~opt~
 
 `_default-parameter_`:
 {tab} `_parameter_` `*=*` `_single-expression_`

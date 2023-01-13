@@ -9,7 +9,6 @@ struct Statement : public HiddenStatement {
     static Node* construct();
     Transpiler::Line transpile() override;
 
-private:
     static Node* newLineStatement();
 };
 

@@ -9,8 +9,9 @@ class Parser {
     vector<Token>& tokens;
 public:
     struct Context {
-        nat mustEndLineStatement = true;
-        nat allowNullStatements = true;
+        bool mustEndLineStatement = true;
+        bool allowNullStatements = true;
+        bool allowDirectAbstractDeclarator = false;
     };
 
     nat i;

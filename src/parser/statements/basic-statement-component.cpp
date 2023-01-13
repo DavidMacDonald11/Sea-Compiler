@@ -4,7 +4,8 @@
 
 Node* BasicStatementComponent::construct() {
     Node* node = PassStatementComponent::construct();
-    
+    node = node? node : JumpStatementComponent::construct();
+    node = node? node : ReturnStatementComponent::construct();
 
     return node;
 }

@@ -53,6 +53,7 @@ struct Token : public Component {
     static const vector<str> TYPE_NAME_KEYWORDS;
     static const vector<str> VISIBILITY_KEYWORDS;
     static const vector<str> STORAGE_KEYWORDS;
+    static const vector<str> FUNCTION_KEYWORDS;
     static const vector<str> DECLARATION_KEYWORDS;
     static const vector<str> KEYWORDS;
 

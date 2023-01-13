@@ -1,27 +1,13 @@
-if true then
-    func()
-else 
-    func2()
+async fun((int)) funPtr;
+fun(char^, ...) pointer;
+fun() empty;
+export async fun(() -> int) intEmp;
 
-if(true) {
-    // C style if statement
-} else if(1) {
-
-} else if(2) {
-
-} 
-else {
-
+fun add(int a, int b = 10) -> int {
+    return a + b;
 }
 
+export async inline fun replace(int a) { return a; } 
+deviant fun foo() -> int ^ {}
 
-compare 10 with {
-    1? then pass
-    2? then pass
-    else pass
-}
-
-compare "Hello" using c::strcmp with {
-    "Hi"? {}
-    else {}
-}
+const int i = 5

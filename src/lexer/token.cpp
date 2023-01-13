@@ -140,7 +140,11 @@ const vector<str> Token::TYPE_SPECIFIER_KEYWORDS {
 };
 
 const vector<str> Token::TYPE_QUALIFIER_KEYWORDS {
-    "const", "unique", "volatile", "atomic"  
+    "const", "unique", "volatile", "atomic", "future" 
+};
+
+const vector<str> Token::FUNCTION_KEYWORDS {
+    "inline", "deviant", "async"  
 };
 
 const vector<str> Token::TYPE_NAME_KEYWORDS(mergeAll<str>({
@@ -154,7 +158,7 @@ const vector<str> Token::VISIBILITY_KEYWORDS {
 };
 
 const vector<str> Token::STORAGE_KEYWORDS {
-    "register", "static", "future"  
+    "register", "static" 
 };
 
 const vector<str> Token::DECLARATION_KEYWORDS(mergeAll<str>({

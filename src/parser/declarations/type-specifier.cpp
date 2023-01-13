@@ -1,5 +1,6 @@
 #include <map>
 #include "parser/declarations/atomic-type-specifier.h"
+#include "parser/declarations/function-type-specifier.h"
 #include "parser/declarations/type-specifier.h"
 #include "parser/expressions/primary-expression.h"
 #include "parser/node.h"
@@ -42,7 +43,8 @@ Node* TypeSpecifier::construct() {
         return new TypeSpecifier(&parser->take());
 
     if(parser->next().has({"atomic"})) return AtomicTypeSpecifier::construct();
-    
+    if(parser->next().has({"async", "fun"})) return FunctionTypeSpecifier::construct();
+
     return new TypeSpecifier(nullptr, FileIdentifier::construct());
 }
 

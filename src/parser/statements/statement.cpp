@@ -1,3 +1,4 @@
+#include "parser/declarations/function-definition.h"
 #include "parser/statements/compare-statement.h"
 #include "parser/statements/compound-statement.h"
 #include "parser/statements/do-while-statement.h"
@@ -26,6 +27,7 @@ Node* Statement::construct() {
     node = node? node : ForStatement::construct();
     node = node? node : IfStatement::construct();
     node = node? node : CompareStatement::construct();
+    node = node? node : FunctionDefinition::construct();
     node = node? node : newLineStatement();
     parser->context.allowNullStatements = true;
 
@@ -38,7 +40,10 @@ Transpiler::Line Statement::transpile() {
 }
 
 Node* Statement::newLineStatement() {
+    parser->context.allowNullStatements = false;
     Node* node = LineStatementComponent::construct();
     if(parser->context.mustEndLineStatement) parser->expectingHas(Token::LINE_ENDS);
+    parser->context.allowNullStatements = true;
+    
     return node;
 }
