@@ -7,7 +7,7 @@
 
 struct Token : public Component {
     using Locale = SourceLine::Locale;
-    enum Type {PUNC, NUM, OP, CHAR, STR, IDENTIFIER, KEYWORD, NONE};
+    enum Type {PUNC, NUM, OP, CHAR, STR, IDENTIFIER, KEYWORD, C_TOKENS, NONE};
     class CopyError : public std::exception {};
 
     SourceLine& line;
@@ -41,6 +41,7 @@ struct Token : public Component {
     static const vector<str> COMPARE_OPS;
     static const vector<str> ASSIGN_OPS;
     static const vector<str> PUNC_OPS;
+    static const vector<str> SUB_OPS;
     static const vector<str> OPERATORS;
     static const str OP_SYMS;
     static const str S_IDENTIFIER_SYMS;

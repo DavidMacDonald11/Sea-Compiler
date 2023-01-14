@@ -11,6 +11,7 @@ std::map<Token::Type, char> typeLabels {
     {Token::STR, 'S'},
     {Token::IDENTIFIER, 'I'},
     {Token::KEYWORD, 'K'},
+    {Token::C_TOKENS, '#'},
     {Token::NONE, '?'},
 };
 
@@ -21,7 +22,8 @@ std::map<Token::Type, str> typeNames {
     {Token::CHAR, "Character"},
     {Token::STR, "String"},
     {Token::IDENTIFIER, "Identifier"},
-    {Token::KEYWORD, "Keyword"}
+    {Token::KEYWORD, "Keyword"},
+    {Token::C_TOKENS, "C Tokens"}
 };
 
 
@@ -78,7 +80,7 @@ void Token::mark() { line.mark(self); }
 str Token::typeToString(Type type) { return typeNames[type]; }
 
 
-const str Token::PUNC_SYMS("{}[](),;`#");
+const str Token::PUNC_SYMS("{}[](),;`");
 const str Token::S_NUM_SYMS("0123456789.");
 const str Token::NUM_SYMS(fmt::format("{}xXabcdefABCDEF", S_NUM_SYMS));
 
@@ -105,7 +107,11 @@ const vector<str> Token::ASSIGN_OPS {
 };
 
 const vector<str> Token::PUNC_OPS {
-    "::", "->", "?", ".", "..."
+    "::", "->", "?", ".", "...", "#", "###"
+};
+
+const vector<str> Token::SUB_OPS {
+    "||", "~"
 };
 
 const vector<str> Token::OPERATORS(mergeAll<str>({
@@ -114,7 +120,8 @@ const vector<str> Token::OPERATORS(mergeAll<str>({
     BINARY_OPS,
     COMPARE_OPS,
     ASSIGN_OPS,
-    PUNC_OPS
+    PUNC_OPS,
+    SUB_OPS
 }));
 
 const str Token::OP_SYMS(fmt::format("{}", fmt::join(OPERATORS, "")));

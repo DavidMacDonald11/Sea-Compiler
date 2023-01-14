@@ -117,6 +117,9 @@
 `_compound-statement_`: 
 {tab} `*{*` `_statement-list_`~opt~ `*}*` 
 
+`_c-statement_`:
+{tab} `*\###*` `_c-tokens_`~opt~ `*\n*`
+
 `_statement_`:
 {tab} `_line-statement-component_` `_line-end_`
 {tab} `_iterative-statement_`
@@ -124,6 +127,7 @@
 {tab} `_compare-statement_`
 {tab} `_declaration-statement_`
 {tab} `_compound-statement_`
+{tab} `_c-statement_`
  
 `_file-statement_`:
 {tab} `_statement-list_`

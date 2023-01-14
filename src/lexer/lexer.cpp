@@ -181,10 +181,9 @@ void Lexer::makeOperator() {
         }
     }
 
-    if(string == "/" and in(file.next(), str("/*"))) 
-        return ignoreComment();
-
+    if(string == "/" and in(file.next(), str("/*"))) return ignoreComment();
     Token token = newToken(in(string, Token::PUNC_OPS)? Token::PUNC : Token::OP);
+    if(string == "###") return makeCStatement();
 
     if(not in(string, Token::OPERATORS)) {
         throw Fault::fail(token, fmt::format(
@@ -196,4 +195,9 @@ void Lexer::makeOperator() {
 void Lexer::makeIdentifier() {
     str string = file.take(-1, Token::IDENTIFIER_SYMS);
     newToken(in(string, Token::KEYWORDS)? Token::KEYWORD : Token::IDENTIFIER);
+}
+
+void Lexer::makeCStatement() {
+    file.take(-1, "", "\n");
+    newToken(Token::C_TOKENS);
 }

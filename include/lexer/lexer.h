@@ -28,6 +28,7 @@ struct Lexer {
     void makeNumber();
     void makeOperator();
     void makeIdentifier();
+    void makeCStatement();
 };
 
 #endif

@@ -22,13 +22,25 @@
 `_sign_`: one of
 {tab} `*+*` `*-*`
 
-// `_copy-expression_`:
-// {tab} `_numeric-constant_` `*of*` `_tokens_`
-// {tab} `_numeric-constant_` `*of*` `_tokens_` `*with*` `_tokens_`
+`_token-concatenate-expression_`:
+{tab} `_token_` `*~*` `_token_`
+
+`_string-concatenate-expression_`:
+{tab} `_string-constant_` `*||*` `_string-constant_`
+
+`_copy-expression_`:
+{tab} `_numeric-constant_` `*of*` `_tokens_`
+{tab} `_numeric-constant_` `*of*` `_tokens_` `*with*` `_tokens_`
+
+`_stringify-expression_`:
+{tab} `*$*` `_tokens_` 
 
 `_substitutions_`:
 {tab} `_range-expression_`
-// {tab} `_copy-expression_`
+{tab} `_string-concatenate-expression_`
+{tab} `_token-concatenate-expression_`
+{tab} `_copy-expression_`
+{tab} `_stringify-expression_`
 
 `_identifier-list_`:
 {tab} `_identifier_`
