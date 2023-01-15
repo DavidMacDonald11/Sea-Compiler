@@ -2,6 +2,7 @@
 #define ALLOCATION_EXPRESSION_H
 
 #include "../node.h"
+#include "transpiler/transpiler.h"
 
 struct AllocationExpression : public Node {
     static Node* construct();
@@ -16,6 +17,7 @@ struct AllocExpression : public Node {
 
     Nodes nodes() const override;
     static Node* construct();
+    Transpiler::Line transpile() override;
 };
 
 struct ReallocExpression : public Node {
@@ -27,6 +29,7 @@ struct ReallocExpression : public Node {
 
     Nodes nodes() const override;
     static Node* construct();
+    Transpiler::Line transpile() override;
 };
 
 struct UnallocExpression : public Node {
@@ -37,6 +40,7 @@ struct UnallocExpression : public Node {
 
     Nodes nodes() const override;
     static Node* construct();
+    Transpiler::Line transpile() override;
 };
 
 #endif //ALLOCATION_EXPRESSION_H

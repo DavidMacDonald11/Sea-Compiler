@@ -50,6 +50,10 @@ Node* UnaryExpression::construct() {
 Transpiler::Line UnaryExpression::transpile() {
     Transpiler::Line line = expression.transpile();
 
+    if(op.has({"sizeof", "alignof"})) {
+        return line.add(op.string + "(", ")").cast("c::size_t");
+    }
+    
     if(op.has({"^"})) line.pointers++;
     else if(op.has({"@"})) line.pointers -= line.pointers? 1 : 0;
 

@@ -3,6 +3,7 @@
 #include "parser/expressions/postfix-istype-expression.h"
 #include "parser/expressions/primary-expression.h"
 #include "parser/expressions/postfix-expression.h"
+#include "transpiler/transpiler.h"
 
 template<class T>
 static Node* constructExternalNode(Node* node) {
@@ -91,4 +92,12 @@ Node* PostfixIndexExpression::construct() {
     Node* index = Expression::construct();
     parser->expectingHas({"]"});
     return new PostfixIndexExpression(*index);
+}
+
+Transpiler::Line PostfixIndexExpression::transpile() {
+    Transpiler::Line result = expression->transpile();
+    Transpiler::Line index = self.index.transpile();
+
+    index.add("[", "]");
+    return result.add("", index.toString());
 }

@@ -4,21 +4,31 @@
 #include "util.h"
 
 Transpiler::Transpiler(OutputFile& file) 
-: lines(), file(file), context() {}
+: headers(), lines(), file(file), context() {}
 
 Transpiler::~Transpiler() {
     file.write(lines);
+}
+
+void Transpiler::header(str string, str end) {
+    file.write(string + end);
 }
 
 void Transpiler::write(str string, str end) {
     lines += string + end;
 }
 
+void Transpiler::include(str header) {
+    if(in(header, headers)) return;
+    headers.push_back(header);
+    self.header(fmt::format("#include <{}.h>", header));
+}
+
 
 using Line = Transpiler::Line;
 
 std::map<str, double> points {
-    {"wild", 100},
+    {"?", 101}, {"wild", 100},
     {"bool", 0}, {"byte", .5}, {"char", 1},
     {"nat16", 2}, {"int16", 2.5}, 
     {"nat", 3}, {"int", 3.5}, 
@@ -65,13 +75,16 @@ Line& Line::add(str before, str after) {
     return self;
 }
 
-Line& Line::cast(str type) {
+Line& Line::cast(str type, nat pointers) {
     self.type = type;
+    self.pointers = pointers;
     return self;
 }
 
+Line& Line::cast(str type) { return cast(type, pointers); }
+
 Line& Line::castUp() {
-    type = in(type, vector<str>{"bool", "byte", "char"})? "short nat" : type;
+    type = in(type, vector<str>{"bool", "byte", "char"})? "nat16" : type;
     return self;
 }
 

@@ -1,12 +1,2 @@
-5 istype(int? then 1, else 2)
-// _Generic(5, int: 1, default: 2)
-
-6.1 istype(
-    float? true,
-    else false
-)
-
-### #include <stdio.h>
-### int main() {
-###     return 0;
-### }
+int x = 5
+int ^y = ^x

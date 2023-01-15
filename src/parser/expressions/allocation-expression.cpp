@@ -1,5 +1,6 @@
 #include "parser/expressions/allocation-expression.h"
 #include "parser/expressions/bitwise-or-expression.h"
+#include "transpiler/transpiler.h"
 
 Node* AllocationExpression::construct() {
     Token& next = parser->next();
@@ -34,6 +35,15 @@ Node* AllocExpression::construct() {
     return new AllocExpression(*node, token);
 }
 
+Transpiler::Line AllocExpression::transpile() {
+    transpiler->include("stdlib");
+
+    Transpiler::Line expression = self.expression.transpile().cast("wild", 1);
+
+    if(token) return expression.add("calloc(1, ", ")");
+    return expression.add("malloc(", ")");
+}
+
 
 ReallocExpression::ReallocExpression(Node& expression, Node& size)
 : expression(expression), size(size) {}
@@ -57,6 +67,17 @@ Node* ReallocExpression::construct() {
     return new ReallocExpression(*expression, *size);
 }
 
+Transpiler::Line ReallocExpression::transpile() {
+    transpiler->include("stdlib");
+    Transpiler::Line expression = self.expression.transpile().cast("wild", 1);
+    Transpiler::Line size = self.size.transpile();
+
+    expression.add("realloc(", ", ");
+    expression.add("", size.toString());
+
+    return expression.add("", ")");
+}
+
 
 UnallocExpression::UnallocExpression(Node& expression) 
 : expression(expression) {}
@@ -73,4 +94,9 @@ Node* UnallocExpression::construct() {
     parser->take();
     Node* node = AllocationExpression::construct();
     return new UnallocExpression(*node);
+}
+
+Transpiler::Line UnallocExpression::transpile() {
+    transpiler->include("stdlib");
+    return expression.transpile().add("free(", ")").cast("", 0);
 }

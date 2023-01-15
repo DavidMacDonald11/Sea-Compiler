@@ -5,7 +5,9 @@
 
 class Node;
 
-struct Transpiler {
+class Transpiler {
+    vector<str> headers;
+public:
     struct Context {
         nat indent;
     };
@@ -17,12 +19,12 @@ struct Transpiler {
     Transpiler(OutputFile& file);
     ~Transpiler();
 
+    void header(str string = "", str end = "\n");
     void write(str string = "", str end = "\n");
+    void include(str header);
 
-    
-    struct Line;
+    class Line;
 };
-
 
 
 class Transpiler::Line {
@@ -42,6 +44,7 @@ public:
     Line& finish(const Node& node, bool semicolons = true);
     Line& replace(str string);
     Line& add(str before = "", str after = "");
+    Line& cast(str type, nat pointers);
     Line& cast(str type);
     Line& castUp();
     Line& prefix(const Line& line);

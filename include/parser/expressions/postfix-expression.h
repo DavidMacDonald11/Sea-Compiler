@@ -2,6 +2,7 @@
 #define POSTFIX_EXPRESSION_H
 
 #include "../node.h"
+#include "transpiler/transpiler.h"
 
 struct PostfixExpression : public Node {
     Node& expression;
@@ -28,6 +29,7 @@ struct PostfixIndexExpression : public Node {
     ~PostfixIndexExpression();
 
     static Node* construct();
+    Transpiler::Line transpile() override;
 };
 
 #endif //POSTFIX_EXPRESSION_H
