@@ -31,19 +31,7 @@
 {tab} `_postfix-expression_` `*.*` `_identifier_`
 {tab} `_postfix-expression_` `*?.*` `_identifier_`
 {tab} `_postfix-expression_` `*[*` `_expression_` `*]*`
-{tab} `_postfix-istype-expression_`
 {tab} `_postfix-call-expression_`
-
-`_postfix-istype-expression_`:
-{tab} `_postfix-expression_` `*istype*` `*(*` `_type-association-list_` `*)*`
-{tab} `_postfix-expression_` `*istype*` `*(*` `_type-association-list_` `*,*` `*else*` `_single-expression_`  `*)*`
-{tab} `_postfix-expression_` `*istype*` `*(*` `*else*` `_single-expression_` `*)*`
-`_type-association-list_`:
-{tab} `_type-association_`
-{tab} `_type-association-list_` `*,*` `_type-association_`
-`_type-association_`:
-{tab} `_type-name_` `*?*` `*then*`~opt~ `_single-expression_`
-{tab} `*(*` `_type-name_` `*)*` `*?*` `*then*`~opt~ `_single-expression_`
 
 `_postfix-call-expression_`:
 {tab} `_postfix-expression_` `*(*`  `_argument-expression-list_`~opt~  `_default-arguments_`~opt~ `*)*`

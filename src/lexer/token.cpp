@@ -110,18 +110,13 @@ const vector<str> Token::PUNC_OPS {
     "::", "->", "?", ".", "...", "#", "###"
 };
 
-const vector<str> Token::SUB_OPS {
-    "||", "~"
-};
-
 const vector<str> Token::OPERATORS(mergeAll<str>({
     POSTFIX_OPS,
     PREFIX_UNARY_OPS,
     BINARY_OPS,
     COMPARE_OPS,
     ASSIGN_OPS,
-    PUNC_OPS,
-    SUB_OPS
+    PUNC_OPS
 }));
 
 const str Token::OP_SYMS(fmt::format("{}", fmt::join(OPERATORS, "")));
@@ -190,7 +185,7 @@ const vector<str> Token::KEYWORDS(mergeAll<str>( {
         "while", "do", "for", "then",
         "compare", "using", "with",
         "alias", "import", "include", "from",
-        "to", "by", "define", "istype"
+        "to", "by"
     }
 }));
 

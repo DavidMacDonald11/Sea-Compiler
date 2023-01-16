@@ -11,9 +11,6 @@
 :tick: `
 :under: _
 
-`_tokens_`:
-{tab} `*{tick}*` `_token-string_` `*{tick}*`
-
 `_range-expression_`:
 {tab} `_sign_`~opt~ `_numeric-constant_` `*to*` `_sign_`~opt~  `_numeric-constant_` `_step_`~opt~
 {tab} `_character-constant_` `*to*` `_character-constant_` `_step_`~opt~
@@ -22,35 +19,5 @@
 `_sign_`: one of
 {tab} `*+*` `*-*`
 
-`_token-concatenate-expression_`:
-{tab} `_token_` `*~*` `_token_`
-
-`_string-concatenate-expression_`:
-{tab} `_string-constant_` `*||*` `_string-constant_`
-
-`_copy-expression_`:
-{tab} `_numeric-constant_` `*of*` `_tokens_`
-{tab} `_numeric-constant_` `*of*` `_tokens_` `*with*` `_tokens_`
-
-`_stringify-expression_`:
-{tab} `*$*` `_tokens_` 
-
 `_substitutions_`:
 {tab} `_range-expression_`
-{tab} `_string-concatenate-expression_`
-{tab} `_token-concatenate-expression_`
-{tab} `_copy-expression_`
-{tab} `_stringify-expression_`
-
-`_identifier-list_`:
-{tab} `_identifier_`
-{tab} `_identifier-list_` `*,*` `_identifier_`
-
-`_macro-parameters_`:
-{tab} `_identifier-list_`
-{tab} `_identifier-list_` `*,*` `*\...*`
-{tab} `*\...*`
-
-`_define-statement_`:
-{tab} `_visiblity-specifier_`~opt~ `*define*` `_identifier_` `*as*` `_tokens_` `_line-end_`
-{tab} `_visiblity-specifier_`~opt~ `*define*` `_identifier_` `*(*` `_macro-parameters_` `*)*` `*as*`~opt~ `_tokens_` `_line-end_`

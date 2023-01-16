@@ -1,6 +1,5 @@
 #include "parser/expressions/expression.h"
 #include "parser/expressions/postfix-call-expression.h"
-#include "parser/expressions/postfix-istype-expression.h"
 #include "parser/expressions/primary-expression.h"
 #include "parser/expressions/postfix-expression.h"
 #include "transpiler/transpiler.h"
@@ -37,11 +36,6 @@ Node* PostfixExpression::construct() {
 
         if(op.has({"("})) {
             node = constructExternalNode<PostfixCallExpression>(node);
-            continue;
-        }
-
-        if(op.has({"istype"})) {
-            node = constructExternalNode<PostfixIstypeExpression>(node);
             continue;
         }
 

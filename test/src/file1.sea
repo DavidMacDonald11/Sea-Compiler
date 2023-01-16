@@ -1,2 +1,7 @@
-int x = 5
-int ^y = ^x
+from "file2" import Token
+
+export struct SourceLine {
+    char ^string
+}
+
+export fun mark(SourceLine ^self, Token ^token) {}

@@ -65,6 +65,9 @@ Node* FunctionDefinition::construct() {
         type = TypeName::construct();
     }
 
-    Node& statement = *CompoundStatement::construct();
+    Node* cStatement = CompoundStatement::construct();
+    if(not cStatement) parser->expectingHas({"{"});
+    
+    Node& statement = *cStatement;
     return new FunctionDefinition(specifiers, name, parameters, type, statement);
 }
