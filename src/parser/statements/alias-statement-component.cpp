@@ -1,6 +1,7 @@
 #include "parser/statements/alias-statement-component.h"
 #include "parser/declarations/type-name.h"
 #include "parser/node.h"
+#include "publisher/publisher.h"
 #include "transpiler/transpiler.h"
 
 AliasStatementComponent::AliasStatementComponent(Token* visibility, Node& type, Token& identifier)
@@ -32,6 +33,10 @@ Node* AliasStatementComponent::construct(Parser& parser) {
     Token& identifier = parser.expectingOf({Token::IDENTIFIER});
 
     return new AliasStatementComponent(visibility, *type, identifier);
+}
+
+Publisher::Value* AliasStatementComponent::publish(Publisher &publisher) {
+    return nullptr;
 }
 
 Transpiler::Line AliasStatementComponent::transpile(Transpiler& transpiler) {

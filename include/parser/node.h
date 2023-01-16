@@ -2,6 +2,7 @@
 #define NODE_H
 
 #include "lexer/source-line.h"
+#include "publisher/publisher.h"
 #include "transpiler/transpiler.h"
 #include "component.h"
 #include "parser.h"
@@ -17,6 +18,7 @@ struct Node : public Component {
     virtual void mark() override;
 
     //static virtual Node* construct(Parser& parser);
+    virtual Publisher::Value* publish(Publisher&) { return nullptr; };
     virtual Transpiler::Line transpile(Transpiler&) { return {}; };
 };
 

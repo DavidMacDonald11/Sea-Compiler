@@ -18,7 +18,7 @@ using namespace std::chrono_literals;
 using std::atomic;
 using std::thread;
 
-static void compileFile(str options, str srcPath, str outDir);
+static void compileFile(str options, str srcPath, str outDir, nat id);
 static Lexer* runLexer(Fault& fault, SourceFile& sFile, DebugFile& dFile);
 static Substitutor* runSubstitutor(Lexer& lexer, DebugFile& dFile);
 static Parser* runParser(Substitutor& substitutor, DebugFile& dFile);
@@ -27,7 +27,9 @@ static Transpiler* runTranspiler(Parser& parser, OutputFile& oFile, DebugFile& d
 
 static atomic<bool> threadsConstructed = false;
 static atomic<nat> threadsCompletedPublishing = 0;
+static atomic<nat> threadsCompletedTranspiling = 0;
 static atomic<nat> threadCount = 0;
+static atomic<Publisher*>* publishers;
 #define sleepTime 100ms
 
 int main(int argc, char *argv[]) {
@@ -39,19 +41,23 @@ int main(int argc, char *argv[]) {
 
     vector<str> filePaths(args.begin() + 3, args.end());
     vector<thread> threads;
+    
     threads.reserve(threadCount = filePaths.size());
+    publishers = new atomic<Publisher*>[threadCount];
+    nat id = 0;
 
     for(const str& filePath : filePaths) {
-        threads.push_back(thread(compileFile, options, filePath, outDir));
+        threads.push_back(thread(compileFile, options, filePath, outDir, id++));
     }
 
     threadsConstructed = true;
     for(thread& t : threads) { if(t.joinable()) t.join(); }
+    delete publishers;
     
     return 0;
 }
 
-void compileFile(str options, str srcPath, str outDir) {
+void compileFile(str options, str srcPath, str outDir, nat id) {
     Fault fault;
     SourceFile sFile(srcPath);
     DebugFile dFile(outDir, srcPath, options);
@@ -63,6 +69,7 @@ void compileFile(str options, str srcPath, str outDir) {
 
     while(not threadsConstructed) std::this_thread::sleep_for(sleepTime);
     threadsCompletedPublishing += 1;
+    publishers[id] = publisher;
 
     if(not publisher) {
         delete lexer;
@@ -75,6 +82,9 @@ void compileFile(str options, str srcPath, str outDir) {
     OutputFile oFile(outDir, srcPath);
     while(threadsCompletedPublishing != threadCount) std::this_thread::sleep_for(sleepTime);
     Transpiler* transpiler = runTranspiler(*parser, oFile, dFile);
+    threadsCompletedTranspiling += 1;
+
+    while(threadsCompletedTranspiling != threadCount) std::this_thread::sleep_for(sleepTime);
 
     delete lexer;
     delete substitutor;
@@ -144,6 +154,7 @@ Publisher* runPublisher(Parser& parser, DebugFile&) {
 
     try {
         publisher = new Publisher(parser.fault);
+        parser.tree->publish(*publisher);
         publisher->fault.check();
         publisher->fault.stage++;
     } catch(const Fault::CompilerFailure&) { 

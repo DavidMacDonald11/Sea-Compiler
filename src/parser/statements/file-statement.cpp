@@ -1,5 +1,6 @@
 #include "parser/statements/file-statement.h"
 #include "parser/statements/statement.h"
+#include "publisher/publisher.h"
 #include "transpiler/transpiler.h"
 #include "util.h"
 
@@ -13,6 +14,11 @@ vector<Component*> FileStatement::nodes() const {
 
 FileStatement::~FileStatement() {
     for(Component* ptr : statements) delete ptr;
+}
+
+Publisher::Value* FileStatement::publish(Publisher& publisher) {
+    for(Node* statement : statements) statement->publish(publisher);
+    return nullptr;
 }
 
 Transpiler::Line FileStatement::transpile(Transpiler& transpiler) {

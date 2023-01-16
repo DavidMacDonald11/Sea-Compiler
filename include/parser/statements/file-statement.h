@@ -10,8 +10,9 @@ struct FileStatement : public Node {
 
     ~FileStatement();
     
-    Transpiler::Line transpile(Transpiler& transpiler) override;
     void makeTree(Parser& parser);
+    Publisher::Value* publish(Publisher& publisher) override;
+    Transpiler::Line transpile(Transpiler& transpiler) override;
 };
 
 #endif //FILE_STATEMENT_H
