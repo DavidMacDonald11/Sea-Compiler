@@ -11,8 +11,8 @@ struct TypeSpecifier : public Node {
     ~TypeSpecifier();
 
     Nodes nodes() const override;
-    static Node* construct();
-    Transpiler::Line transpile() override;
+    static Node* construct(Parser& parser);
+    Transpiler::Line transpile(Transpiler& transpiler) override;
 };
 
 #endif //TYPE_SPECIFIER_H

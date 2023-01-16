@@ -12,7 +12,7 @@ struct EnumDefinition : public Node {
     ~EnumDefinition();
 
     Nodes nodes() const override;
-    static Node* construct();
+    static Node* construct(Parser& parser);
 };
 
 #endif //ENUM_DEFINITION_H

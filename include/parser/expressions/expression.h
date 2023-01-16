@@ -12,8 +12,8 @@ struct Expression : public Node {
     Expression(Node& left, Node& right);
     ~Expression();
 
-    static Node* construct();
-    Transpiler::Line transpile() override;
+    static Node* construct(Parser& parser);
+    Transpiler::Line transpile(Transpiler& transpiler) override;
 };
 
 #endif //EXPRESSION_H

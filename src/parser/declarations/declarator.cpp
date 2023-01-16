@@ -15,15 +15,15 @@ Nodes Declarator::nodes() const {
     return pointer? Nodes{pointer, &declarator} : Nodes{&declarator};
 }
 
-Node* Declarator::construct() {
-    Node* pointer = Pointer::construct();
-    return new Declarator(pointer, *DirectDeclarator::construct());
+Node* Declarator::construct(Parser& parser) {
+    Node* pointer = Pointer::construct(parser);
+    return new Declarator(pointer, *DirectDeclarator::construct(parser));
 }
 
-Transpiler::Line Declarator::transpile() {
-    if(not pointer) return declarator.transpile();
+Transpiler::Line Declarator::transpile(Transpiler& transpiler) {
+    if(not pointer) return declarator.transpile(transpiler);
 
-    Transpiler::Line line = pointer->transpile();
-    line.add("", declarator.transpile().toString());
+    Transpiler::Line line = pointer->transpile(transpiler);
+    line.add("", declarator.transpile(transpiler).toString());
     return line;
 }

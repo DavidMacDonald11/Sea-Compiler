@@ -10,8 +10,9 @@ static Node* make(Node& left, Token& op, Node& right) {
 ShiftExpression::ShiftExpression(Node& left, Token& op, Node& right) 
 : BinaryOperation(left, op, right) {}
 
-Node* ShiftExpression::construct() {
+Node* ShiftExpression::construct(Parser& parser) {
     return BinaryOperation::construct(
+        parser,
         {"<<", ">>"},
         AdditiveExpression::construct,
         make

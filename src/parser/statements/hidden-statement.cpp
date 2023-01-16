@@ -10,4 +10,6 @@ HiddenStatement::~HiddenStatement() {
     delete &statement;
 }
 
-Transpiler::Line HiddenStatement::transpile() { return statement.transpile(); }
+Transpiler::Line HiddenStatement::transpile(Transpiler& transpiler) { 
+    return statement.transpile(transpiler); 
+}

@@ -11,8 +11,8 @@ struct IncludeStatementComponent : public Node {
     IncludeStatementComponent(Token* lib, Token& token);
 
     Nodes nodes() const override;
-    static Node* construct();
-    Transpiler::Line transpile() override;
+    static Node* construct(Parser& parser);
+    Transpiler::Line transpile(Transpiler& transpiler) override;
 };
 
 #endif //INCLUDE_STATEMENT_COMPONENT_H

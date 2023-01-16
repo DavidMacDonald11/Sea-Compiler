@@ -17,35 +17,35 @@ CompoundStatement::~CompoundStatement() {
     for(Node* node : statements) delete node;
 }
 
-Node* CompoundStatement::construct() {
-    if(not parser->next().has({"{"})) return nullptr;
+Node* CompoundStatement::construct(Parser& parser) {
+    if(not parser.next().has({"{"})) return nullptr;
 
-    parser->take();
+    parser.take();
 
     vector<Node*> statements;
 
-    while(not parser->next().has({"}", ""})) {
-        parser->skipNewlines();
-        if(parser->next().has({"}", ""})) break;
-        statements.push_back(Statement::construct());
+    while(not parser.next().has({"}", ""})) {
+        parser.skipNewlines();
+        if(parser.next().has({"}", ""})) break;
+        statements.push_back(Statement::construct(parser));
     }
     
-    parser->expectingHas({"}"});
-    parser->skipNewlines();
+    parser.expectingHas({"}"});
+    parser.skipNewlines();
     
     return new CompoundStatement(statements);
 }
 
-Transpiler::Line CompoundStatement::transpile() {
+Transpiler::Line CompoundStatement::transpile(Transpiler& transpiler) {
     Transpiler::Line start("", "{");
     Transpiler::Line line("", "}");
 
-    start.finish(self, false);
-    line.prefix(start).finish(self);
+    start.finish(self, transpiler, false);
+    line.prefix(start).finish(self, transpiler);
 
-    transpiler->context.indent += 1;
-    for(Node* node : statements) line.prefix(node->transpile());
-    transpiler->context.indent -= 1;
+    transpiler.context.indent += 1;
+    for(Node* node : statements) line.prefix(node->transpile(transpiler));
+    transpiler.context.indent -= 1;
 
     return line;
 }

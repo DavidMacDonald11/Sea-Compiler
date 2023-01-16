@@ -13,7 +13,7 @@ struct FunctionTypeSpecifier : public Node {
     ~FunctionTypeSpecifier();
 
     Nodes nodes() const override;
-    static Node* construct();
+    static Node* construct(Parser& parser);
 };
 
 #endif //FUNCTION_TYPE_SPECIFIER_H

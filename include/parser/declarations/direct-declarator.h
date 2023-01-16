@@ -13,8 +13,8 @@ struct DirectDeclarator : public Node {
     ~DirectDeclarator();
 
     Nodes nodes() const override;
-    static Node* construct();
-    Transpiler::Line transpile() override;
+    static Node* construct(Parser& parser);
+    Transpiler::Line transpile(Transpiler& transpiler) override;
 };
 
 #endif //DIRECT_DECLARATOR_H

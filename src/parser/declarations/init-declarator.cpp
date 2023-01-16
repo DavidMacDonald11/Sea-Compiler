@@ -15,20 +15,20 @@ Nodes InitDeclarator::nodes() const {
     return expression? Nodes{&declarator, expression} : Nodes{&declarator};
 }
 
-Node* InitDeclarator::construct() {
-    Node* declarator = Declarator::construct();
+Node* InitDeclarator::construct(Parser& parser) {
+    Node* declarator = Declarator::construct(parser);
     Node* identifier = nullptr;
     
-    if(parser->next().has({"="})) {
-        parser->take();
-        identifier = SingleExpression::construct();
+    if(parser.next().has({"="})) {
+        parser.take();
+        identifier = SingleExpression::construct(parser);
     }
 
     return new InitDeclarator(*declarator, identifier);
 }
 
-Transpiler::Line InitDeclarator::transpile() {
-    Transpiler::Line line = declarator.transpile();
-    if(expression) line.add("", " = " + expression->transpile().toString());
+Transpiler::Line InitDeclarator::transpile(Transpiler& transpiler) {
+    Transpiler::Line line = declarator.transpile(transpiler);
+    if(expression) line.add("", " = " + expression->transpile(transpiler).toString());
     return line;
 }

@@ -23,32 +23,32 @@ UnaryExpression::~UnaryExpression() {
     delete &expression;
 }
 
-Node* UnaryExpression::construct() {
-    Token& next = parser->next();
+Node* UnaryExpression::construct(Parser& parser) {
+    Token& next = parser.next();
 
     if(next.has(Token::PREFIX_UNARY_OPS) or next.has({"await"})) {
-        Token& op = parser->take();
-        return new UnaryExpression(op, *UnaryExpression::construct());
+        Token& op = parser.take();
+        return new UnaryExpression(op, *UnaryExpression::construct(parser));
     }
 
-    if(not next.has({"sizeof", "alignof"})) return PostfixExpression::construct();
-    Token& op = parser->take();
+    if(not next.has({"sizeof", "alignof"})) return PostfixExpression::construct(parser);
+    Token& op = parser.take();
 
-    if(not parser->next().has({"("})) 
-        return new UnaryExpression(op, *UnaryExpression::construct());
+    if(not parser.next().has({"("})) 
+        return new UnaryExpression(op, *UnaryExpression::construct(parser));
 
-    if(not parser->ahead(1).has(Token::TYPE_NAME_KEYWORDS)) 
-        return new UnaryExpression(op, *UnaryExpression::construct());
+    if(not parser.ahead(1).has(Token::TYPE_NAME_KEYWORDS)) 
+        return new UnaryExpression(op, *UnaryExpression::construct(parser));
     
-    parser->take();
-    Node* expression = TypeName::construct();
-    parser->expectingHas({")"});
+    parser.take();
+    Node* expression = TypeName::construct(parser);
+    parser.expectingHas({")"});
 
     return new UnaryExpression(op, *expression);
 }
 
-Transpiler::Line UnaryExpression::transpile() {
-    Transpiler::Line line = expression.transpile();
+Transpiler::Line UnaryExpression::transpile(Transpiler& transpiler) {
+    Transpiler::Line line = expression.transpile(transpiler);
 
     if(op.has({"sizeof", "alignof"})) {
         return line.add(op.string + "(", ")").cast("c::size_t");

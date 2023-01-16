@@ -21,30 +21,30 @@ Nodes ArrayDeclarator::nodes() const {
     return nodes;
 }
 
-Node* ArrayDeclarator::construct() {
-    parser->expectingHas({"["});
-    Node* qualifiers = TypeQualifierList::construct();
+Node* ArrayDeclarator::construct(Parser& parser) {
+    parser.expectingHas({"["});
+    Node* qualifiers = TypeQualifierList::construct(parser);
     Token* token = nullptr;
     Node* expression = nullptr;
     
-    if(parser->next().has({"*"})) token = &parser->take();
-    else if(parser->next().has({"<="})) {
-        token = &parser->take();
-        expression = SingleExpression::construct();
-    } else if(not parser->next().has({"]"})) {
-        expression = SingleExpression::construct();
+    if(parser.next().has({"*"})) token = &parser.take();
+    else if(parser.next().has({"<="})) {
+        token = &parser.take();
+        expression = SingleExpression::construct(parser);
+    } else if(not parser.next().has({"]"})) {
+        expression = SingleExpression::construct(parser);
     }
 
-    parser->expectingHas({"]"});
+    parser.expectingHas({"]"});
     return new ArrayDeclarator(qualifiers, token, expression);
 }
 
-Transpiler::Line ArrayDeclarator::transpile() {
+Transpiler::Line ArrayDeclarator::transpile(Transpiler& transpiler) {
     Transpiler::Line line = {"", "["};
 
-    if(qualifiers) line.add("", qualifiers->transpile().toString());
+    if(qualifiers) line.add("", qualifiers->transpile(transpiler).toString());
     if(token) line.add("", (token->has({"*"}))? " * " : " static ");
-    if(expression) line.add("", expression->transpile().toString());
+    if(expression) line.add("", expression->transpile(transpiler).toString());
 
     return line.add("", "]");
 }

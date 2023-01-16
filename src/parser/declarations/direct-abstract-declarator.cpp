@@ -17,22 +17,22 @@ Nodes DirectAbstractDeclarator::nodes() const {
     return nodes;
 }
 
-Node* DirectAbstractDeclarator::construct() {
-    if(not parser->next().has({"("})) return nullptr;
+Node* DirectAbstractDeclarator::construct(Parser& parser) {
+    if(not parser.next().has({"("})) return nullptr;
 
-    parser->take();
-    Node* declarator = AbstractDeclarator::construct();
-    parser->expectingHas({")"});
+    parser.take();
+    Node* declarator = AbstractDeclarator::construct(parser);
+    parser.expectingHas({")"});
 
-    Node* array = (parser->next().has({"["}))? ArrayDeclarator::construct() : nullptr;
+    Node* array = (parser.next().has({"["}))? ArrayDeclarator::construct(parser) : nullptr;
     return new DirectAbstractDeclarator(*declarator, array);
 }
 
-Transpiler::Line DirectAbstractDeclarator::transpile() {
+Transpiler::Line DirectAbstractDeclarator::transpile(Transpiler& transpiler) {
     Transpiler::Line line;
     
-    line.add("(", declarator.transpile().toString());
-    if(array) line.add("", array->transpile().toString());
+    line.add("(", declarator.transpile(transpiler).toString());
+    if(array) line.add("", array->transpile(transpiler).toString());
 
     return line.add("", ")");
 }

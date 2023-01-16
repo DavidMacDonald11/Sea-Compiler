@@ -11,7 +11,7 @@ struct ImportStatementComponent : public Node {
     ImportStatementComponent(Token* lib, Token& file, Token* rename = nullptr);
 
     Nodes nodes() const override;
-    static Node* construct();
+    static Node* construct(Parser& parser);
 };
 
 struct FromImportStatementComponent : public Node {
@@ -25,7 +25,7 @@ struct FromImportStatementComponent : public Node {
     ~FromImportStatementComponent();
 
     Nodes nodes() const override;
-    static Node* construct();
+    static Node* construct(Parser& parser);
 };
 
 #endif //IMPORT_STATEMENT_COMPONENT_H

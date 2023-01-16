@@ -22,32 +22,32 @@ Nodes IfStatement::nodes() const {
     return nodes;
 }
 
-Node* IfStatement::construct() {
-    if(not parser->next().has({"if"})) return nullptr;
-    parser->take();
+Node* IfStatement::construct(Parser& parser) {
+    if(not parser.next().has({"if"})) return nullptr;
+    parser.take();
 
-    Node& expression = *Expression::construct();
-    if(parser->next().has({"then"})) parser->take();
+    Node& expression = *Expression::construct(parser);
+    if(parser.next().has({"then"})) parser.take();
     
-    Node& statement = *Statement::construct();
+    Node& statement = *Statement::construct(parser);
     vector<Node*> others;
 
-    while(parser->next().has({"else"}) and parser->ahead(1).has({"if"})) {
-        parser->take();
-        parser->take();
+    while(parser.next().has({"else"}) and parser.ahead(1).has({"if"})) {
+        parser.take();
+        parser.take();
 
-        Node& expression = *Expression::construct();
-        if(parser->next().has({"then"})) parser->take();
+        Node& expression = *Expression::construct(parser);
+        if(parser.next().has({"then"})) parser.take();
         
-        Node& statement = *Statement::construct();
+        Node& statement = *Statement::construct(parser);
         others.push_back(new ElseIf(expression, statement));
     }
 
     Node* otherwise = nullptr;
 
-    if(parser->next().has({"else"})) {
-        parser->take();
-        otherwise = Statement::construct();
+    if(parser.next().has({"else"})) {
+        parser.take();
+        otherwise = Statement::construct(parser);
     }
 
     return new IfStatement(expression, statement, others, otherwise);

@@ -15,17 +15,17 @@ FileStatement::~FileStatement() {
     for(Component* ptr : statements) delete ptr;
 }
 
-Transpiler::Line FileStatement::transpile() {
+Transpiler::Line FileStatement::transpile(Transpiler& transpiler) {
     for(Node* statement : statements) {
-        transpiler->write(statement->transpile().toString(), "");
+        transpiler.write(statement->transpile(transpiler).toString(), "");
     }
 
     return {};
 }
 
-void FileStatement::makeTree() {
-    while(not parser->next().has({""})) {
-        Node* node = Statement::construct();
+void FileStatement::makeTree(Parser& parser) {
+    while(not parser.next().has({""})) {
+        Node* node = Statement::construct(parser);
         if(not node) return;
         statements.push_back(node);
     }

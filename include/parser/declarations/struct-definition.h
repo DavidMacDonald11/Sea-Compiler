@@ -13,7 +13,7 @@ struct StructDefinition : public Node {
     ~StructDefinition();
 
     Nodes nodes() const override;
-    static Node* construct();
+    static Node* construct(Parser& parser);
 };
 
 #endif //STRUCT_DEFINITION_H

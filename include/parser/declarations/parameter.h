@@ -11,7 +11,7 @@ struct Parameter : public Node {
     ~Parameter();
 
     Nodes nodes() const override;
-    static Node* construct();
+    static Node* construct(Parser& parser);
 };
 
 #endif //PARAMETER_H

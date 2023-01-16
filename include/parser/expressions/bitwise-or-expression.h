@@ -5,7 +5,7 @@
 
 struct BitwiseOrExpression : public BinaryOperation {
     BitwiseOrExpression(Node& left, Token& op, Node& right);
-    static Node* construct();
+    static Node* construct(Parser& parser);
 };
 
 #endif //BITWISE_OR_EXPRESSION_H

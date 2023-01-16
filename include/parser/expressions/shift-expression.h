@@ -5,7 +5,7 @@
 
 struct ShiftExpression : public BinaryOperation {
     ShiftExpression(Node& left, Token& op, Node& right);
-    static Node* construct();
+    static Node* construct(Parser& parser);
 };
 
 #endif //SHIFT_EXPRESSION_H

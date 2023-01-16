@@ -11,7 +11,7 @@ struct StructDeclarator : public Node {
     ~StructDeclarator();
 
     Nodes nodes() const override;
-    static Node* construct();
+    static Node* construct(Parser& parser);
 };
 
 #endif //STRUCT_DECLARATOR_H

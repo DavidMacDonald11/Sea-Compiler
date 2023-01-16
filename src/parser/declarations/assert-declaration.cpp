@@ -14,13 +14,13 @@ Nodes AssertDeclaration::nodes() const {
         : Nodes{&assertion, &message};
 }
 
-Node* AssertDeclaration::construct() {
-    Token* token = (parser->next().has({"static"}))? &parser->take() : nullptr;
-    parser->expectingHas({"assert"});
+Node* AssertDeclaration::construct(Parser& parser) {
+    Token* token = (parser.next().has({"static"}))? &parser.take() : nullptr;
+    parser.expectingHas({"assert"});
 
-    Node* assertion = SingleExpression::construct();
-    parser->expectingHas({"else"});
+    Node* assertion = SingleExpression::construct(parser);
+    parser.expectingHas({"else"});
 
-    Node* message = SingleExpression::construct();
+    Node* message = SingleExpression::construct(parser);
     return new AssertDeclaration(token, *assertion, *message);
 }

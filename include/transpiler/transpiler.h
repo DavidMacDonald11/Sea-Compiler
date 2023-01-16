@@ -1,6 +1,7 @@
 #ifndef TRANSPILER_H
 #define TRANSPILER_H
 
+#include "fault.h"
 #include "output-file.h"
 
 class Node;
@@ -12,11 +13,12 @@ public:
         nat indent;
     };
 
+    Fault& fault;
     str lines;
     OutputFile& file;
     Context context;
 
-    Transpiler(OutputFile& file);
+    Transpiler(Fault& fault, OutputFile& file);
     ~Transpiler();
 
     void header(str string = "", str end = "\n");
@@ -41,7 +43,7 @@ public:
 
     str toString() const;
     Line& setShowType();
-    Line& finish(const Node& node, bool semicolons = true);
+    Line& finish(const Node& node, const Transpiler& transpiler, bool semicolons = true);
     Line& replace(str string);
     Line& add(str before = "", str after = "");
     Line& cast(str type, nat pointers);

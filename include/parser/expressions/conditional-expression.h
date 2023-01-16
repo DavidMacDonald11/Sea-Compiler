@@ -13,8 +13,8 @@ struct ConditionalExpression : public Node {
     ConditionalExpression(Node& left, Node& condition, Node& right);
     ~ConditionalExpression();
 
-    static Node* construct();
-    Transpiler::Line transpile() override;
+    static Node* construct(Parser& parser);
+    Transpiler::Line transpile(Transpiler& transpiler) override;
 };
 
 #endif //CONDITIONAL_EXPRESSION_H

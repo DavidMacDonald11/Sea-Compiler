@@ -3,7 +3,6 @@
 #include <string>
 #include "substitutor/substitutor.h"
 #include "util.h"
-#include "fault.h"
 
 static std::map<str, char> charMap {
     {"'\\?'", '\?'},
@@ -22,8 +21,8 @@ static std::map<str, char> charMap {
 static std::map<char, str> strMap(invertMap(charMap));
 
 
-Substitutor::Substitutor(vector<Token>& tokens)
-: lexerTokens(tokens), tokens(), i(0) {}
+Substitutor::Substitutor(Fault& fault, vector<Token>& tokens)
+: lexerTokens(tokens), fault(fault), tokens(), i(0) {}
 
 str Substitutor::toString() const { return vectorToString(tokens); }
 Token& Substitutor::next() const { return lexerTokens[i]; }
@@ -77,7 +76,7 @@ void Substitutor::replaceRange() {
     Token right = combineSign(rightSign, take());
 
     if(not right.of({left.type})) { 
-        throw Fault::fail(right, fmt::format("Expecting {}", 
+        throw fault.fail(right, fmt::format("Expecting {}", 
             Token::typeToString(left.type)));
     }
 
@@ -92,10 +91,10 @@ void Substitutor::replaceRange() {
     Token stepToken = combineSign(sign, take());
     
     if(not stepToken.of({Token::NUM}) or not stepToken.isInt()) 
-        throw Fault::fail(stepToken, "Expecting Integer");
+        throw fault.fail(stepToken, "Expecting Integer");
         
     long long step = std::stoll(stepToken.string);
-    if(step == 0) throw Fault::fail(stepToken, "Expecting non-zero step size");
+    if(step == 0) throw fault.fail(stepToken, "Expecting non-zero step size");
 
     right.locale[1] = stepToken.locale[1]; 
     
@@ -105,10 +104,10 @@ void Substitutor::replaceRange() {
 
 void Substitutor::replaceIntRange(Token left, Token right, long long* stepPtr) {
     if(not left.isInt()) 
-        throw Fault::fail(left, "Expecting Integer");
+        throw fault.fail(left, "Expecting Integer");
     
     if(not right.isInt())
-        throw Fault::fail(right, "Expecting Integer");
+        throw fault.fail(right, "Expecting Integer");
 
     long long leftNum = std::stoll(left.string);
     long long rightNum = std::stoll(right.string);
@@ -135,10 +134,10 @@ void Substitutor::replaceIntRange(Token left, Token right, long long* stepPtr) {
 
 void Substitutor::replaceCharRange(Token left, Token right, long long* stepPtr) {
     if(left.string[0] == '\\' and charMap.find(left.string) == charMap.end()) 
-        throw Fault::fail(left, "Invalid escape character");
+        throw fault.fail(left, "Invalid escape character");
 
     if(right.string[0] == '\\' and charMap.find(right.string) == charMap.end()) 
-        throw Fault::fail(right, "Invalid escape character");
+        throw fault.fail(right, "Invalid escape character");
 
     char leftChar = (left.string[1] == '\\')?  charMap[left.string] : left.string[1];
     char rightChar = (right.string[1] == '\\')?  charMap[right.string] : right.string[1];

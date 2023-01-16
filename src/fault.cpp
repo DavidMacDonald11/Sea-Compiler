@@ -1,48 +1,45 @@
 #include "fault.h"
 #include "util.h"
 
-namespace Fault {
-    static str act(Component& c, const str& message, const str& label) {
-        c.mark();
-        str newMessage = replaceStr(message, "\n", "\\n");
-        return fmt::format("{}: {}\n{}", label, newMessage, c.raw());
-    }
+using CompilerFailure = Fault::CompilerFailure;
 
-    vector<str> warnings;
-    vector<str> errors;
-    str failure;
+static str act(Component& c, const str& message, const str& label) {
+    c.mark();
+    str newMessage = replaceStr(message, "\n", "\\n");
+    return fmt::format("{}: {}\n{}", label, newMessage, c.raw());
+}
 
-    str toString() {
-        str string;
 
-        if(warnings.size() > 0) string.append(join(warnings, "\n"));
-        if(errors.size() > 0) string.append(join(errors, "\n"));
-        if(failure != "") string.append(failure + "\n");
+str Fault::toString() {
+    str string;
 
-        return string;
-    }
+    if(warnings.size() > 0) string.append(join(warnings, "\n"));
+    if(errors.size() > 0) string.append(join(errors, "\n"));
+    if(failure != "") string.append(failure + "\n");
 
-    void warn(Component& c, const str& message) {
-        warnings.push_back(act(c, message, "Warning"));
-    }
+    return string;
+}
 
-    void error(Component& c, const str& message) {
-        errors.push_back(act(c, message, "Error"));
-    }
+void Fault::warn(Component& c, const str& message) {
+    warnings.push_back(act(c, message, "Warning"));
+}
 
-    CompilerFailure fail(Component& c, const str& message) {
-        failure = act(c, message, "Failure");
-        return CompilerFailure();
-    }
+void Fault::error(Component& c, const str& message) {
+    errors.push_back(act(c, message, "Error"));
+}
 
-    void check() {
-        if(warnings.size() + errors.size() == 0) return;
-        throw CompilerFailure();
-    }
+CompilerFailure Fault::fail(Component& c, const str& message) {
+    failure = act(c, message, "Failure");
+    return CompilerFailure();
+}
 
-    void reset() {
-        warnings.clear();
-        errors.clear();
-        failure.clear();
-    }
+void Fault::check() {
+    if(warnings.size() + errors.size() == 0) return;
+    throw CompilerFailure();
+}
+
+void Fault::reset() {
+    warnings.clear();
+    errors.clear();
+    failure.clear();
 }

@@ -12,8 +12,8 @@ struct AbstractDeclarator : public Node {
     ~AbstractDeclarator();
 
     Nodes nodes() const override;
-    static Node* construct();
-    Transpiler::Line transpile() override;
+    static Node* construct(Parser& parser);
+    Transpiler::Line transpile(Transpiler& transpiler) override;
 };
 
 #endif //ABSTRACT_DECLARATOR_H

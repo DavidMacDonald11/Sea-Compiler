@@ -3,8 +3,8 @@
 #include "transpiler/transpiler.h"
 #include "util.h"
 
-Transpiler::Transpiler(OutputFile& file) 
-: headers(), lines(), file(file), context() {}
+Transpiler::Transpiler(Fault& fault, OutputFile& file) 
+: headers(), fault(fault), lines(), file(file), context() {}
 
 Transpiler::~Transpiler() {
     file.write(lines);
@@ -51,13 +51,13 @@ Line& Line::setShowType() {
     return self;
 }
 
-Line& Line::finish(const Node& node, bool semicolons) {
-    for(Line& line : lines) line.finish(node, semicolons);
+Line& Line::finish(const Node& node, const Transpiler& transpiler, bool semicolons) {
+    for(Line& line : lines) line.finish(node, transpiler, semicolons);
 
     if(finished) return self;
     finished = true;
 
-    str indent = multiplyStr("    ", node.transpiler->context.indent);
+    str indent = multiplyStr("    ", transpiler.context.indent);
     str end = semicolons? ";" : "";
     str pointers = multiplyStr("^", self.pointers);
 

@@ -6,10 +6,10 @@
 
 struct Statement : public HiddenStatement {
     Statement(Node& statement);
-    static Node* construct();
-    Transpiler::Line transpile() override;
+    static Node* construct(Parser& parser);
+    Transpiler::Line transpile(Transpiler& transpiler) override;
 
-    static Node* newLineStatement();
+    static Node* newLineStatement(Parser& parser);
 };
 
 #endif //STATEMENT_H

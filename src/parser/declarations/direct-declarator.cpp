@@ -21,27 +21,27 @@ Nodes DirectDeclarator::nodes() const {
     return nodes;
 }
 
-Node* DirectDeclarator::construct() {
+Node* DirectDeclarator::construct(Parser& parser) {
     Token* token = nullptr;
     Node* node = nullptr;
     Node* array = nullptr;
 
-    if(parser->next().has({"("})) {
-        parser->take();
-        node = Declarator::construct();
-        parser->expectingHas({")"});
-    } else token = &parser->expectingOf({Token::IDENTIFIER});
+    if(parser.next().has({"("})) {
+        parser.take();
+        node = Declarator::construct(parser);
+        parser.expectingHas({")"});
+    } else token = &parser.expectingOf({Token::IDENTIFIER});
     
-    if(parser->next().has({"["})) array = ArrayDeclarator::construct();
+    if(parser.next().has({"["})) array = ArrayDeclarator::construct(parser);
     return new DirectDeclarator(token, node, array);
 }
 
-Transpiler::Line DirectDeclarator::transpile() {
+Transpiler::Line DirectDeclarator::transpile(Transpiler& transpiler) {
     Transpiler::Line line;
 
     if(identifier) line.replace(identifier->string);
-    else line = declarator->transpile().add("(", ")");
+    else line = declarator->transpile(transpiler).add("(", ")");
 
-    if(array) line.add("", " " + array->transpile().toString());
+    if(array) line.add("", " " + array->transpile(transpiler).toString());
     return line;
 }

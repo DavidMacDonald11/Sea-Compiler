@@ -10,7 +10,7 @@ struct PartialImport : public Node {
     PartialImport(Token& import, Token* rename = nullptr);
 
     Nodes nodes() const override;
-    static Node* construct();
+    static Node* construct(Parser& parser);
 };
 
 #endif //PARTIAL_IMPORT_H

@@ -5,7 +5,7 @@
 
 struct AdditiveExpression : public BinaryOperation {
     AdditiveExpression(Node& left, Token& op, Node& right);
-    static Node* construct();
+    static Node* construct(Parser& parser);
 };
 
 #endif //ADDITIVE_EXPRESSION_H

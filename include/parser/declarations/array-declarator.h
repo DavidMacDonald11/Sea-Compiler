@@ -13,8 +13,8 @@ struct ArrayDeclarator : public Node {
     ~ArrayDeclarator();
 
     Nodes nodes() const override;
-    static Node* construct();
-    Transpiler::Line transpile() override;
+    static Node* construct(Parser& parser);
+    Transpiler::Line transpile(Transpiler& transpiler) override;
 };
 
 #endif //ARRAY_DECLARATOR_H

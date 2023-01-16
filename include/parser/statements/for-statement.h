@@ -14,9 +14,9 @@ struct ForStatement : public Node {
     ~ForStatement();
 
     Nodes nodes() const override;
-    static Node* construct();
+    static Node* construct(Parser& parser);
 private:
-    static void takeEndOrKeyword(str keyword);
+    static void takeEndOrKeyword(Parser& parser, str keyword);
 };
 
 #endif //FOR_STATEMENT_H

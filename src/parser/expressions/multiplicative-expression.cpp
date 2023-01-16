@@ -9,8 +9,9 @@ static Node* make(Node& left, Token& op, Node& right) {
 MultiplicativeExpression::MultiplicativeExpression(Node& left, Token& op, Node& right) 
 : BinaryOperation(left, op, right) {}
 
-Node* MultiplicativeExpression::construct() {
+Node* MultiplicativeExpression::construct(Parser& parser) {
     return BinaryOperation::construct(
+        parser,
         {"*", "/", "%"}, 
         UnaryExpression::construct,
         make);

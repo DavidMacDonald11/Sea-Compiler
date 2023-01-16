@@ -11,8 +11,8 @@ struct Declarator : public Node {
     ~Declarator();
 
     Nodes nodes() const override;
-    static Node* construct();
-    Transpiler::Line transpile() override;
+    static Node* construct(Parser& parser);
+    Transpiler::Line transpile(Transpiler& transpiler) override;
 };
 
 #endif //DECLARATOR_H

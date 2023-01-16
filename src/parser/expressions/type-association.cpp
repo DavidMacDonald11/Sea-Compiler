@@ -14,14 +14,14 @@ Nodes TypeAssociation::nodes() const {
     return {&type, &expression};
 }
 
-Node* TypeAssociation::construct() {
-    Token* paren = (parser->next().has({"("}))? &parser->take() : nullptr;
-    Node& type = *TypeName::construct();
-    if(paren) parser->expectingHas({")"});
+Node* TypeAssociation::construct(Parser& parser) {
+    Token* paren = (parser.next().has({"("}))? &parser.take() : nullptr;
+    Node& type = *TypeName::construct(parser);
+    if(paren) parser.expectingHas({")"});
 
-    parser->expectingHas({"?"});
-    if(parser->next().has({"then"})) parser->take();
+    parser.expectingHas({"?"});
+    if(parser.next().has({"then"})) parser.take();
 
-    Node& expression = *SingleExpression::construct();
+    Node& expression = *SingleExpression::construct(parser);
     return new TypeAssociation(type, expression);
 }

@@ -21,31 +21,31 @@ Nodes FunctionTypeSpecifier::nodes() const {
     return nodes;
 }
 
-Node* FunctionTypeSpecifier::construct() {
-    Token* async = (parser->next().has({"async"}))? &parser->take() : nullptr;
-    Token& fun = parser->expectingHas({"fun"});
+Node* FunctionTypeSpecifier::construct(Parser& parser) {
+    Token* async = (parser.next().has({"async"}))? &parser.take() : nullptr;
+    Token& fun = parser.expectingHas({"fun"});
 
-    parser->expectingHas({"("});
-    Token* paren = (parser->next().has({"("}))? &parser->take() : nullptr;
+    parser.expectingHas({"("});
+    Token* paren = (parser.next().has({"("}))? &parser.take() : nullptr;
 
     Node* parameters = nullptr;
-    bool allow = parser->context.allowDirectAbstractDeclarator;
+    bool allow = parser.context.allowDirectAbstractDeclarator;
     
-    parser->context.allowDirectAbstractDeclarator = false;
-    if(not parser->next().has({")"})) parameters = AbstractParameters::construct();
-    parser->context.allowDirectAbstractDeclarator = allow;
+    parser.context.allowDirectAbstractDeclarator = false;
+    if(not parser.next().has({")"})) parameters = AbstractParameters::construct(parser);
+    parser.context.allowDirectAbstractDeclarator = allow;
 
-    parser->expectingHas({")"});
+    parser.expectingHas({")"});
     Node* type = nullptr;
 
-    if(paren and parser->next().has({"->"})) {
-        parser->take();
+    if(paren and parser.next().has({"->"})) {
+        parser.take();
 
-        Token* paren = (parser->next().has({"("}))? &parser->take() : nullptr;
-        type = TypeName::construct();
-        if(paren) parser->expectingHas({")"});
+        Token* paren = (parser.next().has({"("}))? &parser.take() : nullptr;
+        type = TypeName::construct(parser);
+        if(paren) parser.expectingHas({")"});
     }
 
-    if(paren) parser->expectingHas({")"});
+    if(paren) parser.expectingHas({")"});
     return new FunctionTypeSpecifier(async, fun, parameters, type);
 }

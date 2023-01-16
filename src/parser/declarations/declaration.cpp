@@ -21,29 +21,29 @@ Nodes Declaration::nodes() const {
     return nodes;
 }
 
-Node* Declaration::construct() {
-    if(parser->ahead(1).has({"assert"})) return AssertDeclaration::construct();
+Node* Declaration::construct(Parser& parser) {
+    if(parser.ahead(1).has({"assert"})) return AssertDeclaration::construct(parser);
 
-    Node* specifiers = DeclarationSpecifiers::construct();
+    Node* specifiers = DeclarationSpecifiers::construct(parser);
     vector<Node*> nodes;
 
     while(true) {
-        nodes.push_back(InitDeclarator::construct());
-        if(not parser->next().has({","})) break;
+        nodes.push_back(InitDeclarator::construct(parser));
+        if(not parser.next().has({","})) break;
         
-        parser->take();
-        parser->skipNewlines();
+        parser.take();
+        parser.skipNewlines();
     }
 
     return new Declaration(specifiers, nodes);
 }
 
-Transpiler::Line Declaration::transpile() {
+Transpiler::Line Declaration::transpile(Transpiler& transpiler) {
     Transpiler::Line line;
-    if(specifiers) line = specifiers->transpile();
+    if(specifiers) line = specifiers->transpile(transpiler);
     
     for(nat i = 0; i < declarators.size(); i++) {
-        line.add("", declarators[i]->transpile().toString());
+        line.add("", declarators[i]->transpile(transpiler).toString());
         if(i != declarators.size() - 1) line.add("", ", ");
     }
 

@@ -24,31 +24,31 @@ Nodes InitializerList::nodes() const {
     return nodes;
 }
 
-Node* InitializerList::construct() {
+Node* InitializerList::construct(Parser& parser) {
     vector<initializer> nodes;
 
     while(true) {
-        Node* desig = Designation::construct();
-        Node* init = SingleExpression::construct();
+        Node* desig = Designation::construct(parser);
+        Node* init = SingleExpression::construct(parser);
 
         nodes.push_back({desig, init});
-        if(not parser->next().has({","})) break;
+        if(not parser.next().has({","})) break;
 
-        parser->take();
-        parser->skipNewlines();
+        parser.take();
+        parser.skipNewlines();
         
-        if(parser->next().has({"]"})) break;
+        if(parser.next().has({"]"})) break;
     }
 
     return new InitializerList(nodes);
 }
 
-Transpiler::Line InitializerList::transpile() {
+Transpiler::Line InitializerList::transpile(Transpiler& transpiler) {
     Transpiler::Line line;
 
     for(initializer pair : initializers) {
-        if(pair.first) line.add("", pair.first->transpile().toString());
-        line.add("", pair.second->transpile().toString());
+        if(pair.first) line.add("", pair.first->transpile(transpiler).toString());
+        line.add("", pair.second->transpile(transpiler).toString());
         line.add("", ", ");
     }
 

@@ -13,19 +13,19 @@ Expression::~Expression() {
     delete &right;
 }
 
-Node* Expression::construct() {
-    Node* node = SingleExpression::construct();
+Node* Expression::construct(Parser& parser) {
+    Node* node = SingleExpression::construct(parser);
 
-    if(parser->next().has({","})) {
-        parser->take();
-        parser->skipNewlines();
-        node = new Expression(*node, *Expression::construct());
+    if(parser.next().has({","})) {
+        parser.take();
+        parser.skipNewlines();
+        node = new Expression(*node, *Expression::construct(parser));
     }
 
     return node;
 }
 
-Transpiler::Line Expression::transpile() {
-    Transpiler::Line line = right.transpile();
-    return line.add(fmt::format("{}, ", left.transpile().toString()));
+Transpiler::Line Expression::transpile(Transpiler& transpiler) {
+    Transpiler::Line line = right.transpile(transpiler);
+    return line.add(fmt::format("{}, ", left.transpile(transpiler).toString()));
 }

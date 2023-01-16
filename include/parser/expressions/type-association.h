@@ -11,7 +11,7 @@ struct TypeAssociation : public Node {
     ~TypeAssociation();
 
     Nodes nodes() const override;
-    static Node* construct();
+    static Node* construct(Parser& parser);
 };
 
 #endif //TYPE_ASSOCIATION_H

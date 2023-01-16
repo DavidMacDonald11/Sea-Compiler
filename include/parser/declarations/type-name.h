@@ -11,8 +11,8 @@ struct TypeName : public Node {
     ~TypeName();
 
     Nodes nodes() const override;
-    static Node* construct();
-    Transpiler::Line transpile() override;
+    static Node* construct(Parser& parser);
+    Transpiler::Line transpile(Transpiler& transpiler) override;
 };
 
 #endif //TYPE_NAME_H

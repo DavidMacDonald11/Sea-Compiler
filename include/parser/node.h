@@ -9,9 +9,6 @@
 using Nodes = vector<Component*>;
 
 struct Node : public Component {
-    static Parser* parser;
-    static Transpiler* transpiler;
-
     virtual Nodes nodes() const = 0;
     virtual str toString() const override;
     virtual str tree(str prefix) const override;
@@ -19,8 +16,8 @@ struct Node : public Component {
     virtual str raw() const override;
     virtual void mark() override;
 
-    //static virtual Node* construct();
-    virtual Transpiler::Line transpile() { return {}; };
+    //static virtual Node* construct(Parser& parser);
+    virtual Transpiler::Line transpile(Transpiler&) { return {}; };
 };
 
 struct PrimaryNode : public Node {
@@ -43,20 +40,20 @@ struct BinaryOperation : public Node {
     ~BinaryOperation();
 
     template <class Fun, class Func>
-    static Node* construct(vector<str> hasList, Fun makeChild, Func make) {
-        Node* node = makeChild();
+    static Node* construct(Parser& parser, vector<str> hasList, Fun makeChild, Func make) {
+        Node* node = makeChild(parser);
 
-        while(parser->next().has(hasList)) {
-            Token& op = parser->take();
-            Node& right = *makeChild();
+        while(parser.next().has(hasList)) {
+            Token& op = parser.take();
+            Node& right = *makeChild(parser);
             node = make(*node, op, right);
         }
 
         return node;
     }
 
-    virtual Transpiler::Line transpile() override;
-    virtual Transpiler::Line transpileBinary(str op);
+    virtual Transpiler::Line transpile(Transpiler& transpiler) override;
+    virtual Transpiler::Line transpileBinary(Transpiler& transpiler, str op);
 };
 
 #endif //NODE_H

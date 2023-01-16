@@ -1,10 +1,9 @@
 #include "parser/node.h"
 #include "parser/parser.h"
 #include "parser/statements/file-statement.h"
-#include "fault.h"
 
-Parser::Parser(vector<Token>& tokens) 
-: tokens(tokens), i(0), tree(nullptr), context() {}
+Parser::Parser(Fault& fault, vector<Token>& tokens) 
+: tokens(tokens), fault(fault), i(0), tree(nullptr), context() {}
 
 Parser::~Parser() {
     delete tree;
@@ -16,7 +15,7 @@ str Parser::toString() const {
 
 void Parser::makeTree() {
     FileStatement* node = new FileStatement();
-    node->makeTree();
+    node->makeTree(self);
     tree = node;
 }
 
@@ -46,7 +45,7 @@ Token& Parser::expectingOf(vector<Token::Type> types) {
     for(Token::Type type : types) names.push_back(Token::typeToString(type));
 
     str message = fmt::format("Expecting one of [{}]", join(names, ", "));
-    throw Fault::fail(take(), message);
+    throw fault.fail(take(), message);
 }
 
 Token& Parser::expectingHas(vector<str> values) {
@@ -56,7 +55,7 @@ Token& Parser::expectingHas(vector<str> values) {
     for(str value : values) escaped.push_back(fmt::format("\"{}\"", value));
 
     str message = fmt::format("Expecting one of [{}]", join(escaped, ", "));
-    throw Fault::fail(take(), message);
+    throw fault.fail(take(), message);
 }
 
 void Parser::skipNewlines() {

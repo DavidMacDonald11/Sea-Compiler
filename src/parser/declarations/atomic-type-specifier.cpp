@@ -13,15 +13,15 @@ Nodes AtomicTypeSpecifier::nodes() const {
     return {&type};
 }
 
-Node* AtomicTypeSpecifier::construct() {
-    parser->expectingHas({"atomic"});
-    parser->expectingHas({"("});
-    Node* type = TypeName::construct();
-    parser->expectingHas({")"});
+Node* AtomicTypeSpecifier::construct(Parser& parser) {
+    parser.expectingHas({"atomic"});
+    parser.expectingHas({"("});
+    Node* type = TypeName::construct(parser);
+    parser.expectingHas({")"});
 
     return new AtomicTypeSpecifier(*type);
 }
 
-Transpiler::Line AtomicTypeSpecifier::transpile() {
-    return type.transpile().add("_Atomic(", ")");
+Transpiler::Line AtomicTypeSpecifier::transpile(Transpiler& transpiler) {
+    return type.transpile(transpiler).add("_Atomic(", ")");
 }

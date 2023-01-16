@@ -1,16 +1,18 @@
 #ifndef LEXER_H
 #define LEXER_H
 
+#include "fault.h"
 #include "lexer/source-line.h"
 #include "token.h"
 #include "source-file.h"
 #include "../util.h"
 
 struct Lexer {
+    Fault& fault;
     vector<Token> tokens;
     SourceFile& file;
 
-    Lexer(SourceFile& file);
+    Lexer(Fault& fault, SourceFile& file);
 
     str toString() const;
     Token newToken(Token::Type type, SourceLine& line);

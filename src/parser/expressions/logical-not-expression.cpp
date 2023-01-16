@@ -10,15 +10,15 @@ LogicalNotExpression::~LogicalNotExpression() {
     delete &expression;
 }
 
-Node* LogicalNotExpression::construct() {
-    if(parser->next().has({"not"})) {
-        parser->take();
-        return new LogicalNotExpression(*LogicalNotExpression::construct());
+Node* LogicalNotExpression::construct(Parser& parser) {
+    if(parser.next().has({"not"})) {
+        parser.take();
+        return new LogicalNotExpression(*LogicalNotExpression::construct(parser));
     }
     
-    return ComparativeExpression::construct();
+    return ComparativeExpression::construct(parser);
 }
 
-Transpiler::Line LogicalNotExpression::transpile() {
-    return expression.transpile().add("!(", ")").cast("bool");
+Transpiler::Line LogicalNotExpression::transpile(Transpiler& transpiler) {
+    return expression.transpile(transpiler).add("!(", ")").cast("bool");
 }

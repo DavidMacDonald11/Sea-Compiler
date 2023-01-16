@@ -14,25 +14,25 @@ CastExpression::~CastExpression() {
     delete &type;
 }
 
-Node* CastExpression::construct() {
-    Node* node = AllocationExpression::construct();
+Node* CastExpression::construct(Parser& parser) {
+    Node* node = AllocationExpression::construct(parser);
 
-    while(parser->next().has({"as"})) {
-        parser->take();
-        bool hasParen = parser->next().has({"("});
+    while(parser.next().has({"as"})) {
+        parser.take();
+        bool hasParen = parser.next().has({"("});
 
-        if(hasParen) parser->take();
-        Node* type = TypeName::construct();
+        if(hasParen) parser.take();
+        Node* type = TypeName::construct(parser);
         node = new CastExpression(*node, *type);
-        if(hasParen) parser->expectingHas({")"});
+        if(hasParen) parser.expectingHas({")"});
     }
 
     return node;
 }
 
-Transpiler::Line CastExpression::transpile() {
-    Transpiler::Line line = type.transpile().add("(", ")");
-    Transpiler::Line expression = self.expression.transpile();
+Transpiler::Line CastExpression::transpile(Transpiler& transpiler) {
+    Transpiler::Line line = type.transpile(transpiler).add("(", ")");
+    Transpiler::Line expression = self.expression.transpile(transpiler);
 
     if(className(&self.expression) != "InitializerListExpression") 
         expression.add("(", ")");

@@ -10,17 +10,18 @@ static Node* make(Node& left, Token& op, Node& right) {
 LogicalOrExpression::LogicalOrExpression(Node& left, Token& op, Node& right)
 : BinaryOperation(left, op, right) {}
 
-Node* LogicalOrExpression::construct() {
+Node* LogicalOrExpression::construct(Parser& parser) {
     return BinaryOperation::construct(
+        parser,
         {"or"},
         LogicalXorExpression::construct,
         make
     );
 }
 
-Transpiler::Line LogicalOrExpression::transpile() {
-    Transpiler::Line left = self.left.transpile();
-    Transpiler::Line right = self.right.transpile();
+Transpiler::Line LogicalOrExpression::transpile(Transpiler& transpiler) {
+    Transpiler::Line left = self.left.transpile(transpiler);
+    Transpiler::Line right = self.right.transpile(transpiler);
     Transpiler::Line result = Transpiler::Line::resolve(left, right);
 
     return result.replace(fmt::format("({0}? {0} : {1})", 

@@ -5,8 +5,8 @@
 
 struct TypeQualifier : public PrimaryNode {
     TypeQualifier(Token& token);
-    static Node* construct();
-    Transpiler::Line transpile() override;
+    static Node* construct(Parser& parser);
+    Transpiler::Line transpile(Transpiler& transpiler) override;
 };
 
 #endif //TYPE_QUALIFIER_H

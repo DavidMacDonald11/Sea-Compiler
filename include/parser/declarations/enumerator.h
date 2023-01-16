@@ -11,7 +11,7 @@ struct Enumerator : public Node {
     ~Enumerator();
 
     Nodes nodes() const override;
-    static Node* construct();
+    static Node* construct(Parser& parser);
 };
 
 #endif //ENUMERATOR_H

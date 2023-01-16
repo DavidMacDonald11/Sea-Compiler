@@ -11,8 +11,8 @@ struct AlignSpecifier : public Node {
     AlignSpecifier(Node& alignOf);
     ~AlignSpecifier();
 
-    static Node* construct();
-    Transpiler::Line transpile() override;
+    static Node* construct(Parser& parser);
+    Transpiler::Line transpile(Transpiler& transpiler) override;
 };
 
 #endif //ALIGN_SPECIFIER_H

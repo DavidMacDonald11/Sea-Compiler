@@ -16,18 +16,18 @@ Nodes StructDeclarator::nodes() const {
     return {declarator};
 }
 
-Node* StructDeclarator::construct() {
-    if(parser->next().has({"using"})) {
-        parser->take();
-        return new StructDeclarator(nullptr, SingleExpression::construct());
+Node* StructDeclarator::construct(Parser& parser) {
+    if(parser.next().has({"using"})) {
+        parser.take();
+        return new StructDeclarator(nullptr, SingleExpression::construct(parser));
     }
 
-    Node* declarator = Declarator::construct();
+    Node* declarator = Declarator::construct(parser);
     Node* expression = nullptr;
 
-    if(parser->next().has({"using"})) {
-        parser->take();
-        expression = SingleExpression::construct();
+    if(parser.next().has({"using"})) {
+        parser.take();
+        expression = SingleExpression::construct(parser);
     }
 
     return new StructDeclarator(declarator, expression);

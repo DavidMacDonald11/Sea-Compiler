@@ -16,24 +16,24 @@ Nodes StructDefinition::nodes() const {
     return nodes;
 }
 
-Node* StructDefinition::construct() {
-    if(not parser->nextOrAfterHas({"struct", "union"})) return nullptr;
+Node* StructDefinition::construct(Parser& parser) {
+    if(not parser.nextOrAfterHas({"struct", "union"})) return nullptr;
     
     Token* visibility = nullptr;
-    if(parser->next().has(Token::VISIBILITY_KEYWORDS)) visibility = &parser->take();
+    if(parser.next().has(Token::VISIBILITY_KEYWORDS)) visibility = &parser.take();
 
-    Token& keyword = parser->expectingHas({"struct", "union"});
-    Token& name = parser->expectingOf({Token::IDENTIFIER});
+    Token& keyword = parser.expectingHas({"struct", "union"});
+    Token& name = parser.expectingOf({Token::IDENTIFIER});
 
-    parser->expectingHas({"{"});
-    parser->skipNewlines();
+    parser.expectingHas({"{"});
+    parser.skipNewlines();
     
     vector<Node*> list;
 
-    while(not parser->next().has({"}"})) {
-        list.push_back(StructDeclaration::construct());
+    while(not parser.next().has({"}"})) {
+        list.push_back(StructDeclaration::construct(parser));
     }
 
-    parser->expectingHas({"}"});
+    parser.expectingHas({"}"});
     return new StructDefinition(visibility, keyword, name, list);
 }

@@ -19,26 +19,26 @@ Nodes StructDeclaration::nodes() const {
     return nodes;
 }
 
-Node* StructDeclaration::construct() {
-    if(parser->nextOrAfterHas({"assert"})) {
-        Node* node =  AssertDeclaration::construct();
-        parser->expectingHas(Token::LINE_ENDS);
+Node* StructDeclaration::construct(Parser& parser) {
+    if(parser.nextOrAfterHas({"assert"})) {
+        Node* node =  AssertDeclaration::construct(parser);
+        parser.expectingHas(Token::LINE_ENDS);
         return node;
     }
 
-    Node& list = *SpecifierQualifierList::construct();
+    Node& list = *SpecifierQualifierList::construct(parser);
     vector<Node*> declarators;
 
-    while(not parser->next().has(Token::LINE_ENDS)) {
-        declarators.push_back(StructDeclarator::construct());
-        if(not parser->next().has({","})) break;
+    while(not parser.next().has(Token::LINE_ENDS)) {
+        declarators.push_back(StructDeclarator::construct(parser));
+        if(not parser.next().has({","})) break;
 
-        parser->take();
-        parser->skipNewlines();
+        parser.take();
+        parser.skipNewlines();
     }
 
-    parser->expectingHas(Token::LINE_ENDS);
-    parser->skipNewlines();
+    parser.expectingHas(Token::LINE_ENDS);
+    parser.skipNewlines();
     
     return new StructDeclaration(list, declarators);
 }

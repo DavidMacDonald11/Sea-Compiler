@@ -13,13 +13,13 @@ Nodes Enumerator::nodes() const {
     return {&identifier};
 }
 
-Node* Enumerator::construct() {
-    Token& identifier = parser->expectingOf({Token::IDENTIFIER});
+Node* Enumerator::construct(Parser& parser) {
+    Token& identifier = parser.expectingOf({Token::IDENTIFIER});
     Node* expression = nullptr;
 
-    if(parser->next().has({"="})) {
-        parser->take();
-        expression = SingleExpression::construct();
+    if(parser.next().has({"="})) {
+        parser.take();
+        expression = SingleExpression::construct(parser);
     }
 
     return new Enumerator(identifier, expression);

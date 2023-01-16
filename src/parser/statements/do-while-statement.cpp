@@ -15,22 +15,22 @@ Nodes DoWhileStatement::nodes() const {
         Nodes{&statement, &condition};
 }
 
-Node* DoWhileStatement::construct() {
-    if(not parser->nextOrAfterHas({"do"})) return nullptr;
+Node* DoWhileStatement::construct(Parser& parser) {
+    if(not parser.nextOrAfterHas({"do"})) return nullptr;
 
-    Token* label = (parser->next().of({Token::IDENTIFIER}))? &parser->take() : nullptr;
-    parser->expectingHas({"do"});
-    parser->skipNewlines();
+    Token* label = (parser.next().of({Token::IDENTIFIER}))? &parser.take() : nullptr;
+    parser.expectingHas({"do"});
+    parser.skipNewlines();
 
-    parser->context.mustEndLineStatement = false;
-    Node* statement = Statement::construct();
-    parser->context.mustEndLineStatement = true;
+    parser.context.mustEndLineStatement = false;
+    Node* statement = Statement::construct(parser);
+    parser.context.mustEndLineStatement = true;
 
-    parser->skipNewlines();
-    parser->expectingHas({"while"});
+    parser.skipNewlines();
+    parser.expectingHas({"while"});
 
-    Node* condition = Expression::construct();
-    parser->expectingHas(Token::LINE_ENDS);
+    Node* condition = Expression::construct(parser);
+    parser.expectingHas(Token::LINE_ENDS);
     
     return new DoWhileStatement(label, *statement, *condition);
 }

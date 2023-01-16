@@ -11,8 +11,8 @@ struct LogicalNotExpression : public Node {
     LogicalNotExpression(Node& expression);
     ~LogicalNotExpression();
 
-    static Node* construct();
-    Transpiler::Line transpile() override;
+    static Node* construct(Parser& parser);
+    Transpiler::Line transpile(Transpiler& transpiler) override;
 };
 
 #endif //LOGICAL_NOT_EXPRESSION_H

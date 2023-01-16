@@ -10,7 +10,7 @@ struct FunctionSpecifiers : public Node {
     FunctionSpecifiers(Token* visibility, vector<Token*> tokens);
 
     Nodes nodes() const override;
-    static Node* construct();
+    static Node* construct(Parser& parser);
 };
 
 #endif //FUNCTION_SPECIFIERS_H

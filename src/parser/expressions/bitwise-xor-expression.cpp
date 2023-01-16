@@ -10,14 +10,15 @@ static Node* make(Node& left, Token& op, Node& right) {
 BitwiseXorExpression::BitwiseXorExpression(Node& left, Token& op, Node& right)
 : BinaryOperation(left, op, right) {}
 
-Node* BitwiseXorExpression::construct() {
+Node* BitwiseXorExpression::construct(Parser& parser) {
     return BinaryOperation::construct(
+        parser,
         {"$"},
         BitwiseAndExpression::construct,
         make
     );
 }
 
-Transpiler::Line BitwiseXorExpression::transpile() {
-    return transpileBinary("^");
+Transpiler::Line BitwiseXorExpression::transpile(Transpiler& transpiler) {
+    return transpileBinary(transpiler, "^");
 }

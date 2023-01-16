@@ -11,8 +11,8 @@ struct CompoundStatement : public Node {
     CompoundStatement(vector<Node*> statements);
     ~CompoundStatement();
 
-    static Node* construct();
-    Transpiler::Line transpile() override;
+    static Node* construct(Parser& parser);
+    Transpiler::Line transpile(Transpiler& transpiler) override;
 };
 
 #endif //COMPOUND_STATEMENT_H

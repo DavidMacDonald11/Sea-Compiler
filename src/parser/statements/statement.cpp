@@ -10,46 +10,45 @@
 #include "parser/statements/line-statement-component.h"
 #include "parser/statements/statement.h"
 #include "parser/statements/while-statement.h"
-#include "fault.h"
 
 Statement::Statement(Node& statement)
 : HiddenStatement(statement) {}
 
-Node* Statement::construct() {
-    while(parser->next().has({"\n", ";"})) parser->take();
+Node* Statement::construct(Parser& parser) {
+    while(parser.next().has({"\n", ";"})) parser.take();
     
-    if(parser->next().has({"EOF"})) {
-        if(parser->context.allowNullStatements) return nullptr;
-        throw Fault::fail(parser->take(), "Expecting statement");
+    if(parser.next().has({"EOF"})) {
+        if(parser.context.allowNullStatements) return nullptr;
+        throw parser.fault.fail(parser.take(), "Expecting statement");
     }
 
-    parser->context.allowNullStatements = false;
-    Node* node = CompoundStatement::construct();
-    node = node? node : WhileStatement::construct();
-    node = node? node : DoWhileStatement::construct();
-    node = node? node : ForStatement::construct();
-    node = node? node : IfStatement::construct();
-    node = node? node : CompareStatement::construct();
-    node = node? node : FunctionDefinition::construct();
-    node = node? node : EnumDefinition::construct();
-    node = node? node : StructDefinition::construct();
-    node = node? node : CStatement::construct();
-    node = node? node : newLineStatement();
-    parser->context.allowNullStatements = true;
+    parser.context.allowNullStatements = false;
+    Node* node = CompoundStatement::construct(parser);
+    node = node? node : WhileStatement::construct(parser);
+    node = node? node : DoWhileStatement::construct(parser);
+    node = node? node : ForStatement::construct(parser);
+    node = node? node : IfStatement::construct(parser);
+    node = node? node : CompareStatement::construct(parser);
+    node = node? node : FunctionDefinition::construct(parser);
+    node = node? node : EnumDefinition::construct(parser);
+    node = node? node : StructDefinition::construct(parser);
+    node = node? node : CStatement::construct(parser);
+    node = node? node : newLineStatement(parser);
+    parser.context.allowNullStatements = true;
 
     return new Statement(*node);
 }
 
-Transpiler::Line Statement::transpile() {
-    if(className(&statement) != "LineStatementComponent") return statement.transpile();
-    return statement.transpile().finish(self, true);
+Transpiler::Line Statement::transpile(Transpiler& transpiler) {
+    if(className(&statement) != "LineStatementComponent") return statement.transpile(transpiler);
+    return statement.transpile(transpiler).finish(self, transpiler, true);
 }
 
-Node* Statement::newLineStatement() {
-    parser->context.allowNullStatements = false;
-    Node* node = LineStatementComponent::construct();
-    if(parser->context.mustEndLineStatement) parser->expectingHas(Token::LINE_ENDS);
-    parser->context.allowNullStatements = true;
+Node* Statement::newLineStatement(Parser& parser) {
+    parser.context.allowNullStatements = false;
+    Node* node = LineStatementComponent::construct(parser);
+    if(parser.context.mustEndLineStatement) parser.expectingHas(Token::LINE_ENDS);
+    parser.context.allowNullStatements = true;
     
     return node;
 }

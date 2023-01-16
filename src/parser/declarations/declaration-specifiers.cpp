@@ -20,21 +20,21 @@ Nodes DeclarationSpecifiers::nodes() const {
     return nodes;
 }
 
-Node* DeclarationSpecifiers::construct() {
+Node* DeclarationSpecifiers::construct(Parser& parser) {
     Token* visibility = nullptr;
     Token* storage = nullptr;
 
-    if(parser->next().has(Token::VISIBILITY_KEYWORDS)) visibility = &parser->take();
-    if(parser->next().has(Token::STORAGE_KEYWORDS)) storage = &parser->take();
+    if(parser.next().has(Token::VISIBILITY_KEYWORDS)) visibility = &parser.take();
+    if(parser.next().has(Token::STORAGE_KEYWORDS)) storage = &parser.take();
 
-    return new DeclarationSpecifiers(visibility, storage, *SpecifierQualifierList::construct());
+    return new DeclarationSpecifiers(visibility, storage, *SpecifierQualifierList::construct(parser));
 }
 
-Transpiler::Line DeclarationSpecifiers::transpile() {
+Transpiler::Line DeclarationSpecifiers::transpile(Transpiler& transpiler) {
     Transpiler::Line line;
 
     if(storage and not storage->has({"future"})) 
         line.replace(storage->string + " ");
 
-    return line.add("", list.transpile().toString() + " ");
+    return line.add("", list.transpile(transpiler).toString() + " ");
 }

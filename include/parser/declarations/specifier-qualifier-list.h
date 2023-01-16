@@ -13,8 +13,8 @@ struct SpecifierQualifierList : public Node {
     SpecifierQualifierList(Node* qualifiers, Node* align, Node& type);
     ~SpecifierQualifierList();
 
-    static Node* construct();
-    Transpiler::Line transpile() override;
+    static Node* construct(Parser& parser);
+    Transpiler::Line transpile(Transpiler& transpiler) override;
 };
 
 #endif //SPECIFIER_QUALIFIER_LIST_H

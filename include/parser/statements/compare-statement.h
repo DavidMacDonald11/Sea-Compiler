@@ -13,7 +13,7 @@ struct CompareStatement : public Node {
     ~CompareStatement();
 
     Nodes nodes() const override;
-    static Node* construct();
+    static Node* construct(Parser& parser);
 };
 
 struct WithStatement : public Node {

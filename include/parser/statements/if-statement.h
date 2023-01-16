@@ -13,7 +13,7 @@ struct IfStatement : public Node {
     ~IfStatement();
 
     Nodes nodes() const override;
-    static Node* construct();
+    static Node* construct(Parser& parser);
 };
 
 struct ElseIf : public Node {

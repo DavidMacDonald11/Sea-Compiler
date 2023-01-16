@@ -12,8 +12,8 @@ struct DirectAbstractDeclarator : public Node {
     ~DirectAbstractDeclarator();
 
     Nodes nodes() const override;
-    static Node* construct();
-    Transpiler::Line transpile() override;
+    static Node* construct(Parser& parser);
+    Transpiler::Line transpile(Transpiler& transpiler) override;
 };
 
 #endif //DIRECT_ABSTRACT_DECLARATOR_H

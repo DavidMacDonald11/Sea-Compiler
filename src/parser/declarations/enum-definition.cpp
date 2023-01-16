@@ -19,25 +19,25 @@ Nodes EnumDefinition::nodes() const {
     return nodes;
 }
 
-Node* EnumDefinition::construct() {
-    if(not parser->nextOrAfterHas({"enum"})) return nullptr;
+Node* EnumDefinition::construct(Parser& parser) {
+    if(not parser.nextOrAfterHas({"enum"})) return nullptr;
 
     Token* visibility = nullptr;
-    if(parser->nextOrAfterHas(Token::VISIBILITY_KEYWORDS)) visibility = &parser->take();
+    if(parser.nextOrAfterHas(Token::VISIBILITY_KEYWORDS)) visibility = &parser.take();
 
-    parser->expectingHas({"enum"});
-    Token& identifier = parser->expectingOf({Token::IDENTIFIER});
+    parser.expectingHas({"enum"});
+    Token& identifier = parser.expectingOf({Token::IDENTIFIER});
 
-    parser->expectingHas({"{"});
-    parser->skipNewlines();
+    parser.expectingHas({"{"});
+    parser.skipNewlines();
     
     vector<Node*> enumerators;
 
-    while(not parser->next().has({"}"})) {
-        enumerators.push_back(Enumerator::construct());
-        if(parser->next().has({","})) parser->take();
+    while(not parser.next().has({"}"})) {
+        enumerators.push_back(Enumerator::construct(parser));
+        if(parser.next().has({","})) parser.take();
     }
 
-    parser->expectingHas({"}"});
+    parser.expectingHas({"}"});
     return new EnumDefinition(visibility, identifier, enumerators);
 }

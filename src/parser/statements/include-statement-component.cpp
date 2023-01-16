@@ -11,18 +11,18 @@ Nodes IncludeStatementComponent::nodes() const {
     return {&token};
 }
 
-Node* IncludeStatementComponent::construct() {
-    if(not parser->next().has({"include"})) return nullptr;
-    parser->take();
+Node* IncludeStatementComponent::construct(Parser& parser) {
+    if(not parser.next().has({"include"})) return nullptr;
+    parser.take();
 
-    Token* lib = (parser->next().has({"lib"}))? &parser->take() : nullptr;
-    Token& token = parser->expectingOf({Token::STR});
+    Token* lib = (parser.next().has({"lib"}))? &parser.take() : nullptr;
+    Token& token = parser.expectingOf({Token::STR});
 
     return new IncludeStatementComponent(lib, token);
 }
 
-Transpiler::Line IncludeStatementComponent::transpile() {
+Transpiler::Line IncludeStatementComponent::transpile(Transpiler& transpiler) {
     str string = (lib)? "<" + replaceStr(token.string, "\"", "") + ">" : token.string;
     Transpiler::Line line = {"", string};
-    return line.add("#include ").finish(self, false);
+    return line.add("#include ").finish(self, transpiler, false);
 }

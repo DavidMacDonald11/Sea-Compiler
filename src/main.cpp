@@ -1,6 +1,7 @@
 #include <filesystem>
 #include <fmt/core.h>
 #include "lexer/lexer.h"
+#include "publisher/publisher.h"
 #include "substitutor/substitutor.h"
 #include "parser/parser.h"
 #include "parser/node.h"
@@ -10,6 +11,7 @@
 
 static void compileFile(const str& options, SourceFile& sFile, OutputFile& oFile);
 static void debugOut(str options, str path, Lexer* lexer, Substitutor* sub, Parser* parser);
+
 
 int main(int argc, char *argv[]) {
     vector<str> args;
@@ -33,38 +35,44 @@ int main(int argc, char *argv[]) {
 }
 
 void compileFile(const str& options, SourceFile& sFile, OutputFile& oFile) {
+    Fault fault;
     Lexer* lexer = nullptr;
-    Parser* parser = nullptr;
     Substitutor* substitutor = nullptr;
+    Parser* parser = nullptr;
+    Publisher* publisher = nullptr;
     Transpiler* transpiler = nullptr;
 
     try {
         fmt::print("Building {}...\n", sFile.path);
-        lexer = new Lexer(sFile);
+        lexer = new Lexer(fault, sFile);
         lexer->makeTokens();
-        Fault::check(); 
+        fault.check(); 
 
-        substitutor = new Substitutor(lexer->tokens);
+        substitutor = new Substitutor(fault, lexer->tokens);
         substitutor->replaceTokens();
-        Fault::check();
+        fault.check();
 
-        Node::parser = parser = new Parser(substitutor->tokens);
+        parser = new Parser(fault, substitutor->tokens);
         parser->makeTree();
-        Fault::check();
+        fault.check();
 
-        Node::transpiler = transpiler = new Transpiler(oFile);
-        parser->tree->transpile();
-        Fault::check();
+        publisher = new Publisher(fault);
+        fault.check();
+
+        transpiler = new Transpiler(fault, oFile);
+        parser->tree->transpile(*transpiler);
+        fault.check();
 
         debugOut(options, sFile.path, lexer, substitutor, parser);
     } catch(const Fault::CompilerFailure&) {
         debugOut(options, sFile.path, lexer, substitutor, parser);
-        fmt::print(stderr, "{}\n", Fault::toString());
+        fmt::print(stderr, "{}\n", fault.toString());
     }
 
     delete lexer;
     delete substitutor;
     delete parser;
+    delete publisher;
     delete transpiler;
 }
 

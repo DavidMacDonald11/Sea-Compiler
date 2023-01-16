@@ -5,8 +5,8 @@
 
 struct LogicalOrExpression : public BinaryOperation {
     LogicalOrExpression(Node& left, Token& op, Node& right);
-    static Node* construct();
-    Transpiler::Line transpile() override;
+    static Node* construct(Parser& parser);
+    Transpiler::Line transpile(Transpiler& transpiler) override;
 };
 
 #endif //LOGICAL_OR_EXPRESSION_H

@@ -13,7 +13,7 @@ struct PostfixCallExpression : public Node {
     PostfixCallExpression(vector<Node*> parameters, vector<Node*> defaults);
     ~PostfixCallExpression();
 
-    static Node* construct();
+    static Node* construct(Parser& parser);
 };
 
 struct DefaultArgument : public Node {
@@ -25,7 +25,7 @@ struct DefaultArgument : public Node {
     DefaultArgument(Token& identifier, Node& expression);
     ~DefaultArgument();
 
-    static Node* construct();
+    static Node* construct(Parser& parser);
 };
 
 #endif //POSTFIX_CALL_EXPRESSION_H

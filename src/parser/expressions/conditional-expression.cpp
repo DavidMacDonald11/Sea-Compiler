@@ -15,21 +15,21 @@ ConditionalExpression::~ConditionalExpression() {
     delete &right;
 }
 
-Node* ConditionalExpression::construct() {
-    Node* node = LogicalOrExpression::construct();
-    if(not parser->next().has({"if"})) return node;
+Node* ConditionalExpression::construct(Parser& parser) {
+    Node* node = LogicalOrExpression::construct(parser);
+    if(not parser.next().has({"if"})) return node;
 
-    parser->take();
-    Node& condition = *Expression::construct();
-    parser->expectingHas({"else"});
+    parser.take();
+    Node& condition = *Expression::construct(parser);
+    parser.expectingHas({"else"});
     
-    return new ConditionalExpression(*node, condition, *ConditionalExpression::construct());
+    return new ConditionalExpression(*node, condition, *ConditionalExpression::construct(parser));
 }
 
-Transpiler::Line ConditionalExpression::transpile() {
-    Transpiler::Line left = self.left.transpile();
-    Transpiler::Line condition = self.condition.transpile();
-    Transpiler::Line right = self.right.transpile();
+Transpiler::Line ConditionalExpression::transpile(Transpiler& transpiler) {
+    Transpiler::Line left = self.left.transpile(transpiler);
+    Transpiler::Line condition = self.condition.transpile(transpiler);
+    Transpiler::Line right = self.right.transpile(transpiler);
     Transpiler::Line result = Transpiler::Line::resolve(left, right);
     
     return result.replace(fmt::format("{1}? {0} : {2}", 

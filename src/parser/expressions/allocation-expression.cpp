@@ -2,14 +2,14 @@
 #include "parser/expressions/bitwise-or-expression.h"
 #include "transpiler/transpiler.h"
 
-Node* AllocationExpression::construct() {
-    Token& next = parser->next();
+Node* AllocationExpression::construct(Parser& parser) {
+    Token& next = parser.next();
 
-    if(next.has({"alloc"})) return AllocExpression::construct();
-    if(next.has({"realloc"})) return ReallocExpression::construct();
-    if(next.has({"unalloc"})) return UnallocExpression::construct();
+    if(next.has({"alloc"})) return AllocExpression::construct(parser);
+    if(next.has({"realloc"})) return ReallocExpression::construct(parser);
+    if(next.has({"unalloc"})) return UnallocExpression::construct(parser);
 
-    return BitwiseOrExpression::construct();
+    return BitwiseOrExpression::construct(parser);
 }
 
 
@@ -26,19 +26,19 @@ Nodes AllocExpression::nodes() const {
     return nodes;
 }
 
-Node* AllocExpression::construct() {
-    parser->take();
+Node* AllocExpression::construct(Parser& parser) {
+    parser.take();
 
-    Node* node = BitwiseOrExpression::construct();
-    Token* token = (parser->next().has({"null"}))? &parser->take() : nullptr;
+    Node* node = BitwiseOrExpression::construct(parser);
+    Token* token = (parser.next().has({"null"}))? &parser.take() : nullptr;
 
     return new AllocExpression(*node, token);
 }
 
-Transpiler::Line AllocExpression::transpile() {
-    transpiler->include("stdlib");
+Transpiler::Line AllocExpression::transpile(Transpiler& transpiler) {
+    transpiler.include("stdlib");
 
-    Transpiler::Line expression = self.expression.transpile().cast("wild", 1);
+    Transpiler::Line expression = self.expression.transpile(transpiler).cast("wild", 1);
 
     if(token) return expression.add("calloc(1, ", ")");
     return expression.add("malloc(", ")");
@@ -57,20 +57,20 @@ Nodes ReallocExpression::nodes() const {
     return {&expression, &size};
 }
 
-Node* ReallocExpression::construct() {
-    parser->take();
+Node* ReallocExpression::construct(Parser& parser) {
+    parser.take();
 
-    Node* expression = AllocationExpression::construct();
-    parser->expectingHas({"with"});
-    Node* size = BitwiseOrExpression::construct();
+    Node* expression = AllocationExpression::construct(parser);
+    parser.expectingHas({"with"});
+    Node* size = BitwiseOrExpression::construct(parser);
 
     return new ReallocExpression(*expression, *size);
 }
 
-Transpiler::Line ReallocExpression::transpile() {
-    transpiler->include("stdlib");
-    Transpiler::Line expression = self.expression.transpile().cast("wild", 1);
-    Transpiler::Line size = self.size.transpile();
+Transpiler::Line ReallocExpression::transpile(Transpiler& transpiler) {
+    transpiler.include("stdlib");
+    Transpiler::Line expression = self.expression.transpile(transpiler).cast("wild", 1);
+    Transpiler::Line size = self.size.transpile(transpiler);
 
     expression.add("realloc(", ", ");
     expression.add("", size.toString());
@@ -90,13 +90,13 @@ Nodes UnallocExpression::nodes() const {
     return {&expression};
 }
 
-Node* UnallocExpression::construct() {
-    parser->take();
-    Node* node = AllocationExpression::construct();
+Node* UnallocExpression::construct(Parser& parser) {
+    parser.take();
+    Node* node = AllocationExpression::construct(parser);
     return new UnallocExpression(*node);
 }
 
-Transpiler::Line UnallocExpression::transpile() {
-    transpiler->include("stdlib");
-    return expression.transpile().add("free(", ")").cast("", 0);
+Transpiler::Line UnallocExpression::transpile(Transpiler& transpiler) {
+    transpiler.include("stdlib");
+    return expression.transpile(transpiler).add("free(", ")").cast("", 0);
 }

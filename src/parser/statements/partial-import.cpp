@@ -9,13 +9,13 @@ Nodes PartialImport::nodes() const {
     return nodes;
 }
 
-Node* PartialImport::construct() {
-    parser->expectingHas({"import"});
-    Token& import = parser->expectingOf({Token::IDENTIFIER});
+Node* PartialImport::construct(Parser& parser) {
+    parser.expectingHas({"import"});
+    Token& import = parser.expectingOf({Token::IDENTIFIER});
 
-    if(not parser->next().has({"as"})) return new PartialImport(import);
+    if(not parser.next().has({"as"})) return new PartialImport(import);
     
-    parser->take();
-    Token* rename = &parser->expectingOf({Token::IDENTIFIER});
+    parser.take();
+    Token* rename = &parser.expectingOf({Token::IDENTIFIER});
     return new PartialImport(import, rename);
 }

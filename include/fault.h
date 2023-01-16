@@ -4,12 +4,12 @@
 #include "util.h"
 #include "parser/component.h"
 
-namespace Fault {
-    extern vector<str> warnings;
-    extern vector<str> errors;
-    extern str failure;
-
+struct Fault {
     class CompilerFailure : public std::exception {};
+
+    vector<str> warnings;
+    vector<str> errors;
+    str failure;
 
     str toString();
     void warn(Component& c, const str& message);
@@ -17,6 +17,6 @@ namespace Fault {
     CompilerFailure fail(Component& c, const str& message);
     void check();
     void reset();
-}
+};
 
 #endif

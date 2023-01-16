@@ -5,9 +5,6 @@
 #include "lexer/source-line.h"
 #include "transpiler/transpiler.h"
 
-Parser* Node::parser = nullptr;
-Transpiler* Node::transpiler = nullptr;
-
 str Node::toString() const { return tree("    "); }
 
 str Node::tree(str prefix) const { 
@@ -78,13 +75,13 @@ BinaryOperation::~BinaryOperation() {
     delete &right;
 }
 
-Transpiler::Line BinaryOperation::transpile() {
-    return transpileBinary(self.op.string);
+Transpiler::Line BinaryOperation::transpile(Transpiler& transpiler) {
+    return transpileBinary(transpiler, self.op.string);
 }
 
-Transpiler::Line BinaryOperation::transpileBinary(str op) {
-    Transpiler::Line left = self.left.transpile();
-    Transpiler::Line right = self.right.transpile();
+Transpiler::Line BinaryOperation::transpileBinary(Transpiler& transpiler, str op) {
+    Transpiler::Line left = self.left.transpile(transpiler);
+    Transpiler::Line right = self.right.transpile(transpiler);
     Transpiler::Line result = Transpiler::Line::resolve(left, right).castUp();
 
     result.replace(fmt::format("{} {} {}", left.toString(), op, right.toString()));

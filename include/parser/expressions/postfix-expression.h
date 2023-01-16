@@ -14,9 +14,9 @@ struct PostfixExpression : public Node {
     PostfixExpression(Node& expression, Token& op, Token& identifier);
     ~PostfixExpression();
 
-    static Node* construct();
-    Transpiler::Line transpile() override;
-    Transpiler::Line staticTranspile();
+    static Node* construct(Parser& parser);
+    Transpiler::Line transpile(Transpiler& transpiler) override;
+    Transpiler::Line staticTranspile(Transpiler& transpiler);
 };
 
 struct PostfixIndexExpression : public Node {
@@ -28,8 +28,8 @@ struct PostfixIndexExpression : public Node {
     PostfixIndexExpression(Node& index);
     ~PostfixIndexExpression();
 
-    static Node* construct();
-    Transpiler::Line transpile() override;
+    static Node* construct(Parser& parser);
+    Transpiler::Line transpile(Transpiler& transpiler) override;
 };
 
 #endif //POSTFIX_EXPRESSION_H

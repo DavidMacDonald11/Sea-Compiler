@@ -6,8 +6,8 @@
 
 struct LineStatementComponent : public HiddenStatement {
     LineStatementComponent(Node& statement);
-    static Node* construct();
-    Transpiler::Line transpile() override;
+    static Node* construct(Parser& parser);
+    Transpiler::Line transpile(Transpiler& transpiler) override;
 };
 
 #endif //LINE_STATEMENT_COMPONENT_H

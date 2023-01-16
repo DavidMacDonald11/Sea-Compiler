@@ -12,8 +12,8 @@ struct InitializerList : public Node {
     ~InitializerList();
 
     Nodes nodes() const override;
-    static Node* construct();
-    Transpiler::Line transpile() override;
+    static Node* construct(Parser& parser);
+    Transpiler::Line transpile(Transpiler& transpiler) override;
 };
 
 #endif //INITIALIZER_LIST_H

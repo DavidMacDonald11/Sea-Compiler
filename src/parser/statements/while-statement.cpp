@@ -15,17 +15,17 @@ Nodes WhileStatement::nodes() const {
         Nodes{&condition, &statement};
 }
 
-Node* WhileStatement::construct() {
-    if(not parser->nextOrAfterHas({"while"})) return nullptr;
+Node* WhileStatement::construct(Parser& parser) {
+    if(not parser.nextOrAfterHas({"while"})) return nullptr;
 
-    Token* label = (parser->next().of({Token::IDENTIFIER}))? &parser->take() : nullptr;
-    parser->expectingHas({"while"});
+    Token* label = (parser.next().of({Token::IDENTIFIER}))? &parser.take() : nullptr;
+    parser.expectingHas({"while"});
 
-    Node* expression = Expression::construct();
-    parser->skipNewlines();
+    Node* expression = Expression::construct(parser);
+    parser.skipNewlines();
 
-    if(parser->next().has({"do"})) parser->take();
-    Node* statement = Statement::construct();
+    if(parser.next().has({"do"})) parser.take();
+    Node* statement = Statement::construct(parser);
 
     return new WhileStatement(label, *expression, *statement);
 }

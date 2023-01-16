@@ -11,11 +11,11 @@ std::map<str, str> qualifierMap {
 TypeQualifier::TypeQualifier(Token& token)
 : PrimaryNode(token) {}
 
-Node* TypeQualifier::construct() {
-    Token& token = parser->expectingHas(Token::TYPE_QUALIFIER_KEYWORDS);
+Node* TypeQualifier::construct(Parser& parser) {
+    Token& token = parser.expectingHas(Token::TYPE_QUALIFIER_KEYWORDS);
     return new TypeQualifier(token);
 }
 
-Transpiler::Line TypeQualifier::transpile() {
+Transpiler::Line TypeQualifier::transpile(Transpiler&) {
     return {"", qualifierMap[token.string]};
 }

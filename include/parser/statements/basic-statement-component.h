@@ -4,12 +4,12 @@
 #include "../node.h"
 
 struct BasicStatementComponent : public Node {
-    static Node* construct();
+    static Node* construct(Parser& parser);
 };
 
 struct PassStatementComponent : public PrimaryNode {
     PassStatementComponent(Token& token);
-    static Node* construct();
+    static Node* construct(Parser& parser);
 };
 
 struct JumpStatementComponent : public Node {
@@ -19,7 +19,7 @@ struct JumpStatementComponent : public Node {
     JumpStatementComponent(Token& token, Token* label);
 
     Nodes nodes() const override;
-    static Node* construct();
+    static Node* construct(Parser& parser);
 };
 
 struct ReturnStatementComponent : public Node {
@@ -30,7 +30,7 @@ struct ReturnStatementComponent : public Node {
     ~ReturnStatementComponent();
 
     Nodes nodes() const override;
-    static Node* construct();
+    static Node* construct(Parser& parser);
 };
 
 #endif //BASIC_STATEMENT_COMPONENT_H

@@ -14,14 +14,14 @@ TypeQualifierList::~TypeQualifierList() {
     for(Node* node : qualifiers) delete node;
 }
 
-Node* TypeQualifierList::construct() {
+Node* TypeQualifierList::construct(Parser& parser) {
     vector<Node*> nodes;
 
-    while(parser->next().has(Token::TYPE_QUALIFIER_KEYWORDS)) {
-        if(parser->next().has({"atomic"}) and parser->ahead(1).has({"("})) 
+    while(parser.next().has(Token::TYPE_QUALIFIER_KEYWORDS)) {
+        if(parser.next().has({"atomic"}) and parser.ahead(1).has({"("})) 
             break;
         
-        Node* node = TypeQualifier::construct();
+        Node* node = TypeQualifier::construct(parser);
         nodes.push_back(node);
     } 
 
@@ -29,11 +29,11 @@ Node* TypeQualifierList::construct() {
     return new TypeQualifierList(nodes);
 }
 
-Transpiler::Line TypeQualifierList::transpile() {
+Transpiler::Line TypeQualifierList::transpile(Transpiler& transpiler) {
     Transpiler::Line result;
 
     for(Node* node : qualifiers) 
-        result.add("", fmt::format("{} ", node->transpile().toString()));
+        result.add("", fmt::format("{} ", node->transpile(transpiler).toString()));
 
     result.string.pop_back();
     return result;

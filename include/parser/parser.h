@@ -1,6 +1,7 @@
 #ifndef PARSER_H
 #define PARSER_H
 
+#include "fault.h"
 #include "lexer/token.h"
 
 class Node;
@@ -14,11 +15,12 @@ public:
         bool allowDirectAbstractDeclarator = false;
     };
 
+    Fault& fault;
     nat i;
     Node* tree;
     Context context;
 
-    Parser(vector<Token>& tokens);
+    Parser(Fault& fault, vector<Token>& tokens);
     ~Parser();
 
     str toString() const;

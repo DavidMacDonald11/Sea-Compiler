@@ -12,7 +12,7 @@ struct HiddenStatement : public Node {
     HiddenStatement(Node& statement);
     ~HiddenStatement();
 
-    virtual Transpiler::Line transpile() override;
+    virtual Transpiler::Line transpile(Transpiler& transpiler) override;
 };
 
 #endif //HIDDEN_STATEMENT_H

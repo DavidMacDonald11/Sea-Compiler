@@ -15,21 +15,24 @@ Nodes Designation::nodes() const {
     return nodes;
 }
 
-Node* Designation::construct() {
+Node* Designation::construct(Parser& parser) {
     vector<Node*> nodes;
 
-    while(parser->next().has({"#", "."})) {
-        nodes.push_back(Designator::construct());
+    while(parser.next().has({"#", "."})) {
+        nodes.push_back(Designator::construct(parser));
     }
 
     if(nodes.size() == 0) return nullptr;
 
-    parser->expectingHas({"="});
+    parser.expectingHas({"="});
     return new Designation(nodes);
 }
 
-Transpiler::Line Designation::transpile() {
+Transpiler::Line Designation::transpile(Transpiler& transpiler) {
     Transpiler::Line line;
-    for(Node* node : designators) line.add("", node->transpile().toString() + " ");
+    
+    for(Node* node : designators) 
+        line.add("", node->transpile(transpiler).toString() + " ");
+    
     return line.add("", "= ");
 }

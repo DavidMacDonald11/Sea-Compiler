@@ -20,21 +20,21 @@ Nodes AbstractDeclarator::nodes() const {
     return nodes;
 }
 
-Node* AbstractDeclarator::construct() {
-    Node* pointer = Pointer::construct();
-    Node* declarator = DirectAbstractDeclarator::construct();
+Node* AbstractDeclarator::construct(Parser& parser) {
+    Node* pointer = Pointer::construct(parser);
+    Node* declarator = DirectAbstractDeclarator::construct(parser);
 
-    if(not declarator and parser->context.allowDirectAbstractDeclarator)
-        declarator = DirectDeclarator::construct();
+    if(not declarator and parser.context.allowDirectAbstractDeclarator)
+        declarator = DirectDeclarator::construct(parser);
 
     if(not pointer and not declarator) return nullptr;
     return new AbstractDeclarator(pointer, declarator);
 }
 
-Transpiler::Line AbstractDeclarator::transpile() {
-    if(not pointer) return declarator->transpile();
+Transpiler::Line AbstractDeclarator::transpile(Transpiler& transpiler) {
+    if(not pointer) return declarator->transpile(transpiler);
 
-    Transpiler::Line line = pointer->transpile();
-    if(declarator) line.add("", declarator->transpile().toString());
+    Transpiler::Line line = pointer->transpile(transpiler);
+    if(declarator) line.add("", declarator->transpile(transpiler).toString());
     return line;
 }

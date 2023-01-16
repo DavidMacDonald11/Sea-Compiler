@@ -38,17 +38,17 @@ Nodes TypeSpecifier::nodes() const {
     return token? Nodes{token} : Nodes{node};
 }
 
-Node* TypeSpecifier::construct() {
-    if(parser->next().has(Token::TYPE_SPECIFIER_KEYWORDS)) 
-        return new TypeSpecifier(&parser->take());
+Node* TypeSpecifier::construct(Parser& parser) {
+    if(parser.next().has(Token::TYPE_SPECIFIER_KEYWORDS)) 
+        return new TypeSpecifier(&parser.take());
 
-    if(parser->next().has({"atomic"})) return AtomicTypeSpecifier::construct();
-    if(parser->next().has({"async", "fun"})) return FunctionTypeSpecifier::construct();
+    if(parser.next().has({"atomic"})) return AtomicTypeSpecifier::construct(parser);
+    if(parser.next().has({"async", "fun"})) return FunctionTypeSpecifier::construct(parser);
 
-    return new TypeSpecifier(nullptr, FileIdentifier::construct());
+    return new TypeSpecifier(nullptr, FileIdentifier::construct(parser));
 }
 
-Transpiler::Line TypeSpecifier::transpile() {
+Transpiler::Line TypeSpecifier::transpile(Transpiler& transpiler) {
     if(token) return {token->string, typeMap[token->string]};
-    return node->transpile();
+    return node->transpile(transpiler);
 }

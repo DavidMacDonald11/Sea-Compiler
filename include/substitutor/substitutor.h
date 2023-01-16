@@ -1,15 +1,17 @@
 #ifndef SUBSTITUTOR_H
 #define SUBSTITUTOR_H
 
+#include "fault.h"
 #include "lexer/token.h"
 
 class Substitutor {
     vector<Token>& lexerTokens;
 public:
+    Fault& fault;
     vector<Token> tokens;
     nat i;
 
-    Substitutor(vector<Token>& tokens);
+    Substitutor(Fault& fault, vector<Token>& tokens);
     
     str toString() const;
     Token& next() const;

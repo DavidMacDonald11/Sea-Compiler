@@ -1,11 +1,10 @@
 #include "lexer/lexer.h"
 #include "lexer/source-file.h"
 #include "lexer/source-line.h"
-#include "fault.h"
 #include "util.h"
 
-Lexer::Lexer(SourceFile& file)
-: tokens(), file(file) {}
+Lexer::Lexer(Fault& fault, SourceFile& file)
+: fault(fault), tokens(), file(file) {}
 
 str Lexer::toString() const { return vectorToString(tokens); }
 
@@ -38,7 +37,7 @@ void Lexer::makeToken() {
     file.take(1);
     Token token = newToken(Token::NONE);
 
-    throw Fault::fail(token, fmt::format(
+    throw fault.fail(token, fmt::format(
         "Unrecognized symbol '{}'",
         token.string
     ));
@@ -81,7 +80,7 @@ void Lexer::ignoreComment() {
     }
 
     Token token = newToken(Token::NONE, line);
-    throw Fault::fail(token, "Unterminated multiline comment");
+    throw fault.fail(token, "Unterminated multiline comment");
 }
 
 void Lexer::makePunctuator() {
@@ -100,7 +99,7 @@ void Lexer::makeLineContinue() {
     file.take(-1, "", "\n");
 
     Token token = newToken(Token::NONE);
-    throw Fault::fail(token, "Unexpected symbols after line continuation");
+    throw fault.fail(token, "Unexpected symbols after line continuation");
 }
 
 void Lexer::makeNewline() {
@@ -129,7 +128,7 @@ void Lexer::makeChar() {
     }
         
     Token token = newToken(Token::NONE);
-    throw Fault::fail(token, "Unterminated character");
+    throw fault.fail(token, "Unterminated character");
 }
 
 void Lexer::makeString() {
@@ -146,7 +145,7 @@ void Lexer::makeString() {
     }
 
     Token token = newToken(Token::NONE);
-    throw Fault::fail(token, "Unterminated string");
+    throw fault.fail(token, "Unterminated string");
 }
 
 void Lexer::makeNumber() {
@@ -186,7 +185,7 @@ void Lexer::makeOperator() {
     if(string == "###") return makeCStatement();
 
     if(not in(string, Token::OPERATORS)) {
-        throw Fault::fail(token, fmt::format(
+        throw fault.fail(token, fmt::format(
             "Unrecognized operator '{}'", 
             token.string));
     }

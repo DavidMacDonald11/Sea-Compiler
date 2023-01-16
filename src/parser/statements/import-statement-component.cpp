@@ -15,18 +15,18 @@ Nodes ImportStatementComponent::nodes() const {
     return nodes;
 }
 
-Node* ImportStatementComponent::construct() {
-    if(parser->next().has({"from"})) return FromImportStatementComponent::construct();
-    if(not parser->next().has({"import"})) return nullptr;
-    parser->take();
+Node* ImportStatementComponent::construct(Parser& parser) {
+    if(parser.next().has({"from"})) return FromImportStatementComponent::construct(parser);
+    if(not parser.next().has({"import"})) return nullptr;
+    parser.take();
 
-    Token* lib = (parser->next().has({"lib"}))? &parser->take() : nullptr;
-    Token& file = parser->expectingOf({Token::STR});
+    Token* lib = (parser.next().has({"lib"}))? &parser.take() : nullptr;
+    Token& file = parser.expectingOf({Token::STR});
 
-    if(not parser->next().has({"as"})) return new ImportStatementComponent(lib, file);
+    if(not parser.next().has({"as"})) return new ImportStatementComponent(lib, file);
     
-    parser->take();
-    Token* rename = &parser->expectingOf({Token::IDENTIFIER});
+    parser.take();
+    Token* rename = &parser.expectingOf({Token::IDENTIFIER});
     return new ImportStatementComponent(lib, file, rename);
 }
 
@@ -53,24 +53,24 @@ Nodes FromImportStatementComponent::nodes() const {
     return nodes;
 }
 
-Node* FromImportStatementComponent::construct() {
-    parser->expectingHas({"from"});
+Node* FromImportStatementComponent::construct(Parser& parser) {
+    parser.expectingHas({"from"});
 
-    Token* lib = (parser->next().has({"lib"}))? &parser->take() : nullptr;
-    Token& file = parser->expectingOf({Token::STR});
+    Token* lib = (parser.next().has({"lib"}))? &parser.take() : nullptr;
+    Token& file = parser.expectingOf({Token::STR});
 
-    if(parser->ahead(1).has({"*"})) {
-        parser->expectingHas({"import"});
-        return new FromImportStatementComponent(lib, file, &parser->take());
+    if(parser.ahead(1).has({"*"})) {
+        parser.expectingHas({"import"});
+        return new FromImportStatementComponent(lib, file, &parser.take());
     }
         
     vector<Node*> nodes;
 
     while(true) {
-        nodes.push_back(PartialImport::construct());
-        if(not parser->next().has({","})) break;
-        parser->take();
-        parser->skipNewlines();
+        nodes.push_back(PartialImport::construct(parser));
+        if(not parser.next().has({","})) break;
+        parser.take();
+        parser.skipNewlines();
     }
 
     return new FromImportStatementComponent(lib, file, nodes);

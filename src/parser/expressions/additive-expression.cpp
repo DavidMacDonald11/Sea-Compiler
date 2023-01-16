@@ -10,8 +10,9 @@ static Node* make(Node& left, Token& op, Node& right) {
 AdditiveExpression::AdditiveExpression(Node& left, Token& op, Node& right)
 : BinaryOperation(left, op, right) {}
 
-Node* AdditiveExpression::construct() {
+Node* AdditiveExpression::construct(Parser& parser) {
     return BinaryOperation::construct(
+        parser,
         {"+", "-"}, 
         MultiplicativeExpression::construct, 
         make);

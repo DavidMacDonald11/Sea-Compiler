@@ -14,10 +14,10 @@ Nodes DefaultParameter::nodes() const {
     return {&parameter, &expression};
 }
 
-Node* DefaultParameter::construct() {
-    Node& parameter = *Parameter::construct();
-    if(not parser->next().has({"="})) return &parameter;
+Node* DefaultParameter::construct(Parser& parser) {
+    Node& parameter = *Parameter::construct(parser);
+    if(not parser.next().has({"="})) return &parameter;
 
-    parser->take();
-    return new DefaultParameter(parameter, *SingleExpression::construct());
+    parser.take();
+    return new DefaultParameter(parameter, *SingleExpression::construct(parser));
 }

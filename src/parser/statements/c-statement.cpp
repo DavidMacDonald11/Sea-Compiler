@@ -9,23 +9,23 @@ Nodes CStatement::nodes() const {
     return {&token};
 }
 
-Node* CStatement::construct() {
-    if(not parser->next().has({"###"})) return nullptr;
+Node* CStatement::construct(Parser& parser) {
+    if(not parser.next().has({"###"})) return nullptr;
 
-    Token& token = parser->take();
+    Token& token = parser.take();
 
-    if(parser->next().has({"\n"})) {
-        parser->take();
+    if(parser.next().has({"\n"})) {
+        parser.take();
         return new CStatement(token);
     }
 
-    Token* cTokens = &parser->expectingOf({Token::C_TOKENS});
-    parser->expectingHas({"\n"});
+    Token* cTokens = &parser.expectingOf({Token::C_TOKENS});
+    parser.expectingHas({"\n"});
 
     return new CStatement(token, cTokens);
 }
 
-Transpiler::Line CStatement::transpile() {
+Transpiler::Line CStatement::transpile(Transpiler&) {
     if(cTokens) return {"", cTokens->string + "\n"};
     return {};
 }

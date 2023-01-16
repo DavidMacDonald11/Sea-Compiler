@@ -10,8 +10,9 @@ static Node* make(Node& left, Token& op, Node& right) {
 BitwiseAndExpression::BitwiseAndExpression(Node& left, Token& op, Node& right)
 : BinaryOperation(left, op, right) {}
 
-Node* BitwiseAndExpression::construct() {
+Node* BitwiseAndExpression::construct(Parser& parser) {
     return BinaryOperation::construct(
+        parser,
         {"&"},
         ShiftExpression::construct,
         make

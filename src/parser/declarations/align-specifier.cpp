@@ -11,17 +11,17 @@ AlignSpecifier::~AlignSpecifier() {
     delete &alignOf;
 }
 
-Node* AlignSpecifier::construct() {
-    parser->expectingHas({"alignas"});
-    parser->expectingHas({"("});
+Node* AlignSpecifier::construct(Parser& parser) {
+    parser.expectingHas({"alignas"});
+    parser.expectingHas({"("});
 
-    Node* alignOf = (parser->next().has(Token::TYPE_NAME_KEYWORDS))? 
-        TypeName::construct() : Expression::construct();
+    Node* alignOf = (parser.next().has(Token::TYPE_NAME_KEYWORDS))? 
+        TypeName::construct(parser) : Expression::construct(parser);
 
-    parser->expectingHas({")"});
+    parser.expectingHas({")"});
     return new AlignSpecifier(*alignOf);
 }
 
-Transpiler::Line AlignSpecifier::transpile() {
-    return alignOf.transpile().add("_Alignas(", ")");
+Transpiler::Line AlignSpecifier::transpile(Transpiler& transpiler) {
+    return alignOf.transpile(transpiler).add("_Alignas(", ")");
 }

@@ -12,7 +12,7 @@ struct DoWhileStatement : public Node {
     ~DoWhileStatement();
 
     Nodes nodes() const override;
-    static Node* construct();
+    static Node* construct(Parser& parser);
 };
 
 #endif //DO_WHILE_STATEMENT_H

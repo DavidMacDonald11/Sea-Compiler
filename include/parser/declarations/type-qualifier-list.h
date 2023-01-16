@@ -11,8 +11,8 @@ struct TypeQualifierList : public Node {
     TypeQualifierList(vector<Node*> qualifiers);
     ~TypeQualifierList();
 
-    static Node* construct();
-    Transpiler::Line transpile() override;
+    static Node* construct(Parser& parser);
+    Transpiler::Line transpile(Transpiler& transpiler) override;
 };
 
 #endif //TYPE_QUALIFIER_LIST_H

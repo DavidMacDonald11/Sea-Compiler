@@ -5,7 +5,7 @@
 #include "transpiler/transpiler.h"
 
 struct AllocationExpression : public Node {
-    static Node* construct();
+    static Node* construct(Parser& parser);
 };
 
 struct AllocExpression : public Node {
@@ -16,8 +16,8 @@ struct AllocExpression : public Node {
     ~AllocExpression();
 
     Nodes nodes() const override;
-    static Node* construct();
-    Transpiler::Line transpile() override;
+    static Node* construct(Parser& parser);
+    Transpiler::Line transpile(Transpiler& transpiler) override;
 };
 
 struct ReallocExpression : public Node {
@@ -28,8 +28,8 @@ struct ReallocExpression : public Node {
     ~ReallocExpression();
 
     Nodes nodes() const override;
-    static Node* construct();
-    Transpiler::Line transpile() override;
+    static Node* construct(Parser& parser);
+    Transpiler::Line transpile(Transpiler& transpiler) override;
 };
 
 struct UnallocExpression : public Node {
@@ -39,8 +39,8 @@ struct UnallocExpression : public Node {
     ~UnallocExpression();
 
     Nodes nodes() const override;
-    static Node* construct();
-    Transpiler::Line transpile() override;
+    static Node* construct(Parser& parser);
+    Transpiler::Line transpile(Transpiler& transpiler) override;
 };
 
 #endif //ALLOCATION_EXPRESSION_H

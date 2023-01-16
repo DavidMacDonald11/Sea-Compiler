@@ -1,6 +1,5 @@
 #include "parser/expressions/postfix-call-expression.h"
 #include "parser/expressions/single-expression.h"
-#include "fault.h"
 
 Nodes PostfixCallExpression::nodes() const {
     Nodes nodes = {expression};
@@ -21,25 +20,25 @@ PostfixCallExpression::~PostfixCallExpression() {
     for(Node* node : defaults) delete node;
 }
 
-Node* PostfixCallExpression::construct() {
+Node* PostfixCallExpression::construct(Parser& parser) {
     vector<Node*> parameters;
     vector<Node*> defaults;
 
-    while(not parser->next().has({")"})) {
-        Node* node = DefaultArgument::construct();
+    while(not parser.next().has({")"})) {
+        Node* node = DefaultArgument::construct(parser);
         bool isDefault = className(node) == "DefaultArgument";
 
         if(defaults.size() > 0 and not isDefault) {
-            Fault::error(*node, "Parameter arguments must precede default arguments.");
+            parser.fault.error(*node, "Parameter arguments must precede default arguments.");
         }
 
         (isDefault? &defaults : &parameters)->push_back(node);
         
-        if(parser->next().has({")"})) break;
-        parser->expectingHas({","}); 
+        if(parser.next().has({")"})) break;
+        parser.expectingHas({","}); 
     }
 
-    parser->expectingHas({")"});
+    parser.expectingHas({")"});
     return new PostfixCallExpression(parameters, defaults);
 }
 
@@ -55,12 +54,12 @@ DefaultArgument::~DefaultArgument() {
     delete &expression;
 }
 
-Node* DefaultArgument::construct() {
-    if(not parser->next().of({Token::IDENTIFIER})) return SingleExpression::construct();
-    if(not parser->ahead(1).has({"="})) return SingleExpression::construct();
+Node* DefaultArgument::construct(Parser& parser) {
+    if(not parser.next().of({Token::IDENTIFIER})) return SingleExpression::construct(parser);
+    if(not parser.ahead(1).has({"="})) return SingleExpression::construct(parser);
     
-    Token& identifier = parser->take();
-    parser->take();
+    Token& identifier = parser.take();
+    parser.take();
     
-    return new DefaultArgument(identifier, *SingleExpression::construct());
+    return new DefaultArgument(identifier, *SingleExpression::construct(parser));
 }

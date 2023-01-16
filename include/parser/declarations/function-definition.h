@@ -14,7 +14,7 @@ struct FunctionDefinition : public Node {
     ~FunctionDefinition();
 
     Nodes nodes() const override;
-    static Node* construct();
+    static Node* construct(Parser& parser);
 };
 
 #endif //FUNCTION_DEFINITION_H

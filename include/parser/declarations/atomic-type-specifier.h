@@ -11,8 +11,8 @@ struct AtomicTypeSpecifier : public Node {
     ~AtomicTypeSpecifier();
 
     Nodes nodes() const override;
-    static Node* construct();
-    Transpiler::Line transpile() override;
+    static Node* construct(Parser& parser);
+    Transpiler::Line transpile(Transpiler& transpiler) override;
 };
 
 #endif //ATOMIC_TYPE_SPECIFIER_H

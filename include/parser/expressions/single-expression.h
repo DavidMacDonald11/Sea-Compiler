@@ -4,7 +4,7 @@
 #include "../node.h"
 
 struct SingleExpression : public Node {
-    static Node* construct();
+    static Node* construct(Parser& parser);
 };
 
 #endif //SINGLE_EXPRESSION_H

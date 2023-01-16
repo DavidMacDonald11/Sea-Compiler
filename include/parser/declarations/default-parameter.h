@@ -11,7 +11,7 @@ struct DefaultParameter : public Node {
     ~DefaultParameter();
 
     Nodes nodes() const override;
-    static Node* construct();
+    static Node* construct(Parser& parser);
 };
 
 #endif //DEFAULT_PARAMETER_H

@@ -12,8 +12,8 @@ struct CastExpression : public Node {
     CastExpression(Node& expression, Node& type);
     ~CastExpression();
 
-    static Node* construct();
-    Transpiler::Line transpile() override;
+    static Node* construct(Parser& parser);
+    Transpiler::Line transpile(Transpiler& transpiler) override;
 };
 
 #endif //CAST_EXPRESSION_H

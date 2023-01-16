@@ -20,21 +20,21 @@ Nodes AliasStatementComponent::nodes() const {
     return nodes;
 }
 
-Node* AliasStatementComponent::construct() {
-    if(not parser->nextOrAfterHas({"alias"})) return nullptr;
+Node* AliasStatementComponent::construct(Parser& parser) {
+    if(not parser.nextOrAfterHas({"alias"})) return nullptr;
     
     Token* visibility = nullptr;
-    if(parser->next().has({Token::VISIBILITY_KEYWORDS})) visibility = &parser->take();
+    if(parser.next().has({Token::VISIBILITY_KEYWORDS})) visibility = &parser.take();
 
-    parser->expectingHas({"alias"});
-    Node* type = TypeName::construct();
-    parser->expectingHas({"as"});
-    Token& identifier = parser->expectingOf({Token::IDENTIFIER});
+    parser.expectingHas({"alias"});
+    Node* type = TypeName::construct(parser);
+    parser.expectingHas({"as"});
+    Token& identifier = parser.expectingOf({Token::IDENTIFIER});
 
     return new AliasStatementComponent(visibility, *type, identifier);
 }
 
-Transpiler::Line AliasStatementComponent::transpile() {
-    Transpiler::Line line = type.transpile();
+Transpiler::Line AliasStatementComponent::transpile(Transpiler& transpiler) {
+    Transpiler::Line line = type.transpile(transpiler);
     return line.add("typedef ", " " + identifier.string);
 }

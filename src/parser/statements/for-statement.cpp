@@ -17,44 +17,44 @@ Nodes ForStatement::nodes() const {
         : Nodes{&declaration, &condition, &mod, &statement};
 }
 
-Node* ForStatement::construct() {
-    if(not parser->nextOrAfterHas({"for"})) return nullptr;
+Node* ForStatement::construct(Parser& parser) {
+    if(not parser.nextOrAfterHas({"for"})) return nullptr;
 
-    Token* label = parser->next().of({Token::IDENTIFIER})? &parser->take() : nullptr;
-    parser->expectingHas({"for"});
+    Token* label = parser.next().of({Token::IDENTIFIER})? &parser.take() : nullptr;
+    parser.expectingHas({"for"});
 
     Token* paren = nullptr;
 
-    if(parser->next().has({"("})) {
-        paren = &parser->take();
-        parser->skipNewlines();
+    if(parser.next().has({"("})) {
+        paren = &parser.take();
+        parser.skipNewlines();
     }
 
-    Node& declaration = *LineStatementComponent::construct();
-    takeEndOrKeyword("while");
+    Node& declaration = *LineStatementComponent::construct(parser);
+    takeEndOrKeyword(parser, "while");
 
-    Node& condition = *Expression::construct();
-    takeEndOrKeyword("then");
+    Node& condition = *Expression::construct(parser);
+    takeEndOrKeyword(parser, "then");
 
-    Node& modification = *LineStatementComponent::construct();
-    if(paren) parser->expectingHas({")"});
-    parser->skipNewlines();
+    Node& modification = *LineStatementComponent::construct(parser);
+    if(paren) parser.expectingHas({")"});
+    parser.skipNewlines();
 
-    if(parser->next().has({"do"})) parser->take();
-    parser->skipNewlines();
+    if(parser.next().has({"do"})) parser.take();
+    parser.skipNewlines();
 
-    Node& statement = *Statement::construct();
+    Node& statement = *Statement::construct(parser);
     return new ForStatement(label, declaration, condition, modification, statement);
 }
 
-void ForStatement::takeEndOrKeyword(str keyword) {
-    Token* end = (parser->next().has(Token::LINE_ENDS))? &parser->take() : nullptr;
-    parser->skipNewlines();
+void ForStatement::takeEndOrKeyword(Parser& parser, str keyword) {
+    Token* end = (parser.next().has(Token::LINE_ENDS))? &parser.take() : nullptr;
+    parser.skipNewlines();
 
     if(end) {
-        if(parser->next().has({keyword})) parser->take();
+        if(parser.next().has({keyword})) parser.take();
         return;
     }
 
-    parser->expectingHas({keyword});
+    parser.expectingHas({keyword});
 }

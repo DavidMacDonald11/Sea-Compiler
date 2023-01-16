@@ -5,8 +5,8 @@
 
 struct LogicalXorExpression : public BinaryOperation {
     LogicalXorExpression(Node& left, Token& op, Node& right);
-    static Node* construct();
-    Transpiler::Line transpile() override;
+    static Node* construct(Parser& parser);
+    Transpiler::Line transpile(Transpiler& transpiler) override;
 };
 
 #endif //LOGICAL_XOR_EXPRESSION_H

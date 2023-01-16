@@ -17,16 +17,16 @@ Nodes TypeName::nodes() const {
     return nodes;
 }
 
-Node* TypeName::construct() {
-    Node* list = SpecifierQualifierList::construct();
-    return new TypeName(*list, AbstractDeclarator::construct());
+Node* TypeName::construct(Parser& parser) {
+    Node* list = SpecifierQualifierList::construct(parser);
+    return new TypeName(*list, AbstractDeclarator::construct(parser));
 }
 
-Transpiler::Line TypeName::transpile() {
-    Transpiler::Line line = list.transpile();
+Transpiler::Line TypeName::transpile(Transpiler& transpiler) {
+    Transpiler::Line line = list.transpile(transpiler);
 
     if(declarator) {
-        Transpiler::Line declarator = self.declarator->transpile();
+        Transpiler::Line declarator = self.declarator->transpile(transpiler);
         line.add("", declarator.toString());
         line.pointers = declarator.pointers;
     }

@@ -27,46 +27,46 @@ Nodes FunctionDefinition::nodes() const {
     return nodes;
 }
 
-Node* FunctionDefinition::construct() {
-    Token* visibility = (parser->next().has(Token::VISIBILITY_KEYWORDS))? &parser->take() : nullptr;
-    Token* async = (parser->next().has({"async"}))? &parser->take() : nullptr;
+Node* FunctionDefinition::construct(Parser& parser) {
+    Token* visibility = (parser.next().has(Token::VISIBILITY_KEYWORDS))? &parser.take() : nullptr;
+    Token* async = (parser.next().has({"async"}))? &parser.take() : nullptr;
 
-    if(not async and not parser->next().has(mergeAll<str>({
+    if(not async and not parser.next().has(mergeAll<str>({
             Token::FUNCTION_KEYWORDS, {"fun"}}))) {
-        if(async) parser->i -= 1;
-        if(visibility) parser->i -= 1;
+        if(async) parser.i -= 1;
+        if(visibility) parser.i -= 1;
         return nullptr;
     }
 
-    if((async or parser->next().has({"fun"})) and not parser->ahead(1).of({
-            Token::IDENTIFIER}) and not parser->next().has(Token::FUNCTION_KEYWORDS)) {
-        if(async) parser->i -= 1;
-        if(visibility) parser->i -= 1;
+    if((async or parser.next().has({"fun"})) and not parser.ahead(1).of({
+            Token::IDENTIFIER}) and not parser.next().has(Token::FUNCTION_KEYWORDS)) {
+        if(async) parser.i -= 1;
+        if(visibility) parser.i -= 1;
         
-        return Statement::newLineStatement();
+        return Statement::newLineStatement(parser);
     }
     
-    if(async) parser->i -= 1;
-    if(visibility) parser->i -= 1;
+    if(async) parser.i -= 1;
+    if(visibility) parser.i -= 1;
 
-    Node* specifiers = FunctionSpecifiers::construct();
-    parser->expectingHas({"fun"});
-    Token& name = parser->expectingOf({Token::IDENTIFIER});
+    Node* specifiers = FunctionSpecifiers::construct(parser);
+    parser.expectingHas({"fun"});
+    Token& name = parser.expectingOf({Token::IDENTIFIER});
 
-    parser->expectingHas({"("});
+    parser.expectingHas({"("});
     Node* parameters = nullptr;
-    if(not parser->next().has({")"})) parameters = Parameters::construct();
-    parser->expectingHas({")"});
+    if(not parser.next().has({")"})) parameters = Parameters::construct(parser);
+    parser.expectingHas({")"});
 
     Node* type = nullptr;
 
-    if(parser->next().has({"->"})) {
-        parser->take();
-        type = TypeName::construct();
+    if(parser.next().has({"->"})) {
+        parser.take();
+        type = TypeName::construct(parser);
     }
 
-    Node* cStatement = CompoundStatement::construct();
-    if(not cStatement) parser->expectingHas({"{"});
+    Node* cStatement = CompoundStatement::construct(parser);
+    if(not cStatement) parser.expectingHas({"{"});
     
     Node& statement = *cStatement;
     return new FunctionDefinition(specifiers, name, parameters, type, statement);

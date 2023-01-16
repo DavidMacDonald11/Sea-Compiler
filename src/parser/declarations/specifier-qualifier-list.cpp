@@ -22,22 +22,22 @@ SpecifierQualifierList::~SpecifierQualifierList() {
     delete &type;
 }
 
-Node* SpecifierQualifierList::construct() {
-    Node* qualifiers = (parser->next().has(Token::TYPE_QUALIFIER_KEYWORDS))? 
-        TypeQualifierList::construct() : nullptr;
+Node* SpecifierQualifierList::construct(Parser& parser) {
+    Node* qualifiers = (parser.next().has(Token::TYPE_QUALIFIER_KEYWORDS))? 
+        TypeQualifierList::construct(parser) : nullptr;
 
-    Node* align = (parser->next().has({"alignas"}))? 
-        AlignSpecifier::construct() : nullptr;
+    Node* align = (parser.next().has({"alignas"}))? 
+        AlignSpecifier::construct(parser) : nullptr;
 
-    Node* type = TypeSpecifier::construct();
+    Node* type = TypeSpecifier::construct(parser);
     return new SpecifierQualifierList(qualifiers, align, *type);
 }
 
-Transpiler::Line SpecifierQualifierList::transpile() {
-    Transpiler::Line line = type.transpile();
+Transpiler::Line SpecifierQualifierList::transpile(Transpiler& transpiler) {
+    Transpiler::Line line = type.transpile(transpiler);
 
-    if(align) line.add(fmt::format("{} ", align->transpile().toString()));
-    if(qualifiers) line.add(fmt::format("{} ", qualifiers->transpile().toString()));
+    if(align) line.add(fmt::format("{} ", align->transpile(transpiler).toString()));
+    if(qualifiers) line.add(fmt::format("{} ", qualifiers->transpile(transpiler).toString()));
 
     return line;
 }

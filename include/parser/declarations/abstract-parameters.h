@@ -11,7 +11,7 @@ struct AbstractParameters : public Node {
     ~AbstractParameters();
 
     Nodes nodes() const override;
-    static Node* construct();
+    static Node* construct(Parser& parser);
 };
 
 #endif //ABSTRACT_PARAMETERS_H

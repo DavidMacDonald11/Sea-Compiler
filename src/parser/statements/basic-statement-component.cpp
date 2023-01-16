@@ -2,10 +2,10 @@
 #include "parser/expressions/expression.h"
 #include "parser/node.h"
 
-Node* BasicStatementComponent::construct() {
-    Node* node = PassStatementComponent::construct();
-    node = node? node : JumpStatementComponent::construct();
-    node = node? node : ReturnStatementComponent::construct();
+Node* BasicStatementComponent::construct(Parser& parser) {
+    Node* node = PassStatementComponent::construct(parser);
+    node = node? node : JumpStatementComponent::construct(parser);
+    node = node? node : ReturnStatementComponent::construct(parser);
 
     return node;
 }
@@ -14,9 +14,9 @@ Node* BasicStatementComponent::construct() {
 PassStatementComponent::PassStatementComponent(Token& token)
 : PrimaryNode(token) {}
 
-Node* PassStatementComponent::construct() {
-    if(not parser->next().has({"pass"})) return nullptr;
-    return new PassStatementComponent(parser->take());
+Node* PassStatementComponent::construct(Parser& parser) {
+    if(not parser.next().has({"pass"})) return nullptr;
+    return new PassStatementComponent(parser.take());
 }
 
 
@@ -28,11 +28,11 @@ Nodes JumpStatementComponent::nodes() const {
     return {&token};
 }
 
-Node* JumpStatementComponent::construct() {
-    if(not parser->next().has({"continue", "break"})) return nullptr;
+Node* JumpStatementComponent::construct(Parser& parser) {
+    if(not parser.next().has({"continue", "break"})) return nullptr;
 
-    Token& token = parser->take();
-    Token* label = (parser->next().of({Token::IDENTIFIER}))? &parser->take() : nullptr;
+    Token& token = parser.take();
+    Token* label = (parser.next().of({Token::IDENTIFIER}))? &parser.take() : nullptr;
 
     return new JumpStatementComponent(token, label);
 }
@@ -48,12 +48,12 @@ Nodes ReturnStatementComponent::nodes() const {
     return {&token};
 }
 
-Node* ReturnStatementComponent::construct() {
-    if(not parser->next().has({"return"})) return nullptr;
+Node* ReturnStatementComponent::construct(Parser& parser) {
+    if(not parser.next().has({"return"})) return nullptr;
 
-    Token& token = parser->take();
+    Token& token = parser.take();
     Node* expression = nullptr;
 
-    if(not parser->next().has(Token::LINE_ENDS)) expression = Expression::construct();
+    if(not parser.next().has(Token::LINE_ENDS)) expression = Expression::construct(parser);
     return new ReturnStatementComponent(token, expression);
 }

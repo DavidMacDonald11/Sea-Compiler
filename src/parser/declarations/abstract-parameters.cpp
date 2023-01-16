@@ -18,21 +18,21 @@ Nodes AbstractParameters::nodes() const {
     return nodes;
 }
 
-Node* AbstractParameters::construct() {
+Node* AbstractParameters::construct(Parser& parser) {
     vector<Node*> nodes;
     Token* varargs = nullptr;
 
-    nodes.push_back(Parameter::construct());
+    nodes.push_back(Parameter::construct(parser));
 
-    while(parser->next().has({","})) {
-        parser->take();
+    while(parser.next().has({","})) {
+        parser.take();
 
-        if(parser->next().has({"..."})) {
-            varargs = &parser->take();
+        if(parser.next().has({"..."})) {
+            varargs = &parser.take();
             break;
         }
 
-        nodes.push_back(Parameter::construct());
+        nodes.push_back(Parameter::construct(parser));
     }
 
     return new AbstractParameters(nodes, varargs);

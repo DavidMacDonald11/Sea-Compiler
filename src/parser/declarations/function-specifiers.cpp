@@ -9,12 +9,12 @@ Nodes FunctionSpecifiers::nodes() const {
     return nodes;
 }
 
-Node* FunctionSpecifiers::construct() {
+Node* FunctionSpecifiers::construct(Parser& parser) {
     Token* visibility = nullptr; 
-    if(parser->next().has(Token::VISIBILITY_KEYWORDS)) visibility = &parser->take();
+    if(parser.next().has(Token::VISIBILITY_KEYWORDS)) visibility = &parser.take();
 
     vector<Token*> tokens;
-    while(parser->next().has(Token::FUNCTION_KEYWORDS)) tokens.push_back(&parser->take());
+    while(parser.next().has(Token::FUNCTION_KEYWORDS)) tokens.push_back(&parser.take());
     
     if(not visibility and tokens.size() == 0) return nullptr;
     return new FunctionSpecifiers(visibility, tokens);

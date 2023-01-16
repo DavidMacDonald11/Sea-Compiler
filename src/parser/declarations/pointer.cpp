@@ -16,26 +16,26 @@ Nodes Pointer::nodes() const {
     return nodes;
 }
 
-Node* Pointer::construct() {
-    if(not parser->next().has({"^"})) return nullptr;
+Node* Pointer::construct(Parser& parser) {
+    if(not parser.next().has({"^"})) return nullptr;
 
-    Token& token = parser->take();
+    Token& token = parser.take();
     Node* qualifiers = nullptr;
 
-    if(parser->next().has(Token::TYPE_QUALIFIER_KEYWORDS)) 
-        qualifiers = TypeQualifierList::construct();
+    if(parser.next().has(Token::TYPE_QUALIFIER_KEYWORDS)) 
+        qualifiers = TypeQualifierList::construct(parser);
 
-    return new Pointer(token, qualifiers, Pointer::construct());
+    return new Pointer(token, qualifiers, Pointer::construct(parser));
 }
 
-Transpiler::Line Pointer::transpile() {
+Transpiler::Line Pointer::transpile(Transpiler& transpiler) {
     Transpiler::Line line = {"", "*"};
     line.pointers = 1;
     
-    if(qualifiers) line.add("", qualifiers->transpile().toString());
+    if(qualifiers) line.add("", qualifiers->transpile(transpiler).toString());
 
     if(pointer) {
-        Transpiler::Line ptr = pointer->transpile();
+        Transpiler::Line ptr = pointer->transpile(transpiler);
         line.pointers += ptr.pointers;
         line.add("", ptr.toString());
     }
