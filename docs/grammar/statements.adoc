@@ -24,13 +24,13 @@
 {tab} `_partial-import-list_` `*,*` `_partial-import_`
 
 `_import-statement-component_`:
-{tab} `*from*` `_string-constant_` `_partial-import-list_` 
-{tab} `*from*` `_string-constant_` `*import*` `*{star}*` 
-{tab} `*import*` `_string-constant_` 
-{tab} `*import*` `_string-constant_` `*as*` `_identifier_` 
+{tab} `*from*` `*lib*`~opt~ `_string-constant_` `_partial-import-list_` 
+{tab} `*from*` `*lib*`~opt~ `_string-constant_` `*import*` `*{star}*` 
+{tab} `*import*` `*lib*`~opt~ `_string-constant_` 
+{tab} `*import*` `*lib*`~opt~ `_string-constant_` `*as*` `_identifier_` 
 
 `_include-statement-component_`:
-{tab} `*include*` `_string-constant_` 
+{tab} `*include*` `*lib*`~opt~ `_string-constant_` 
 
 `_basic-statement-component_`:
 {tab} `*pass*`

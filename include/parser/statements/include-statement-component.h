@@ -4,8 +4,13 @@
 #include "../node.h"
 #include "transpiler/transpiler.h"
 
-struct IncludeStatementComponent : public PrimaryNode {
-    IncludeStatementComponent(Token& token);
+struct IncludeStatementComponent : public Node {
+    Token* lib;
+    Token& token;
+
+    IncludeStatementComponent(Token* lib, Token& token);
+
+    Nodes nodes() const override;
     static Node* construct();
     Transpiler::Line transpile() override;
 };

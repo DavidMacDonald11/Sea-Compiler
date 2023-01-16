@@ -184,7 +184,7 @@ const vector<str> Token::KEYWORDS(mergeAll<str>( {
         "pass", "continue", "break", "return",
         "while", "do", "for", "then",
         "compare", "using", "with",
-        "alias", "import", "include", "from",
+        "alias", "import", "include", "from", "lib",
         "to", "by"
     }
 }));

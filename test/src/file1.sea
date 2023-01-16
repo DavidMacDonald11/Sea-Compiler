@@ -1,3 +1,4 @@
+include lib "stdio.h"
 from "file2" import Token
 
 export struct SourceLine {
