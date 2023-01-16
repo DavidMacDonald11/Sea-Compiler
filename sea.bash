@@ -25,7 +25,7 @@ usage() {
     printf "Compiles Sea code in FILEs or in DIRs and subdirs.\n\n"
     printf "OPTIONS:\n"
 
-    printu "-d, --debug" "prints compiler debug information."
+    printu "-d, --debug" "writes compiler debug information to a file."
     printu "-h, --help" "prints the sea command's usage information."
     printu "-u, --update" "uses git to update Sea to the latest version."
     printu "--version" "prints the sea command's version information."

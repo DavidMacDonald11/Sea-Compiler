@@ -4,14 +4,14 @@
 #include "util.h"
 
 class OutputFile {
-    std::ofstream file;
+    std::ofstream* file;
 public:
-    const str& path;
+    str path;
 
-    OutputFile(const str& filePath);
+    OutputFile(str outDir, str srcPath);
     ~OutputFile();
 
-    void write(const str& text);
+    void write(const str& s);
 };
 
 #endif //OUTPUT_FILE_H

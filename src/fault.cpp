@@ -1,14 +1,20 @@
+#include <map>
 #include "fault.h"
 #include "util.h"
 
 using CompilerFailure = Fault::CompilerFailure;
 
-static str act(Component& c, const str& message, const str& label) {
-    c.mark();
-    str newMessage = replaceStr(message, "\n", "\\n");
-    return fmt::format("{}: {}\n{}", label, newMessage, c.raw());
-}
+static std::map<nat, str> stageMap {
+    {0, "Lexing"},
+    {1, "Substitution"},
+    {2, "Parsing"},
+    {3, "Publishing"},
+    {4, "Transpiling"}
+};
 
+
+Fault::Fault()
+: stage(0), warnings(), errors(), failure() {}
 
 str Fault::toString() {
     str string;
@@ -38,8 +44,11 @@ void Fault::check() {
     throw CompilerFailure();
 }
 
-void Fault::reset() {
-    warnings.clear();
-    errors.clear();
-    failure.clear();
+str Fault::act(Component& c, const str& message, const str& label) {
+    c.mark();
+
+    str stageLabel = fmt::format("{} {}", stageMap[stage], label);
+    str newMessage = replaceStr(message, "\n", "\\n");
+
+    return fmt::format("{}: {}\n{}", stageLabel, newMessage, c.raw());
 }
