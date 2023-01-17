@@ -1,6 +1,5 @@
 #include <atomic>
 #include <chrono>
-#include <filesystem>
 #include <fmt/core.h>
 #include <thread>
 #include "lexer/lexer.h"

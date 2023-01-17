@@ -35,7 +35,7 @@ Node* AliasStatementComponent::construct(Parser& parser) {
     return new AliasStatementComponent(visibility, *type, identifier);
 }
 
-Publisher::Value* AliasStatementComponent::publish(Publisher &publisher) {
+Publisher::Value* AliasStatementComponent::publish(Publisher &) {
     return nullptr;
 }
 

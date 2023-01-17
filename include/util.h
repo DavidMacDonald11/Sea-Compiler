@@ -17,11 +17,11 @@
 
 using nat = unsigned int;
 using str = std::string;
+using std::map;
+using std::vector;
 
 template<class T> using uptr = std::unique_ptr<T>;
 template<class T> using sptr = std::shared_ptr<T>;
-template<class T> using set = std::set<T>;
-template<class T> using vector = std::vector<T>;
 template<class T> using list = std::initializer_list<T>;
 template<class T, size_t Nm> using array = std::array<T, Nm>;
 template<class T1, class T2> using pair = std::pair<T1, T2>;

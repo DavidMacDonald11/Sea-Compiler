@@ -1,5 +1,6 @@
 #include "parser/declarations/pointer.h"
 #include "parser/declarations/type-qualifier-list.h"
+#include "publisher/publisher.h"
 #include "transpiler/transpiler.h"
 
 Pointer::Pointer(Token& token, Node* qualifiers, Node* pointer) 
@@ -26,6 +27,16 @@ Node* Pointer::construct(Parser& parser) {
         qualifiers = TypeQualifierList::construct(parser);
 
     return new Pointer(token, qualifiers, Pointer::construct(parser));
+}
+
+Publisher::Value* Pointer::publish(Publisher &publisher) {
+    if(not qualifiers) return new Publisher::Declarator();
+
+    Publisher::Type* type = static_cast<Publisher::Type*>(qualifiers->publish(publisher));
+    Publisher::Declarator* declarator = new Publisher::Declarator({.qualifiers = type->qualifiers});
+    delete type;
+
+    return declarator;
 }
 
 Transpiler::Line Pointer::transpile(Transpiler& transpiler) {

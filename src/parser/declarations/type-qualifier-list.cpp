@@ -1,5 +1,6 @@
 #include "parser/declarations/type-qualifier.h"
 #include "parser/declarations/type-qualifier-list.h"
+#include "publisher/publisher.h"
 
 vector<Component*> TypeQualifierList::nodes() const {
     vector<Component*> nodes;
@@ -27,6 +28,18 @@ Node* TypeQualifierList::construct(Parser& parser) {
 
     if(nodes.size() == 0) return nullptr;
     return new TypeQualifierList(nodes);
+}
+
+Publisher::Value* TypeQualifierList::publish(Publisher &publisher) {
+    Publisher::Type* type = new Publisher::Type();
+
+    for(Node* node : qualifiers) {
+        Publisher::BasicValue* value = static_cast<Publisher::BasicValue*>(node->publish(publisher));
+        type->qualifiers.push_back(value->data);
+        delete value;
+    }
+
+    return type;
 }
 
 Transpiler::Line TypeQualifierList::transpile(Transpiler& transpiler) {

@@ -12,6 +12,7 @@ struct TypeQualifierList : public Node {
     ~TypeQualifierList();
 
     static Node* construct(Parser& parser);
+    Publisher::Value* publish(Publisher& publisher) override;
     Transpiler::Line transpile(Transpiler& transpiler) override;
 };
 

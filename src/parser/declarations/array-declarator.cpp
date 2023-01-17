@@ -1,6 +1,7 @@
 #include "parser/declarations/array-declarator.h"
 #include "parser/declarations/type-qualifier-list.h"
 #include "parser/expressions/single-expression.h"
+#include "publisher/publisher.h"
 #include "transpiler/transpiler.h"
 
 ArrayDeclarator::ArrayDeclarator(Node* qualifiers, Token* token, Node* expression)
@@ -37,6 +38,16 @@ Node* ArrayDeclarator::construct(Parser& parser) {
 
     parser.expectingHas({"]"});
     return new ArrayDeclarator(qualifiers, token, expression);
+}
+
+Publisher::Value* ArrayDeclarator::publish(Publisher &publisher) {
+    if(not qualifiers) return new Publisher::Declarator();
+    
+    Publisher::Type* type = static_cast<Publisher::Type*>(qualifiers->publish(publisher));
+    Publisher::Declarator* value = new Publisher::Declarator({.qualifiers = type->qualifiers});
+    delete type;
+
+    return value;
 }
 
 Transpiler::Line ArrayDeclarator::transpile(Transpiler& transpiler) {

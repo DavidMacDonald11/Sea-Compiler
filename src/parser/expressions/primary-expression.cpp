@@ -3,6 +3,7 @@
 #include "parser/expressions/expression.h"
 #include "parser/expressions/primary-expression.h"
 #include "parser/node.h"
+#include "publisher/publisher.h"
 #include "transpiler/transpiler.h"
 
 Node* PrimaryExpression::construct(Parser& parser) {
@@ -78,6 +79,10 @@ Node* FileIdentifier::construct(Parser& parser) {
     Token& identifier = parser.expectingOf({Token::IDENTIFIER});
 
     return new FileIdentifier(file, identifier);
+}
+
+Publisher::Value* FileIdentifier::publish(Publisher &) {
+    return new Publisher::Type(identifier.string, file.string);
 }
 
 Transpiler::Line FileIdentifier::transpile(Transpiler&) {

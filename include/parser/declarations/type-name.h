@@ -12,6 +12,7 @@ struct TypeName : public Node {
 
     Nodes nodes() const override;
     static Node* construct(Parser& parser);
+    Publisher::Value* publish(Publisher& publisher) override;
     Transpiler::Line transpile(Transpiler& transpiler) override;
 };
 

@@ -1,6 +1,7 @@
 #include "parser/declarations/direct-abstract-declarator.h"
 #include "parser/declarations/abstract-declarator.h"
 #include "parser/declarations/array-declarator.h"
+#include "publisher/publisher.h"
 #include "transpiler/transpiler.h"
 
 DirectAbstractDeclarator::DirectAbstractDeclarator(Node& declarator, Node* array)
@@ -26,6 +27,17 @@ Node* DirectAbstractDeclarator::construct(Parser& parser) {
 
     Node* array = (parser.next().has({"["}))? ArrayDeclarator::construct(parser) : nullptr;
     return new DirectAbstractDeclarator(*declarator, array);
+}
+
+Publisher::Value* DirectAbstractDeclarator::publish(Publisher &publisher) {
+    Publisher::Declarator* decl = static_cast<Publisher::Declarator*>(declarator.publish(publisher));
+    if(not array) return decl;
+
+    Publisher::Declarator* last = decl;
+    while(last->declarator != nullptr) last = decl->declarator;
+    last->declarator = static_cast<Publisher::Declarator*>(array->publish(publisher));
+    
+    return decl;
 }
 
 Transpiler::Line DirectAbstractDeclarator::transpile(Transpiler& transpiler) {

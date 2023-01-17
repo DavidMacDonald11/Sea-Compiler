@@ -2,6 +2,7 @@
 #include "parser/declarations/align-specifier.h"
 #include "parser/declarations/type-qualifier-list.h"
 #include "parser/declarations/type-specifier.h"
+#include "publisher/publisher.h"
 
 vector<Component*> SpecifierQualifierList::nodes() const {
     vector<Component*> nodes;
@@ -31,6 +32,16 @@ Node* SpecifierQualifierList::construct(Parser& parser) {
 
     Node* type = TypeSpecifier::construct(parser);
     return new SpecifierQualifierList(qualifiers, align, *type);
+}
+
+Publisher::Value* SpecifierQualifierList::publish(Publisher &publisher) {
+    Publisher::Type* value = static_cast<Publisher::Type*>(type.publish(publisher));
+    Publisher::Type* list = static_cast<Publisher::Type*>(qualifiers->publish(publisher));
+
+    value->qualifiers = list->qualifiers;
+    delete list;
+
+    return value;
 }
 
 Transpiler::Line SpecifierQualifierList::transpile(Transpiler& transpiler) {

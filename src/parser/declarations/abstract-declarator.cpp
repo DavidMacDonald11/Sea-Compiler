@@ -2,6 +2,7 @@
 #include "parser/declarations/direct-declarator.h"
 #include "parser/declarations/direct-abstract-declarator.h"
 #include "parser/declarations/pointer.h"
+#include "publisher/publisher.h"
 #include "transpiler/transpiler.h"
 
 AbstractDeclarator::AbstractDeclarator(Node* pointer, Node* declarator)
@@ -29,6 +30,17 @@ Node* AbstractDeclarator::construct(Parser& parser) {
 
     if(not pointer and not declarator) return nullptr;
     return new AbstractDeclarator(pointer, declarator);
+}
+
+Publisher::Value* AbstractDeclarator::publish(Publisher &publisher) {
+    if(not pointer) return declarator->publish(publisher);
+
+    Publisher::Declarator* ptr = static_cast<Publisher::Declarator*>(pointer->publish(publisher));
+    
+    ptr->declarator = nullptr;
+    if(declarator) ptr->declarator = static_cast<Publisher::Declarator*>(declarator->publish(publisher));
+
+    return ptr;
 }
 
 Transpiler::Line AbstractDeclarator::transpile(Transpiler& transpiler) {
