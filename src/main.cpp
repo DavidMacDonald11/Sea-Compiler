@@ -5,6 +5,7 @@
 #include "lexer/lexer.h"
 #include "lexer/source-file.h"
 #include "publisher/publisher.h"
+#include "publisher/publisher-file.h"
 #include "substitutor/substitutor.h"
 #include "parser/parser.h"
 #include "parser/node.h"
@@ -21,7 +22,7 @@ static void compileFile(str options, str srcPath, str outDir, nat id);
 static Lexer* runLexer(Fault& fault, SourceFile& sFile, DebugFile& dFile);
 static Substitutor* runSubstitutor(Lexer& lexer, DebugFile& dFile);
 static Parser* runParser(Substitutor& substitutor, DebugFile& dFile);
-static Publisher* runPublisher(Parser& parser, DebugFile& dFile);
+static Publisher* runPublisher(Parser& parser, PublisherFile& pFile, DebugFile& dFile);
 static Transpiler* runTranspiler(Parser& parser, OutputFile& oFile, DebugFile& dFile);
 
 static atomic<bool> threadsConstructed = false;
@@ -51,7 +52,9 @@ int main(int argc, char *argv[]) {
 
     threadsConstructed = true;
     for(thread& t : threads) { if(t.joinable()) t.join(); }
-    delete publishers;
+
+    for(nat i = 0; i < threadCount; i++) delete publishers[i];
+    delete[] publishers;
     
     return 0;
 }
@@ -59,12 +62,13 @@ int main(int argc, char *argv[]) {
 void compileFile(str options, str srcPath, str outDir, nat id) {
     Fault fault;
     SourceFile sFile(srcPath);
+    PublisherFile pFile(outDir, srcPath);
     DebugFile dFile(outDir, srcPath, options);
     
     Lexer* lexer = runLexer(fault, sFile, dFile);
     Substitutor* substitutor = (lexer)? runSubstitutor(*lexer, dFile) : nullptr;
     Parser* parser = (substitutor)? runParser(*substitutor, dFile) : nullptr;
-    Publisher* publisher = (parser)? runPublisher(*parser, dFile) : nullptr;
+    Publisher* publisher = (parser)? runPublisher(*parser, pFile, dFile) : nullptr;
 
     while(not threadsConstructed) std::this_thread::sleep_for(sleepTime);
     threadsCompletedPublishing += 1;
@@ -74,7 +78,6 @@ void compileFile(str options, str srcPath, str outDir, nat id) {
         delete lexer;
         delete substitutor;
         delete parser;
-        delete publisher;
         return;
     }
 
@@ -88,7 +91,6 @@ void compileFile(str options, str srcPath, str outDir, nat id) {
     delete lexer;
     delete substitutor;
     delete parser;
-    delete publisher;
     delete transpiler;
 }
 
@@ -147,12 +149,12 @@ Parser* runParser(Substitutor& substitutor, DebugFile& dFile) {
     return failed? nullptr : parser;
 }
 
-Publisher* runPublisher(Parser& parser, DebugFile&) {
+Publisher* runPublisher(Parser& parser, PublisherFile& pFile, DebugFile&) {
     bool failed = false;
     Publisher* publisher = nullptr;
 
     try {
-        publisher = new Publisher(parser.fault);
+        publisher = new Publisher(parser.fault, pFile);
         parser.tree->publish(*publisher);
         publisher->fault.check();
         publisher->fault.stage++;

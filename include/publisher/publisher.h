@@ -3,6 +3,7 @@
 
 #include <atomic>
 #include "fault.h"
+#include "publisher/publisher-file.h"
 #include "util.h"
 
 struct Publisher {
@@ -10,9 +11,10 @@ struct Publisher {
     class Declaration;
 
     Fault& fault;
+    PublisherFile& file;
     map<str, Declaration*> table;
 
-    Publisher(Fault& fault);
+    Publisher(Fault& fault, PublisherFile& file);
     ~Publisher();
 };
 
