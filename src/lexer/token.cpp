@@ -163,7 +163,7 @@ const vector<str> Token::VISIBILITY_KEYWORDS {
 };
 
 const vector<str> Token::STORAGE_KEYWORDS {
-    "register", "static", "threaded", "external"
+    "register", "static", "threaded"
 };
 
 const vector<str> Token::DECLARATION_KEYWORDS(mergeAll<str>({

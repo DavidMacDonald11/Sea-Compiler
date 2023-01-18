@@ -19,8 +19,7 @@ Node* TypeQualifierList::construct(Parser& parser) {
     vector<Node*> nodes;
 
     while(parser.next().has(Token::TYPE_QUALIFIER_KEYWORDS)) {
-        if(parser.next().has({"atomic"}) and parser.ahead(1).has({"("})) 
-            break;
+        if(parser.ahead(1).has({"<"})) break;
         
         Node* node = TypeQualifier::construct(parser);
         nodes.push_back(node);

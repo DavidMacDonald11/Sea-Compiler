@@ -65,7 +65,7 @@
 {tab} `*export*` `*local*` 
 
 `_storage-class-specifier_`: one of
-{tab} `*register*` `*static*` `*threaded*` `*external*`
+{tab} `*register*` `*static*` `*threaded*`
 
 `_init-declarator_`:
 {tab} `_identifier_`
