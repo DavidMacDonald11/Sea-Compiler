@@ -1,18 +1,15 @@
 #include "parser/declarations/parameter.h"
-#include "parser/declarations/abstract-declarator.h"
 #include "parser/declarations/declaration-specifiers.h"
 
-Parameter::Parameter(Node& specifiers, Node* declarator)
-: specifiers(specifiers), declarator(declarator) {}
+Parameter::Parameter(Node& specifiers, Token& identifier)
+: specifiers(specifiers), identifier(identifier) {}
 
 Parameter::~Parameter() {
     delete &specifiers;
-    delete declarator;
 }
 
 Nodes Parameter::nodes() const {
-    if(declarator) return {&specifiers, declarator};
-    return {&specifiers};
+    return {&specifiers, &identifier};
 }
 
 Node* Parameter::construct(Parser& parser) {
@@ -26,6 +23,7 @@ Node* Parameter::construct(Parser& parser) {
         *specifiers.storage, 
         "'static' storage cannot be specified for parameter");
 
-    return new Parameter(specifiers, AbstractDeclarator::construct(parser));
+    Token& identifier = parser.expectingOf({Token::IDENTIFIER});
+    return new Parameter(specifiers, identifier);
 }
 

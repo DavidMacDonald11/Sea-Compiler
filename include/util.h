@@ -18,6 +18,7 @@
 using nat = unsigned int;
 using str = std::string;
 using std::map;
+using std::set;
 using std::vector;
 
 template<class T> using uptr = std::unique_ptr<T>;

@@ -4,10 +4,10 @@
 #include "../node.h"
 
 struct StructDeclaration : public Node {
-    Node& list;
+    Node& type;
     vector<Node*> declarators;
 
-    StructDeclaration(Node& list, vector<Node*> declarators);
+    StructDeclaration(Node& type, vector<Node*> declarators);
     ~StructDeclaration();
 
     Nodes nodes() const override;

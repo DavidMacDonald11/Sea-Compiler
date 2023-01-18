@@ -4,15 +4,14 @@
 #include "../node.h"
 
 struct InitDeclarator : public Node {
-    Node& declarator;
+    Token& identifier;
     Node* expression;
 
-    InitDeclarator(Node& declarator, Node* expression);
+    InitDeclarator(Token& identifier, Node* expression);
     ~InitDeclarator();
 
     Nodes nodes() const override;
     static Node* construct(Parser& parser);
-    Transpiler::Line transpile(Transpiler& transpiler) override;
 };
 
 #endif //INIT_DECLARATOR_H

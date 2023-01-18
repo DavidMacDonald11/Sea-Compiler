@@ -1,19 +1,19 @@
 #include "parser/declarations/struct-declaration.h"
 #include "parser/declarations/assert-declaration.h"
-#include "parser/declarations/specifier-qualifier-list.h"
 #include "parser/declarations/struct-declarator.h"
+#include "parser/declarations/type-name.h"
 
-StructDeclaration::StructDeclaration(Node& list, vector<Node*> declarators)
-: list(list), declarators(declarators) {}
+StructDeclaration::StructDeclaration(Node& type, vector<Node*> declarators)
+: type(type), declarators(declarators) {}
 
 StructDeclaration::~StructDeclaration() {
-    delete &list;
+    delete &type;
     for(Node* node : declarators) delete node;
 }
 
 Nodes StructDeclaration::nodes() const {
-    Nodes nodes;
-    nodes.reserve(declarators.size() + 1);
+    Nodes nodes = {&type};
+    nodes.reserve(declarators.size());
 
     for(Node* node : declarators) nodes.push_back(node);
     return nodes;
@@ -26,7 +26,7 @@ Node* StructDeclaration::construct(Parser& parser) {
         return node;
     }
 
-    Node& list = *SpecifierQualifierList::construct(parser);
+    Node& type = *TypeName::construct(parser);
     vector<Node*> declarators;
 
     while(not parser.next().has(Token::LINE_ENDS)) {
@@ -40,5 +40,5 @@ Node* StructDeclaration::construct(Parser& parser) {
     parser.expectingHas(Token::LINE_ENDS);
     parser.skipNewlines();
     
-    return new StructDeclaration(list, declarators);
+    return new StructDeclaration(type, declarators);
 }

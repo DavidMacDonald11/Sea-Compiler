@@ -2,7 +2,7 @@ include lib "stdio.h"
 from "file2" import Token
 
 export struct SourceLine {
-    char ^string
+    char^ string
 }
 
-export fun mark(SourceLine ^self, Token ^token) {}
+export fun mark(SourceLine^ self, Token^ token) {}

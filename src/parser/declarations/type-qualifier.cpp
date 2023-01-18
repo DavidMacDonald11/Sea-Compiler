@@ -6,7 +6,8 @@ std::map<str, str> qualifierMap {
     {"const", "const"},
     {"unique", "restrict"},
     {"volatile", "volatile"},
-    {"atomic", "_Atomic"}
+    {"atomic", "_Atomic"},
+    {"future", ""}
 };
 
 TypeQualifier::TypeQualifier(Token& token)
@@ -15,10 +16,6 @@ TypeQualifier::TypeQualifier(Token& token)
 Node* TypeQualifier::construct(Parser& parser) {
     Token& token = parser.expectingHas(Token::TYPE_QUALIFIER_KEYWORDS);
     return new TypeQualifier(token);
-}
-
-Publisher::Value* TypeQualifier::publish(Publisher &) {
-    return new Publisher::BasicValue(token.string);
 }
 
 Transpiler::Line TypeQualifier::transpile(Transpiler&) {

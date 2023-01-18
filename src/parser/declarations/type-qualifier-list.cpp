@@ -2,17 +2,17 @@
 #include "parser/declarations/type-qualifier-list.h"
 #include "publisher/publisher.h"
 
-vector<Component*> TypeQualifierList::nodes() const {
-    vector<Component*> nodes;
-    for(Node* node : qualifiers) nodes.push_back(node);
-    return nodes;
-}
-
 TypeQualifierList::TypeQualifierList(vector<Node*> qualifiers)
 : qualifiers(qualifiers) {}
 
 TypeQualifierList::~TypeQualifierList() {
     for(Node* node : qualifiers) delete node;
+}
+
+Nodes TypeQualifierList::nodes() const {
+    vector<Component*> nodes;
+    for(Node* node : qualifiers) nodes.push_back(node);
+    return nodes;
 }
 
 Node* TypeQualifierList::construct(Parser& parser) {
@@ -30,23 +30,11 @@ Node* TypeQualifierList::construct(Parser& parser) {
     return new TypeQualifierList(nodes);
 }
 
-Publisher::Value* TypeQualifierList::publish(Publisher &publisher) {
-    Publisher::Type* type = new Publisher::Type();
-
-    for(Node* node : qualifiers) {
-        Publisher::BasicValue* value = static_cast<Publisher::BasicValue*>(node->publish(publisher));
-        type->qualifiers.push_back(value->data);
-        delete value;
-    }
-
-    return type;
-}
-
 Transpiler::Line TypeQualifierList::transpile(Transpiler& transpiler) {
     Transpiler::Line result;
 
     for(Node* node : qualifiers) 
-        result.add("", fmt::format("{} ", node->transpile(transpiler).toString()));
+        result.add("", node->transpile(transpiler).toString() + " ");
 
     result.string.pop_back();
     return result;

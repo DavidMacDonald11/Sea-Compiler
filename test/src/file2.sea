@@ -1,11 +1,11 @@
 from "file1" import SourceLine
 
 export struct Token {
-    SourceLine ^line
+    SourceLine^ line
 }
 
-export fun construct(SourceLine ^line) -> Token ^{
-    Token ^self = alloc sizeof(Token)
+export fun construct(SourceLine^ line) -> Token^ {
+    Token^ self = alloc sizeof(Token)
     self.line = line
     return self
 }

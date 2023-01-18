@@ -81,10 +81,6 @@ Node* FileIdentifier::construct(Parser& parser) {
     return new FileIdentifier(file, identifier);
 }
 
-Publisher::Value* FileIdentifier::publish(Publisher &) {
-    return new Publisher::Type(identifier.string, file.string);
-}
-
 Transpiler::Line FileIdentifier::transpile(Transpiler&) {
     Transpiler::Line line = {"?"};
 

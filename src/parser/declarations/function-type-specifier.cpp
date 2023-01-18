@@ -40,10 +40,7 @@ Node* FunctionTypeSpecifier::construct(Parser& parser) {
 
     if(paren and parser.next().has({"->"})) {
         parser.take();
-
-        Token* paren = (parser.next().has({"("}))? &parser.take() : nullptr;
         type = TypeName::construct(parser);
-        if(paren) parser.expectingHas({")"});
     }
 
     if(paren) parser.expectingHas({")"});

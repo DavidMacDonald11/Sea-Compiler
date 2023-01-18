@@ -4,10 +4,10 @@
 #include "../node.h"
 
 struct StructDeclarator : public Node {
-    Node* declarator;
+    Token* identifier;
     Node* expression;
 
-    StructDeclarator(Node* declarator, Node* expression);
+    StructDeclarator(Token* identifier, Node* expression);
     ~StructDeclarator();
 
     Nodes nodes() const override;

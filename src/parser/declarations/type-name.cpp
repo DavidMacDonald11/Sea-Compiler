@@ -1,45 +1,30 @@
 #include "parser/declarations/type-name.h"
-#include "parser/declarations/specifier-qualifier-list.h"
-#include "parser/declarations/abstract-declarator.h"
-#include "publisher/publisher.h"
+#include "parser/declarations/type-modifier-list.h"
+#include "parser/declarations/type-specifier.h"
+#include "parser/declarations/pointers.h"
 #include "transpiler/transpiler.h"
 
-TypeName::TypeName(Node& list, Node* declarator)
-: list(list), declarator(declarator) {}
+TypeName::TypeName(Node* list, Node& type, Node* pointers)
+: list(list), type(type), pointers(pointers) {}
 
 TypeName::~TypeName() {
-    delete &list;
-    delete declarator;
+    delete list;
+    delete &type;
+    delete pointers;
 }
 
 Nodes TypeName::nodes() const {
-    Nodes nodes = {&list};
-    if(declarator) nodes.push_back(declarator);
+    Nodes nodes;
+
+    if(list) nodes.push_back(list);
+    nodes.push_back(&type);
+    if(pointers) nodes.push_back(pointers);
+
     return nodes;
 }
 
 Node* TypeName::construct(Parser& parser) {
-    Node* list = SpecifierQualifierList::construct(parser);
-    return new TypeName(*list, AbstractDeclarator::construct(parser));
-}
-
-Publisher::Value* TypeName::publish(Publisher &publisher) {
-    Publisher::Type* type = static_cast<Publisher::Type*>(list.publish(publisher));
-    
-    Publisher::Declarator* dec = nullptr;
-    if(declarator) dec = static_cast<Publisher::Declarator*>(declarator->publish(publisher));
-
-    return new Publisher::Declaration(type, dec);
-}
-
-Transpiler::Line TypeName::transpile(Transpiler& transpiler) {
-    Transpiler::Line line = list.transpile(transpiler);
-
-    if(declarator) {
-        Transpiler::Line declarator = self.declarator->transpile(transpiler);
-        line.add("", declarator.toString());
-        line.pointers = declarator.pointers;
-    }
-
-    return line;
+    Node* list = TypeModifierList::construct(parser);
+    Node& type = *TypeSpecifier::construct(parser);
+    return new TypeName(list, type, Pointers::construct(parser));
 }

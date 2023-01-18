@@ -1,5 +1,5 @@
 #include <map>
-#include "parser/declarations/atomic-type-specifier.h"
+#include "parser/declarations/qualifier-type-specifier.h"
 #include "parser/declarations/function-type-specifier.h"
 #include "parser/declarations/type-specifier.h"
 #include "parser/expressions/primary-expression.h"
@@ -43,15 +43,12 @@ Node* TypeSpecifier::construct(Parser& parser) {
     if(parser.next().has(Token::TYPE_SPECIFIER_KEYWORDS)) 
         return new TypeSpecifier(&parser.take());
 
-    if(parser.next().has({"atomic"})) return AtomicTypeSpecifier::construct(parser);
+    if(parser.next().has({Token::TYPE_QUALIFIER_KEYWORDS})) 
+        return QualifierTypeSpecifier::construct(parser);
+
     if(parser.next().has({"async", "fun"})) return FunctionTypeSpecifier::construct(parser);
 
     return new TypeSpecifier(nullptr, FileIdentifier::construct(parser));
-}
-
-Publisher::Value* TypeSpecifier::publish(Publisher &publisher) {
-    if(token) return new Publisher::Type(token->string);
-    return node->publish(publisher);
 }
 
 Transpiler::Line TypeSpecifier::transpile(Transpiler& transpiler) {

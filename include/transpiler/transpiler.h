@@ -10,9 +10,9 @@ class Transpiler {
     vector<str> headers;
 public:
     struct Context {
-        nat indent;
+        nat indent = 0;
     };
-
+    
     Fault& fault;
     str lines;
     OutputFile& file;

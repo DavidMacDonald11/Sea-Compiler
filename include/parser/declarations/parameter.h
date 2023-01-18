@@ -5,9 +5,9 @@
 
 struct Parameter : public Node {
     Node& specifiers;
-    Node* declarator;
+    Token& identifier;
 
-    Parameter(Node& specifiers, Node* declarator);
+    Parameter(Node& specifiers, Token& identifier);
     ~Parameter();
 
     Nodes nodes() const override;

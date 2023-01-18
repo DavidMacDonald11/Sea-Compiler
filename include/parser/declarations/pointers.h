@@ -4,17 +4,16 @@
 #include "../node.h"
 #include "transpiler/transpiler.h"
 
-struct Pointer : public Node {
-    Token& token;
+struct Pointers : public Node {
     Node* qualifiers;
+    Token& token;
     Node* pointer;
 
-    Pointer(Token& token, Node* qualifiers, Node* pointer);
-    ~Pointer();
+    Pointers(Node* qualifiers, Token& token, Node* pointer);
+    ~Pointers();
 
     Nodes nodes() const override;
     static Node* construct(Parser& parser);
-    Publisher::Value* publish(Publisher& publisher) override;
     Transpiler::Line transpile(Transpiler& transpiler) override;
 };
 

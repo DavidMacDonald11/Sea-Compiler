@@ -137,7 +137,7 @@ const vector<str> Token::ALLOC_KEYWORDS {
 };
 
 const vector<str> Token::TYPE_SPECIFIER_KEYWORDS {
-    "wild", "bool", "byte", "char",
+    "auto", "wild", "bool", "byte", "char",
     "int16", "int", "int32", "int64", 
     "nat16", "nat", "nat32", "nat64",
     "real32", "real", "real64",
@@ -163,7 +163,7 @@ const vector<str> Token::VISIBILITY_KEYWORDS {
 };
 
 const vector<str> Token::STORAGE_KEYWORDS {
-    "register", "static", "threaded"
+    "register", "static", "threaded", "external"
 };
 
 const vector<str> Token::DECLARATION_KEYWORDS(mergeAll<str>({

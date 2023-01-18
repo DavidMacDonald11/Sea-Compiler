@@ -6,11 +6,10 @@
 struct AlignSpecifier : public Node {
     Node& alignOf;
 
-    vector<Component*> nodes() const override;
-
     AlignSpecifier(Node& alignOf);
     ~AlignSpecifier();
 
+    Nodes nodes() const override;
     static Node* construct(Parser& parser);
     Transpiler::Line transpile(Transpiler& transpiler) override;
 };

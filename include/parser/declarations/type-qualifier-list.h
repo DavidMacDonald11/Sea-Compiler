@@ -6,13 +6,11 @@
 struct TypeQualifierList : public Node {
     vector<Node*> qualifiers;
 
-    vector<Component*> nodes() const override;
-
     TypeQualifierList(vector<Node*> qualifiers);
     ~TypeQualifierList();
 
+    Nodes nodes() const override;
     static Node* construct(Parser& parser);
-    Publisher::Value* publish(Publisher& publisher) override;
     Transpiler::Line transpile(Transpiler& transpiler) override;
 };
 

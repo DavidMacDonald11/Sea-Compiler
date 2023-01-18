@@ -1,34 +1,26 @@
 #include "parser/declarations/init-declarator.h"
-#include "parser/declarations/declarator.h"
 #include "parser/expressions/single-expression.h"
 #include "transpiler/transpiler.h"
 
-InitDeclarator::InitDeclarator(Node& declarator, Node* expression)
-: declarator(declarator), expression(expression) {}
+InitDeclarator::InitDeclarator(Token& identifier, Node* expression)
+: identifier(identifier), expression(expression) {}
 
 InitDeclarator::~InitDeclarator() {
-    delete &declarator;
     delete expression;
 }
 
 Nodes InitDeclarator::nodes() const {
-    return expression? Nodes{&declarator, expression} : Nodes{&declarator};
+    return expression? Nodes{&identifier, expression} : Nodes{&identifier};
 }
 
 Node* InitDeclarator::construct(Parser& parser) {
-    Node* declarator = Declarator::construct(parser);
-    Node* identifier = nullptr;
+    Token& identifier = parser.expectingOf({Token::IDENTIFIER});
+    Node* expression = nullptr;
     
     if(parser.next().has({"="})) {
         parser.take();
-        identifier = SingleExpression::construct(parser);
+        expression = SingleExpression::construct(parser);
     }
 
-    return new InitDeclarator(*declarator, identifier);
-}
-
-Transpiler::Line InitDeclarator::transpile(Transpiler& transpiler) {
-    Transpiler::Line line = declarator.transpile(transpiler);
-    if(expression) line.add("", " = " + expression->transpile(transpiler).toString());
-    return line;
+    return new InitDeclarator(identifier, expression);
 }

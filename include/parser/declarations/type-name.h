@@ -4,16 +4,15 @@
 #include "../node.h"
 
 struct TypeName : public Node {
-    Node& list;
-    Node* declarator;
+    Node* list;
+    Node& type;
+    Node* pointers;
 
-    TypeName(Node& list, Node* declarator);
+    TypeName(Node* list, Node& type, Node* pointers);
     ~TypeName();
 
     Nodes nodes() const override;
     static Node* construct(Parser& parser);
-    Publisher::Value* publish(Publisher& publisher) override;
-    Transpiler::Line transpile(Transpiler& transpiler) override;
 };
 
 #endif //TYPE_NAME_H

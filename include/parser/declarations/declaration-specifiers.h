@@ -6,14 +6,13 @@
 struct DeclarationSpecifiers : public Node {
     Token* visibility;
     Token* storage;
-    Node& list;
+    Node& type;
 
-    DeclarationSpecifiers(Token* visibility, Token* storage, Node& list);
+    DeclarationSpecifiers(Token* visibility, Token* storage, Node& type);
     ~DeclarationSpecifiers();
 
     Nodes nodes() const override;
     static Node* construct(Parser& parser);
-    Transpiler::Line transpile(Transpiler& transpiler) override;
 };
 
 #endif //DECLARATION_SPECIFIERS_H

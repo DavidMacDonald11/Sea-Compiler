@@ -1,5 +1,5 @@
 #include "parser/declarations/abstract-parameters.h"
-#include "parser/declarations/parameter.h"
+#include "parser/declarations/declaration-specifiers.h"
 
 AbstractParameters::AbstractParameters(vector<Node*> parameters, Token* varargs) 
 : parameters(parameters), varargs(varargs) {}
@@ -22,7 +22,7 @@ Node* AbstractParameters::construct(Parser& parser) {
     vector<Node*> nodes;
     Token* varargs = nullptr;
 
-    nodes.push_back(Parameter::construct(parser));
+    nodes.push_back(DeclarationSpecifiers::construct(parser));
 
     while(parser.next().has({","})) {
         parser.take();
@@ -32,7 +32,7 @@ Node* AbstractParameters::construct(Parser& parser) {
             break;
         }
 
-        nodes.push_back(Parameter::construct(parser));
+        nodes.push_back(DeclarationSpecifiers::construct(parser));
     }
 
     return new AbstractParameters(nodes, varargs);
