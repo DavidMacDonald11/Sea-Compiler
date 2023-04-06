@@ -39,6 +39,10 @@ Node* Statement::construct(Parser& parser) {
     return new Statement(*node);
 }
 
+Publisher::Value* Statement::publish(Publisher &publisher) {
+    return statement.publish(publisher);
+}
+
 Transpiler::Line Statement::transpile(Transpiler& transpiler) {
     if(className(&statement) != "LineStatementComponent") return statement.transpile(transpiler);
     return statement.transpile(transpiler).finish(self, transpiler, true);

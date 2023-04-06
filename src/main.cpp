@@ -149,7 +149,7 @@ Parser* runParser(Substitutor& substitutor, DebugFile& dFile) {
     return failed? nullptr : parser;
 }
 
-Publisher* runPublisher(Parser& parser, PublisherFile& pFile, DebugFile&) {
+Publisher* runPublisher(Parser& parser, PublisherFile& pFile, DebugFile& dFile) {
     bool failed = false;
     Publisher* publisher = nullptr;
 
@@ -163,6 +163,7 @@ Publisher* runPublisher(Parser& parser, PublisherFile& pFile, DebugFile&) {
         fmt::print(stderr, "{}\n", publisher->fault.toString()); 
     }
 
+    dFile.write(fmt::format("Published:\n{}", publisher? publisher->toString() : ""));
     return failed? nullptr : publisher;
 }
 

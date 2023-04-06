@@ -1,8 +1,16 @@
 include lib "stdio.h"
-from "file2" import Token
 
-export struct SourceLine {
-    char^ string
+struct Pair {
+    int x, y
 }
 
-export fun mark(SourceLine^ self, Token^ token) {}
+fun constructor(int x = 0, int y = 0) -> Pair {
+    return [x, y] as Pair
+}
+
+fun main() -> int {
+    Pair pair1 = constructor(5, 6)
+    c::printf("(%d, %d)\n", pair1.x, pair2.y)
+
+    return 0
+}

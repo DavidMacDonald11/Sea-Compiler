@@ -14,6 +14,7 @@ struct StructDefinition : public Node {
 
     Nodes nodes() const override;
     static Node* construct(Parser& parser);
+    Publisher::Value* publish(Publisher& publisher) override;
 };
 
 #endif //STRUCT_DEFINITION_H

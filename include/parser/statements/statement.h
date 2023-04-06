@@ -7,6 +7,7 @@
 struct Statement : public HiddenStatement {
     Statement(Node& statement);
     static Node* construct(Parser& parser);
+    Publisher::Value* publish(Publisher& publisher) override;
     Transpiler::Line transpile(Transpiler& transpiler) override;
 
     static Node* newLineStatement(Parser& parser);

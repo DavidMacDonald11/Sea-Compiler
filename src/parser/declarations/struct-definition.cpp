@@ -37,3 +37,10 @@ Node* StructDefinition::construct(Parser& parser) {
     parser.expectingHas({"}"});
     return new StructDefinition(visibility, keyword, name, list);
 }
+
+Publisher::Value* StructDefinition::publish(Publisher& publisher) {
+    auto value = new Publisher::Declaration(name.string);
+    publisher.table.insert(pair<str, Publisher::Value*>(name.string, value));
+    
+    return value;
+}

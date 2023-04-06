@@ -7,19 +7,30 @@
 #include "util.h"
 
 struct Publisher {
-    class Value {};
+    class Value;
     class Declaration;
 
     Fault& fault;
     PublisherFile& file;
-    map<str, Declaration*> table;
+    map<str, Value*> table;
 
     Publisher(Fault& fault, PublisherFile& file);
     ~Publisher();
+
+    str toString() const;
+};
+
+struct Publisher::Value {
+    virtual ~Value() {}
+    virtual str toString() const = 0;
 };
 
 struct Publisher::Declaration : public Value {
-    
+    str name;
+
+    Declaration(str name);
+
+    str toString() const override;
 };
 
 #endif //PUBLISHER_H
