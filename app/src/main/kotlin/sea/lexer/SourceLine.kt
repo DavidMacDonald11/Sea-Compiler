@@ -1,16 +1,18 @@
 package sea.lexer
 
 import sea.lexer.Locale
+import sea.lexer.Token
 
 data class SourceLine(val num: Int, val string: String) {
-    private var locale: Locale = Locale()
-    val marks: ArrayList<Locale> = ArrayList()
+    private var locale = Locale()
+    val marks = ArrayList<Locale>()
 
-    var unreadString = ""
+    val unreadString: String
         get() = string.substring(locale[1])
 
     fun ignore() { locale[0] = locale[1] }
     fun mark(locale: Locale) { marks.add(locale) }
+    fun mark(token: Token) { marks.add(token.locale) }
     fun increment() { if(locale[1] < string.length) locale[1] += 1 }
 
     fun newLocale(): Locale {
