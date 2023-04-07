@@ -12,6 +12,8 @@ data class SourceFile(val filePath: String) {
                 lines.add(SourceLine(i + 1, "$line\n"))
             }
         }
+
+        if(lines.size == 0) lines.add(SourceLine(1, ""))
     }
 
     var line: SourceLine? = lines[0]
@@ -24,7 +26,7 @@ data class SourceFile(val filePath: String) {
     fun next(): Char = if(line?.unreadString == "") line!!.unreadString[0] else '\u0000'
 
     fun take(num: Int = -1, these: String = "", until: String = ""): String {
-        var string: String = ""
+        var string = ""
 
         if(line == null || num == 0) return string
 

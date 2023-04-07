@@ -14,27 +14,27 @@ data class SourceLine(val num: Int, val string: String) {
     fun increment() { if(locale[1] < string.length) locale[1] += 1 }
 
     fun newLocale(): Locale {
-        val result: Locale = locale.copy()
+        val result = locale.copy()
         locale[0] = locale[1]
         return result
     }
 
     fun raw(): String {
-        var col1: Int = 0
-        var col2: Int = 0
+        var col1 = 0
+        var col2 = 0
 
-        for(locale: Locale in marks) {
+        for(locale in marks) {
             if(col1 == 0 || locale[0] < col1) col1 = locale[0]
             if(col2 == 0 || locale[1] > col2) col2 = locale[1]
         }
 
-        var underline: String = ""
+        var underline = ""
 
         for(i in string.indices) {
             underline += if(i < col1 || i >= col2) ' ' else '^'
         }
 
-        val line: String = if(string == "") "EOF\n" else string
+        val line = if(string == "") "EOF\n" else string
         if(string == "") underline = "^^^"
 
         return "%4d|$line    |$underline".format(num)
