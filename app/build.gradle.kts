@@ -29,6 +29,9 @@ dependencies {
     // This dependency is used by the application.
     implementation("com.google.guava:guava:30.1.1-jre")
 
+    // Use Kotlin Coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2")
+
     // Use the Kotlin test library.
     testImplementation("org.jetbrains.kotlin:kotlin-test")
 
