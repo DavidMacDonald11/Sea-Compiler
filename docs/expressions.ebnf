@@ -1,0 +1,38 @@
+expression ::= conditionalExpression
+
+conditionalExpression ::= logicalOrExpression ["if" expression "else" conditionalExpression]
+
+logicalOrExpression ::= logicalXorExpression ["or" logicalOrExpression]
+logicalXorExpression ::= logicalAndExpression ["xor" logicalXorExpression]
+logicalAndExpression ::= logicalNotExpression ["and" logicalAndExpression]
+logicalNotExpression ::= comparativeExpression | "not" logicalNotExpression
+
+comparativeExpression ::= castExpression [comparisonOperator comparativeExpression]
+    comparisonOperator ::= "<" | ">" | "<=" | ">=" | "==" | "!="
+
+castExpression ::= bitwiseOrExpression | castExpression "as" type_name
+
+bitwiseOrExpression ::= bitwiseXorExpression ["|" bitwiseOrExpression]
+bitwiseXorExpression ::= bitwiseAndExpression ["$" bitwiseXorExpression]
+bitwiseAndExpression ::= shiftExpression ["&" bitwiseAndExpression]
+shiftExpression ::= additiveExpression [("<<" | ">>") shiftExpression]
+
+additiveExpression ::= multiplicativeExpression [("+" | "-") additiveExpression]
+multiplicativeExpression ::= unaryExpression [("*" | "/" | "%" | "mod") multiplicativeExpression]
+
+unaryExpression ::= postfixExpression | unaryOperator unaryExpression
+    unaryOperator ::= "+" | "-" | "!"
+
+postfixExpression ::= postfixExpression ["." IDENTIFIER]
+                    | postfixExpression ["[" expression "]"] 
+                    | primaryExpression
+
+primaryExpression ::= NUMBER
+                    | CHARACTER
+                    | STRING
+                    | IDENTIFIER
+                    | fileIdentifier
+                    | primaryKeyword
+                    | "(" expression ")"
+    fileIdentifier ::= IDENTIFIER "::" IDENTIFIER
+    primaryKeyword ::= "true" | "false"
