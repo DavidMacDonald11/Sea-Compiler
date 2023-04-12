@@ -1,0 +1,1 @@
+"even" if 5 mod 2b10 == 0 else "odd"
