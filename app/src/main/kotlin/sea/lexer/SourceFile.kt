@@ -3,43 +3,45 @@ package sea.lexer
 import java.io.File
 import sea.lexer.SourceLine
 
-data class SourceFile(val filePath: String) {
+data class SourceFile(val path: String) {
     val lines: ArrayList<SourceLine> = ArrayList()
 
     init {
-        File(filePath).bufferedReader().useLines { fileLines ->
+        File(path).bufferedReader().useLines { fileLines ->
             for((i, line) in fileLines.withIndex()) {
                 lines.add(SourceLine(i + 1, "$line\n"))
             }
         }
 
-        if(lines.size == 0) lines.add(SourceLine(1, ""))
+        lines.add(SourceLine(lines.size + 1, ""))
     }
 
-    var line: SourceLine? = lines[0]
+    var line: SourceLine = lines[0]
+
+    val atEnd: Boolean
+        get() = line.num > lines.size - 1
+
+    val next: Char
+        get() = if(line.unreadString != "") line.unreadString[0] else '\u0000'
 
     fun iterateLine() {
-        if(line != null) 
-            line = if(line!!.num < lines.size) lines[line!!.num] else null
+        if(!atEnd) line = lines[line.num]
     }
-    
-    fun next(): Char = if(line?.unreadString == "") line!!.unreadString[0] else '\u0000'
 
     fun take(num: Int = -1, these: String = "", until: String = ""): String {
+        if(atEnd || num == 0) return ""
         var string = ""
 
-        if(line == null || num == 0) return string
-
-        for(c in line!!.unreadString) {
+        for(c in line.unreadString) {
             if(c in until || (these != "" && !(c in these))) return string
 
             string += c
-            line!!.increment()
+            line.increment()
 
             if(string.length == num) break
         }
 
-        if(line!!.unreadString == "") iterateLine()
+        if(line.unreadString == "") iterateLine()
         return string
     } 
 }
