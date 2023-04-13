@@ -12,7 +12,7 @@ data class Token(val line: SourceLine, var type: Type) : Faults.Component {
     public enum class Type(val data: Pair<Char, String>) { 
         PUNC(Pair('P', "Puncuator")), NUM(Pair('N', "Number")), 
         OP(Pair('O', "Operator")), CHAR(Pair('C', "Character")), 
-        STR(Pair('S', "String")), IDENTIFIER(Pair('I', "Integer")), 
+        STR(Pair('S', "String")), IDENTIFIER(Pair('I', "Identifier")), 
         KEYWORD(Pair('K', "Keyword")), NONE(Pair('?', "None"));
 
         val label: Char 
@@ -71,21 +71,37 @@ data class Token(val line: SourceLine, var type: Type) : Faults.Component {
     override fun mark() = line.mark(this)
 
     companion object {
-        val PREFIX_UNARY_OPS = setOf("+", "-", "!")
-        val BINARY_OPS = setOf("*", "/", "+", "-", "<<", ">>", "&", "$", "|")
+        val POSTFIX_OPS = setOf("?.", "!!")
+        val PREFIX_UNARY_OPS = setOf("+", "-", "!", "&", "$")
+        val BINARY_OPS = setOf("*", "/", "%", "+", "-", "<<", ">>", "&", "$", "|")
         val COMPARE_OPS = setOf("<", ">", "<=", ">=", "==", "!=")
-        val ASSIGN_OPS = setOf("*=", "/=", "%=", "+=", "-=", "<<=", ">>=", "&=", "$=", "|=", "=")
-        val OPERATORS = PREFIX_UNARY_OPS + BINARY_OPS + COMPARE_OPS + ASSIGN_OPS
+        val ASSIGN_OPS = setOf("*=", "/=", "%=", "+=", "-=", "<<=", ">>=", "&=", "$=", "|=", "?:=", "=")
+        val PUNC_OPS = setOf(":", "::", "->", "?")
+        val OPERATORS = POSTFIX_OPS + PREFIX_UNARY_OPS + BINARY_OPS + COMPARE_OPS + ASSIGN_OPS + 
+            PUNC_OPS + setOf("?:")
 
-        val PUNC_SYMBOLS = "{}[](),;#%"
+        val PUNC_SYMBOLS = "{}[](),;#@"
         val NUMBER_START_SYMBOLS = "0123456789."
         val NUMBER_SYMBOLS = NUMBER_START_SYMBOLS + "b" + UPPERCASE_LETTERS
         val OPERATOR_SYMBOLS = OPERATORS.flatMap { it.asIterable() }.toSet()
         val IDENTIFIER_START_SYMBOLS = "_" +  UPPERCASE_LETTERS + LOWERCASE_LETTERS
         val IDENTIFIER_SYMBOLS = IDENTIFIER_START_SYMBOLS + "0123456789"
 
-        val PRIMARY_KEYWORDS = setOf("true", "false")
-        val KEYWORDS = PRIMARY_KEYWORDS + setOf("not", "and", "xor", "or", "mod", "as", "if", "else")
+        val PRIMARY_KEYWORDS = setOf("true", "false", "null")
+        val VIS_KEYWORDS = setOf("public", "private")
+        val VAR_KEYWORDS = setOf("val", "var")
+        val TYPE_KEYWORDS = setOf("Bool", "Byte", "Char", 
+            "Int16", "Int", "Int32", "Int64",
+            "Nat16", "Nat", "Nat32", "Nat64",
+            "Real32", "Real", "Real64",
+            "Imag32", "Imag", "Imag64",
+            "Cplex32", "Cplex", "Cplex64",
+            "Str", "Array", "Matrix")
+        val FUN_KEYWORDS = setOf("fun", "inline", "deviant")
+        val KEYWORDS = PRIMARY_KEYWORDS + VAR_KEYWORDS + VIS_KEYWORDS + TYPE_KEYWORDS + 
+            FUN_KEYWORDS + setOf(
+            "not", "and", "xor", "or", 
+            "mod", "as", "if", "else")
 
         val LINE_ENDS = setOf(";", "\n", "EOF")
     }

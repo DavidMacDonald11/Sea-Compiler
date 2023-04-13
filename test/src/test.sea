@@ -1,8 +1,14 @@
-;;{}[[]]
+public var name: Str = "Hello World!"
 
-gg +== 5 + small $$
+val a: #Int // int on the heap
+val b: Int // int not on the heap
+val c: #Int? // nullable int on the heap
+val d: Int? // nullable int not on the heap
 
-'a'
-'\n'
-'\u0000'
+a = $b // give ownership of b to a
+a = b // copy value of b to a
 
+add($b, $c) 
+
+private fun add(num1: Real, &num2: Real) -> #Real
+add(a, b)

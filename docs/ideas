@@ -2,6 +2,6 @@
 #data
 $heap
 
-var i: Int
+var i: Int = 5
 
 fun add(num1: Int, num2: Int)

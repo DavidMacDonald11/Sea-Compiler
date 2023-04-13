@@ -1,0 +1,38 @@
+funDeclaration ::= [visKeyword] [funOptimizer] "fun" IDENTIFIER "(" [parameters] ")" [funReturn]
+    funReturn ::= "->" type
+
+funOptimizer ::= "inline" ["deviant"]
+               | "deviant" ["inline"]
+
+parameters ::= parameterList
+             | parameterList "," defualtParameterList
+             | defaultParameterList
+
+defualtParameterList ::= defaultParameter | (defaultParameter "," defualtParameterList)
+defaultParameter ::= parameter "=" expression
+parameterList ::= parameter | (parameter "," parameterList)
+parameter ::= [varKeyword] ["&"] IDENTIFIER ":" type
+
+
+varDeclaration ::= [visKeyword] varKeyword varDeclaratorList
+
+varDeclaratorList ::= varDeclarator | (varDeclarator "," varDeclaratorList)
+varDeclarator ::= IDENTIFIER [":" type] "=" expression
+                | IDENTIFIER ":" type ["=" expression]
+
+varKeyword ::= "val" | "var"
+visKeyword ::= "public" | "private"
+
+type ::= ["#"] typeName ["?"]
+
+typeName ::= typeKeyword | IDENTIFIER | fileIdentifier
+                | "Array" "<" typeName "," INTEGER ">"
+                | "Matrix" "<" typeName "," INTEGER "," INTEGER ">"
+
+typeKeyword ::= "Bool" | "Byte" | "Char" 
+              | "Int16" | "Int" | "Int32" | "Int64" 
+              | "Nat16" | "Nat" | "Nat32" | "Nat64"
+              | "Real32" | "Real" | "Real64"
+              | "Imag32" | "Imag" | "Imag64"
+              | "Cplex32" | "Cplex" | "Cplex64"
+              | "Str"

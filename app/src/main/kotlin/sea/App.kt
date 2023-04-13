@@ -3,10 +3,8 @@ package sea
 import kotlinx.coroutines.*
 import java.util.concurrent.CountDownLatch
 import sea.Faults
-import sea.lexer.SourceFile
-import sea.lexer.SourceLine
-import sea.lexer.Locale
-import sea.lexer.Lexer
+import sea.DebugFile
+import sea.lexer.*
 
 class App {}
 
@@ -27,12 +25,12 @@ fun main(args: Array<String>) = runBlocking {
 }
 
 suspend fun compileFile(options: String, srcPath: String, outDir: String, latch: CountDownLatch) {
-    val sourceFile = SourceFile(srcPath)
+    val sFile = SourceFile(srcPath)
+    val dFile = DebugFile(outDir, srcPath, options)
     val faults = Faults()
     
-    val lexer = Lexer(faults, sourceFile)
-    if(runLexer(lexer)) return
-    println(lexer)
+    val lexer = Lexer(faults, sFile)
+    if(runLexer(lexer, dFile)) return
 
     // publish
 
@@ -42,9 +40,10 @@ suspend fun compileFile(options: String, srcPath: String, outDir: String, latch:
     // transpile
 }
 
-fun runLexer(lexer: Lexer): Boolean = runStage(lexer.faults) { 
+fun runLexer(lexer: Lexer, dFile: DebugFile) = runStage(lexer.faults) { 
     println("Building ${lexer.file.path}...")
     lexer.makeTokens()
+    dFile.write("Tokens:\n\t$lexer")
 }
 
 fun runStage(faults: Faults, func: () -> Unit): Boolean {

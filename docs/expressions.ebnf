@@ -1,16 +1,17 @@
-expression ::= conditionalExpression
+expression ::= nullCoalescingExpression
 
+nullCoalescingExpression ::= conditionalExpression ["?:" nullCoalescingExpression]
 conditionalExpression ::= logicalOrExpression ["if" expression "else" conditionalExpression]
 
 logicalOrExpression ::= logicalXorExpression ["or" logicalOrExpression]
 logicalXorExpression ::= logicalAndExpression ["xor" logicalXorExpression]
 logicalAndExpression ::= logicalNotExpression ["and" logicalAndExpression]
-logicalNotExpression ::= comparativeExpression | "not" logicalNotExpression
+logicalNotExpression ::= comparativeExpression | ("not" logicalNotExpression)
 
 comparativeExpression ::= castExpression [comparisonOperator comparativeExpression]
     comparisonOperator ::= "<" | ">" | "<=" | ">=" | "==" | "!="
 
-castExpression ::= bitwiseOrExpression | castExpression "as" type_name
+castExpression ::= bitwiseOrExpression | (castExpression "as" type)
 
 bitwiseOrExpression ::= bitwiseXorExpression ["|" bitwiseOrExpression]
 bitwiseXorExpression ::= bitwiseAndExpression ["$" bitwiseXorExpression]
@@ -20,10 +21,12 @@ shiftExpression ::= additiveExpression [("<<" | ">>") shiftExpression]
 additiveExpression ::= multiplicativeExpression [("+" | "-") additiveExpression]
 multiplicativeExpression ::= unaryExpression [("*" | "/" | "%" | "mod") multiplicativeExpression]
 
-unaryExpression ::= postfixExpression | unaryOperator unaryExpression
-    unaryOperator ::= "+" | "-" | "!"
+unaryExpression ::= postfixExpression | (unaryOperator unaryExpression)
+    unaryOperator ::= "+" | "-" | "!" | "&" | "$"
 
-postfixExpression ::= postfixExpression ["." IDENTIFIER]
+postfixExpression ::= postfixExpression ["!!"]
+                    | postfixExpression ["." IDENTIFIER]
+                    | postfixExpression ["?." IDENTIFIER]
                     | postfixExpression ["[" expression "]"] 
                     | primaryExpression
 
@@ -35,4 +38,4 @@ primaryExpression ::= NUMBER
                     | primaryKeyword
                     | "(" expression ")"
     fileIdentifier ::= IDENTIFIER "::" IDENTIFIER
-    primaryKeyword ::= "true" | "false"
+    primaryKeyword ::= "true" | "false" | "null"

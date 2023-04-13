@@ -175,7 +175,7 @@ data class Lexer(val faults: Faults, val file: SourceFile) {
         }
 
         if(string == "/" && file.next in "/*") return ignoreComment()
-        val token = newToken(Token.Type.OP)
+        val token = newToken(if(string in Token.PUNC_OPS) Token.Type.PUNC else Token.Type.OP)
 
         if(string !in Token.OPERATORS) {
             throw faults.fail(token, "Unrecognized operator '${token.string}'")

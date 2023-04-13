@@ -1,0 +1,38 @@
+fileStatement ::= statementList
+
+statementList ::= statement | (statement statementList)
+statement ::= lineStatementPart lineEnd
+            | compoundStatement
+            | ifStatement
+            | iterativeStatement
+
+iterativeStatement ::= whileStatement
+                     | doWhileStatement
+
+whileStatement ::= ["@" IDENTIFIER] "while" "(" expression ")" statement
+doWhileStatement ::= ["@" IDENTIFIER] "do" statement "while" "(" expression ")" lineEnd
+                   | ["@" IDENTIFIER] "do" lineStatementPart "while" "(" expression ")" lineEnd
+
+ifStatement ::= "if" "(" expression ")" statement [elseIfStatement] [elseStatement]
+elseIfStatement ::= "else" "if" "(" expression ")" statement 
+                  | elseIfStatement "else" "if" "(" expression ")" statement
+elseStatement ::= "else" statement 
+
+compoundStatement ::= "{" [statementList] "}"
+
+lineStatementPart ::= expression
+                    | varDeclaration
+                    | basicStatementPart
+                    | reassignStatementPart
+
+reassignStatementPart ::= chainReassignStatementPart
+                        | postfixExpression reassignOperator expression
+chainReassignStatementPart ::= postfixExpression "=" expression
+                             | chainReassignStatementPart "=" expression
+reassignOperator ::= "=" | "*=" | "/=" | "%=" | "+=" | "-=" 
+                   | "<<=" | ">>=" | "&=" | "$=" | "|=" | "?:="
+ 
+basicStatementPart ::= "pass"
+                     | "return" [expression]
+
+lineEnd ::= ";" | "\n" | "EOF"

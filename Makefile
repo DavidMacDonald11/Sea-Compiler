@@ -7,7 +7,7 @@ build:
 
 .PHONY: test
 test: build
-	./sea.bash -o=test/bin test/src
+	./sea.bash -d -o=test/bin test/src
 
 .PHONY: clean
 clean:
