@@ -13,7 +13,7 @@ data class DebugFile(val outDir: String, val srcPath: String, val options: Strin
         path = File(path).name
         path = "$outDir/$path"
 
-        if(enabled) File(path).writeText("$srcPath:")
+        if(enabled) File(path).writeText("$srcPath\n\n")
     }
 
     fun write(string: String, end: String = "\n\n") {

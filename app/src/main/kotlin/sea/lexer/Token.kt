@@ -8,20 +8,20 @@ import sea.lexer.SourceLine
 val UPPERCASE_LETTERS = ('A'..'Z').joinToString("")
 val LOWERCASE_LETTERS = ('a'..'z').joinToString("")
 
-data class Token(val line: SourceLine, var type: Type) : Faults.Component {
-    public enum class Type(val data: Pair<Char, String>) { 
-        PUNC(Pair('P', "Puncuator")), NUM(Pair('N', "Number")), 
-        OP(Pair('O', "Operator")), CHAR(Pair('C', "Character")), 
-        STR(Pair('S', "String")), IDENTIFIER(Pair('I', "Identifier")), 
-        KEYWORD(Pair('K', "Keyword")), NONE(Pair('?', "None"));
+enum class TokenType(val data: Pair<Char, String>) { 
+    PUNC(Pair('P', "Puncuator")), NUM(Pair('N', "Number")), 
+    OP(Pair('O', "Operator")), CHAR(Pair('C', "Character")), 
+    STR(Pair('S', "String")), IDENTIFIER(Pair('I', "Identifier")), 
+    KEYWORD(Pair('K', "Keyword")), NONE(Pair('?', "None"));
 
-        val label: Char 
-            get() = data.first
+    val label: Char 
+        get() = data.first
 
-        val word: String 
-            get() = data.second
-    }
+    val word: String 
+        get() = data.second
+}
 
+data class Token(val line: SourceLine, var type: TokenType) : Faults.Component {
     var string: String
     var locale: Locale
 
@@ -56,9 +56,9 @@ data class Token(val line: SourceLine, var type: Type) : Faults.Component {
         string = if("." in num) "$result" else "${result.toInt()}"
     }
 
-    fun of(vararg types: Type ): Boolean = type in types
+    fun of(vararg types: TokenType ): Boolean = type in types
     fun has(vararg strings: String): Boolean = (if(string == "") "EOF" else string) in strings
-    fun isInt(): Boolean = of(Type.NUM) && !("." in string)
+    fun isInt(): Boolean = of(TokenType.NUM) && !("." in string)
     
     override fun toString(): String {
         var string = if(string == "") "EOF" else string.replace("\n", "\\n")

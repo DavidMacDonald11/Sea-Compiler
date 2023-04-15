@@ -28,7 +28,7 @@ data class Parser(val faults: Faults, val tokens: ArrayList<Token>) {
         return token
     }
 
-    fun expectingOf(vararg types: Token.Type): Token {
+    fun expectingOf(vararg types: TokenType): Token {
         if(next.of(*types)) return take()
 
         val names = (types.map { it.name }).joinToString(", ", "[", "]")

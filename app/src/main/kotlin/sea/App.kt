@@ -6,6 +6,7 @@ import sea.Faults
 import sea.DebugFile
 import sea.lexer.*
 import sea.parser.*
+import sea.publisher.*
 
 class App {}
 
@@ -35,12 +36,17 @@ suspend fun compileFile(options: String, srcPath: String, outDir: String, latch:
 
     val parser = Parser(faults, lexer.tokens)
     if(runParser(parser, dFile)) return
-    // publish
-
-    latch.countDown()
-    latch.await()
-
+    
+    val publisher = Publisher(faults, parser.tree)
+    if(runPublisher(publisher, dFile, latch)) return
+    
     // transpile
+}
+
+fun runLexer(lexer: Lexer, dFile: DebugFile) = runStage(lexer.faults) { 
+    println("Building ${lexer.file.path}...")
+    lexer.makeTokens()
+    dFile.write("Tokens:\n\t$lexer")
 }
 
 fun runParser(parser: Parser, dFile: DebugFile) = runStage(parser.faults) {
@@ -48,10 +54,12 @@ fun runParser(parser: Parser, dFile: DebugFile) = runStage(parser.faults) {
     dFile.write("AST:\n\t$parser")
 }
 
-fun runLexer(lexer: Lexer, dFile: DebugFile) = runStage(lexer.faults) { 
-    println("Building ${lexer.file.path}...")
-    lexer.makeTokens()
-    dFile.write("Tokens:\n\t$lexer")
+fun runPublisher(publisher: Publisher, dFile: DebugFile, latch: CountDownLatch) 
+    = runStage(publisher.faults) {
+    publisher.publishTree()
+    latch.countDown()
+    latch.await()
+    dFile.write("Published AST:\n\t$publisher")
 }
 
 fun runStage(faults: Faults, func: () -> Unit): Boolean {

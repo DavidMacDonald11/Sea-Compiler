@@ -12,3 +12,7 @@ add($b, $c)
 
 private fun add(num1: Real, &num2: Real) -> #Real
 add(a, b)
+
+Publisher should link part of AST from one file into AST of another
+Create a map of identifiers and ASTs
+Make a list of declared functions (hoisting)

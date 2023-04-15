@@ -3,13 +3,14 @@ package sea.lexer
 import sea.Faults
 import sea.lexer.SourceFile
 import sea.lexer.Token
+import sea.lexer.TokenType
 
 data class Lexer(val faults: Faults, val file: SourceFile) {
     val tokens = ArrayList<Token>()
 
     override fun toString(): String = tokens.joinToString(", ", "[", "]")
 
-    fun newToken(type: Token.Type = Token.Type.NONE, line: SourceLine = file.line): Token {
+    fun newToken(type: TokenType = TokenType.NONE, line: SourceLine = file.line): Token {
         val token = Token(line, type)
         tokens.add(token)
         return token
@@ -82,7 +83,7 @@ data class Lexer(val faults: Faults, val file: SourceFile) {
             file.take(1)
         }
 
-        newToken(Token.Type.PUNC, line)
+        newToken(TokenType.PUNC, line)
     }
 
     fun makeLineContinuation() {
@@ -100,7 +101,7 @@ data class Lexer(val faults: Faults, val file: SourceFile) {
 
     fun makePunctuator() {
         file.take(1)
-        newToken(Token.Type.PUNC)
+        newToken(TokenType.PUNC)
     }
 
     fun makeChar() {
@@ -115,7 +116,7 @@ data class Lexer(val faults: Faults, val file: SourceFile) {
         } else file.take(1)
 
         if(file.take(1) == "'") {
-            val token = newToken(Token.Type.CHAR)
+            val token = newToken(TokenType.CHAR)
             if(token.string.matches(pattern)) return
 
             faults.error(token, "Invalid character")
@@ -133,7 +134,7 @@ data class Lexer(val faults: Faults, val file: SourceFile) {
             if(taken == "\\") file.take(1)
 
             if(taken == "\"") {
-                newToken(Token.Type.STR)
+                newToken(TokenType.STR)
                 return
             }
         }
@@ -146,12 +147,12 @@ data class Lexer(val faults: Faults, val file: SourceFile) {
         pattern += """(\d+b(([0-9A-Z]+)|([0-9A-Z]*\.[0-9A-Z]+)|([0-9A-Z]+\.[0-9A-Z]*)))"""
 
         if(file.take(1) == "." && !(file.next.isDigit())) {
-            newToken(Token.Type.OP)
+            newToken(TokenType.OP)
             return
         }
 
         file.take(these = Token.NUMBER_SYMBOLS)
-        val token = newToken(Token.Type.NUM)
+        val token = newToken(TokenType.NUM)
 
         if(!token.string.matches(pattern.toRegex())) throw faults.fail(token, "Invalid number")
         token.convertNumber(faults)
@@ -175,7 +176,7 @@ data class Lexer(val faults: Faults, val file: SourceFile) {
         }
 
         if(string == "/" && file.next in "/*") return ignoreComment()
-        val token = newToken(if(string in Token.PUNC_OPS) Token.Type.PUNC else Token.Type.OP)
+        val token = newToken(if(string in Token.PUNC_OPS) TokenType.PUNC else TokenType.OP)
 
         if(string !in Token.OPERATORS) {
             throw faults.fail(token, "Unrecognized operator '${token.string}'")
@@ -184,6 +185,6 @@ data class Lexer(val faults: Faults, val file: SourceFile) {
 
     fun makeIdentifier() {
         val string = file.take(these = Token.IDENTIFIER_SYMBOLS)
-        newToken(if(string in Token.KEYWORDS) Token.Type.KEYWORD else Token.Type.IDENTIFIER)
+        newToken(if(string in Token.KEYWORDS) TokenType.KEYWORD else TokenType.IDENTIFIER)
     }
 }

@@ -1,12 +1,17 @@
 package sea.parser
 
-import sea.Faults
-import sea.lexer.SourceLine
-import sea.lexer.Token
-import sea.parser.Parser
 import kotlin.reflect.KClass
 import kotlin.reflect.full.primaryConstructor
+import sea.Faults
+import sea.lexer.SourceLine
+import sea.lexer.TokenType
+import sea.lexer.Token
+import sea.parser.Parser
+import sea.publisher.Publisher
 
+typealias Token = Token
+typealias TokenType = TokenType
+typealias KClass<T> = KClass<T>
 typealias Parts = List<Faults.Component>
 
 abstract class Node : Faults.Component {
@@ -51,6 +56,8 @@ abstract class Node : Faults.Component {
     interface CompanionObject {
         fun construct(parser: Parser): Node?
     }
+
+    open fun publish(publisher: Publisher) {}
 }
 
 
@@ -61,22 +68,22 @@ abstract class PrimaryNode(var token: Token) : Node() {
 
 
 private typealias ConstructFun = (Parser) -> Node
-private typealias BinOpClass = KClass<BinaryOperation>
+typealias BinOpClass = KClass<BinaryOperation>
 
 abstract class BinaryOperation(var left: Node, var op: Token, var right: Node) : Node() {
     override val parts: Parts = listOf(left, op, right)
 
     companion object {
         fun construct(parser: Parser, hasList: List<String>, makeChild: ConstructFun, Type: BinOpClass): Node {
-                var node = makeChild(parser)
+            var node = makeChild(parser)
 
-                while(parser.next.has(*hasList.toTypedArray())) {
-                    val op = parser.take()
-                    val right = makeChild(parser)
-                    node = Type.primaryConstructor!!.call(node, op, right)
-                }
+            while(parser.next.has(*hasList.toTypedArray())) {
+                val op = parser.take()
+                val right = makeChild(parser)
+                node = Type.primaryConstructor!!.call(node, op, right)
+            }
 
-                return node
+            return node
         }
     }
 }

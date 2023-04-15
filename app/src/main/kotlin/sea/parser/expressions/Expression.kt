@@ -1,12 +1,12 @@
 package sea.grammar
 
 import sea.parser.*
-import sea.grammar.PrimaryExpression
+import sea.grammar.AdditiveExpression
 
 abstract class Expression : Node() {
     companion object : Node.CompanionObject {
         override fun construct(parser: Parser): Node {
-            return PrimaryExpression.construct(parser)
+            return AdditiveExpression.construct(parser)
         }
     }
 }
