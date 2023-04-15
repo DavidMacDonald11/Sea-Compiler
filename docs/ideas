@@ -1,7 +1,14 @@
-%register
-#data
-$heap
+public var name: Str = "Hello World!"
 
-var i: Int = 5
+val a: #Int // int on the heap
+val b: Int // int not on the heap
+val c: #Int? // nullable int on the heap
+val d: Int? // nullable int not on the heap
 
-fun add(num1: Int, num2: Int)
+a = $b // give ownership of b to a
+a = b // copy value of b to a
+
+add($b, $c) 
+
+private fun add(num1: Real, &num2: Real) -> #Real
+add(a, b)

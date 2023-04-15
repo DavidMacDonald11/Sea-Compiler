@@ -5,6 +5,7 @@ import java.util.concurrent.CountDownLatch
 import sea.Faults
 import sea.DebugFile
 import sea.lexer.*
+import sea.parser.*
 
 class App {}
 
@@ -32,12 +33,19 @@ suspend fun compileFile(options: String, srcPath: String, outDir: String, latch:
     val lexer = Lexer(faults, sFile)
     if(runLexer(lexer, dFile)) return
 
+    val parser = Parser(faults, lexer.tokens)
+    if(runParser(parser, dFile)) return
     // publish
 
     latch.countDown()
     latch.await()
 
     // transpile
+}
+
+fun runParser(parser: Parser, dFile: DebugFile) = runStage(parser.faults) {
+    parser.makeTree()
+    dFile.write("AST:\n\t$parser")
 }
 
 fun runLexer(lexer: Lexer, dFile: DebugFile) = runStage(lexer.faults) { 

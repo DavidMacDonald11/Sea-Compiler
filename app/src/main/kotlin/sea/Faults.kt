@@ -50,7 +50,7 @@ class Faults {
     public interface Component {
         override fun toString(): String
         fun tree(prefix: String): String
-        fun lines(): ArrayList<SourceLine>
+        fun lines(): List<SourceLine>
         fun raw(): String
         fun mark()
     }
