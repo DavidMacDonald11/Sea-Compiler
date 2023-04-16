@@ -2,7 +2,6 @@ package sea.grammar
 
 import sea.parser.*
 import sea.grammar.LineStatement
-import sea.publisher.Publisher
 
 class FileStatement : Node() {
     val statements = ArrayList<Node>()
@@ -18,5 +17,13 @@ class FileStatement : Node() {
 
     override fun publish(publisher: Publisher) {
         statements.forEach { it.publish(publisher) }
+    }
+
+    override fun transpile(transpiler: Transpiler): TExpression {
+        statements.forEach { statement -> 
+            transpiler.write(statement.transpile(transpiler).toString(), "")
+        }
+
+        return TExpression()
     }
 }

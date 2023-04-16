@@ -6,7 +6,8 @@ import sea.Faults
 import sea.DebugFile
 import sea.lexer.*
 import sea.parser.*
-import sea.publisher.*
+import sea.transpiler.OutputFile
+import sea.transpiler.createStandard
 
 class App {}
 
@@ -23,6 +24,7 @@ fun main(args: Array<String>) = runBlocking {
         jobs.add(job)
     }
 
+    createStandard(outDir)
     jobs.joinAll()
 }
 
@@ -40,7 +42,9 @@ suspend fun compileFile(options: String, srcPath: String, outDir: String, latch:
     val publisher = Publisher(faults, parser.tree)
     if(runPublisher(publisher, dFile, latch)) return
     
-    // transpile
+    val oFile = OutputFile(outDir, srcPath)
+    val transpiler = Transpiler(faults, publisher.tree, oFile)
+    runTranspiler(transpiler, dFile)
 }
 
 fun runLexer(lexer: Lexer, dFile: DebugFile) = runStage(lexer.faults) { 
@@ -60,6 +64,11 @@ fun runPublisher(publisher: Publisher, dFile: DebugFile, latch: CountDownLatch)
     latch.countDown()
     latch.await()
     dFile.write("Published AST:\n\t$publisher")
+}
+
+fun runTranspiler(transpiler: Transpiler, dFile: DebugFile) = runStage(transpiler.faults) {
+    transpiler.transpileTree()
+    dFile.write("Transpiled")
 }
 
 fun runStage(faults: Faults, func: () -> Unit): Boolean {

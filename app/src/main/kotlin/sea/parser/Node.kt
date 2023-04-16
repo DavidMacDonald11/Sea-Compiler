@@ -8,11 +8,16 @@ import sea.lexer.TokenType
 import sea.lexer.Token
 import sea.parser.Parser
 import sea.publisher.Publisher
+import sea.transpiler.Transpiler
+import sea.transpiler.TExpression
 
 typealias Token = Token
 typealias TokenType = TokenType
 typealias KClass<T> = KClass<T>
 typealias Parts = List<Faults.Component>
+typealias Publisher = Publisher
+typealias Transpiler = Transpiler
+typealias TExpression = TExpression
 
 abstract class Node : Faults.Component {
     abstract val parts: Parts
@@ -58,6 +63,7 @@ abstract class Node : Faults.Component {
     }
 
     open fun publish(publisher: Publisher) {}
+    abstract fun transpile(transpiler: Transpiler): TExpression
 }
 
 

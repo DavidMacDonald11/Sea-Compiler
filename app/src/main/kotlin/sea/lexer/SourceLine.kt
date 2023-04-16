@@ -39,6 +39,6 @@ data class SourceLine(val num: Int, val string: String) {
         val line = if(string == "") "EOF\n" else string
         if(string == "") underline = "^^^"
 
-        return "%4d|$line    |$underline".format(num)
+        return "${"%4d".format(num)}|$line    |$underline"
     }
 }
