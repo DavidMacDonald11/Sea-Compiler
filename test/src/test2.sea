@@ -7,3 +7,7 @@
 3.14i % 2i
 
 (1 + 2i) % 2
+
+true
+true + false
+null

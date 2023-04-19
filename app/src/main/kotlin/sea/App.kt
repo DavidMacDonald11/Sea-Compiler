@@ -63,12 +63,14 @@ fun runPublisher(publisher: Publisher, dFile: DebugFile, latch: CountDownLatch)
     publisher.publishTree()
     latch.countDown()
     latch.await()
-    dFile.write("Published AST:\n\t$publisher")
+    
+    publisher.importTree()
+    dFile.write("Published Map & AST:\n\t$publisher")
 }
 
 fun runTranspiler(transpiler: Transpiler, dFile: DebugFile) = runStage(transpiler.faults) {
     transpiler.transpileTree()
-    dFile.write("Transpiled")
+    dFile.write("Transpiler Symbol Table:\n\t$transpiler")
 }
 
 fun runStage(faults: Faults, func: () -> Unit): Boolean {

@@ -1,16 +1,18 @@
 package sea.grammar
 
 import sea.parser.*
-import sea.grammar.Expression
 import sea.publisher.Publisher
 
-data class LineStatementPart(val part: Node) : Node() {
+data class LineStatementPart(val part: Node): Node() {
     override val parts: Parts = listOf(part)    
 
-    companion object : Node.CompanionObject {
+    companion object: Node.CompanionObject {
         override fun construct(parser: Parser): Node {
-            val node = Expression.construct(parser)
-            return LineStatementPart(node)
+            if(parser.nextOrAfterHas(Token.VAR_KEYWORDS)) {
+                return LineStatementPart(VarDeclaration.construct(parser))
+            }
+
+            return LineStatementPart(Expression.construct(parser))
         }
     }
 

@@ -16,21 +16,25 @@ class MultiplicativeExpression(left: Node, op: Token, right: Node)
     }
 
     override fun transpile(transpiler: Transpiler): TExpression {
-        if(op.has("%", "mod")) return transpileRemainder(transpiler)
+        if(op.has("%", "mod")) return transpiler.nodeContext(this) { 
+            transpileRemainder(transpiler)
+        }
 
-        val left = left.transpile(transpiler).arithmeticOp(this, transpiler)
-        val right = right.transpile(transpiler).arithmeticOp(this, transpiler)
-        val result = TExpression.resolveType(left, right)
+        return transpiler.nodeContext(this) {
+            val left = left.transpile(transpiler).arithmeticOp(transpiler)
+            val right = right.transpile(transpiler).arithmeticOp(transpiler)
+            val result = TExpression.resolveType(left, right)
 
-        if(TExpression.realAndImag(left, right))result.castReplace("Imag")
-        if("Imag" in left.type && "Imag" in right.type) result.castReplace("Real")
-
-        return result.replace("$left ${op.string} $right")
+            if(TExpression.realAndImag(left, right))result.castReplace("Imag")
+            if("Imag" in left.type && "Imag" in right.type) result.castReplace("Real")
+        
+            result.replace("$left ${op.string} $right")
+        }
     }
 
     fun transpileRemainder(transpiler: Transpiler): TExpression {
-        val left = left.transpile(transpiler).arithmeticOp(this, transpiler)
-        val right = right.transpile(transpiler).arithmeticOp(this, transpiler)
+        val left = left.transpile(transpiler).arithmeticOp(transpiler)
+        val right = right.transpile(transpiler).arithmeticOp(transpiler)
         val result = TExpression.resolveType(left, right)
 
         if("Nat" in result.type || "Int" in result.type) {

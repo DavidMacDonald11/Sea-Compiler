@@ -42,9 +42,7 @@ class Faults {
         c.mark()
 
         val stageLabel = "${stageMap[stage]} $label"
-        var newMessage = message.replace("\n", "\\n")
-
-        return "$stageLabel: $newMessage\n${c.raw()}"
+        return "$stageLabel: $message\n${c.raw()}"
     }
 
     public interface Component {

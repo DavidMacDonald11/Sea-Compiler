@@ -16,11 +16,13 @@ class AdditiveExpression(left: Node, op: Token, right: Node)
         }
 
         override fun transpile(transpiler: Transpiler): TExpression {
-            val left = left.transpile(transpiler).arithmeticOp(this, transpiler)
-            val right = right.transpile(transpiler).arithmeticOp(this, transpiler)
-            val result = TExpression.resolveType(left, right)
+            return transpiler.nodeContext(this) {
+                val left = left.transpile(transpiler).arithmeticOp(transpiler)
+                val right = right.transpile(transpiler).arithmeticOp(transpiler)
+                val result = TExpression.resolveType(left, right)
 
-            if(TExpression.realAndImag(left, right)) result.castReplace("Cplex")
-            return result.replace("$left ${op.string} $right")
+                if(TExpression.realAndImag(left, right)) result.castReplace("Cplex")
+                result.replace("$left ${op.string} $right")
+            }
          }
     }

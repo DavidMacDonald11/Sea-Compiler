@@ -8,26 +8,24 @@ parameters ::= parameterList
              | parameterList "," defualtParameterList
              | defaultParameterList
 
-defualtParameterList ::= defaultParameter | (defaultParameter "," defualtParameterList)
+defaultParameterList ::= defaultParameter | (defaultParameter "," defualtParameterList)
 defaultParameter ::= parameter "=" expression
 parameterList ::= parameter | (parameter "," parameterList)
-parameter ::= [varKeyword] ["&"] IDENTIFIER ":" type
+parameter ::= ["invar" | "var"] ["&"] IDENTIFIER ":" type
 
 
-varDeclaration ::= [visKeyword] varKeyword varDeclaratorList
-
-varDeclaratorList ::= varDeclarator | (varDeclarator "," varDeclaratorList)
+varDeclaration ::= [visKeyword] varKeyword varDeclarator
 varDeclarator ::= IDENTIFIER [":" type] "=" expression
                 | IDENTIFIER ":" type ["=" expression]
 
-varKeyword ::= "val" | "var"
+varKeyword ::= "val" | "invar" | "var"
 visKeyword ::= "public" | "private"
 
 type ::= ["#"] typeName ["?"]
 
 typeName ::= typeKeyword | IDENTIFIER | fileIdentifier
-                | "Array" "<" typeName "," INTEGER ">"
-                | "Matrix" "<" typeName "," INTEGER "," INTEGER ">"
+           | "Array" "<" typeName "," INTEGER ">"
+           | "Matrix" "<" typeName "," INTEGER "," INTEGER ">"
 
 typeKeyword ::= "Bool" | "Byte" | "Char" 
               | "Int16" | "Int" | "Int32" | "Int64" 

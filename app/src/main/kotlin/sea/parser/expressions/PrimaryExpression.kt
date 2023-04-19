@@ -6,6 +6,7 @@ abstract class PrimaryExpression: Node() {
     companion object: Node.CompanionObject {
         override fun construct(parser: Parser): Node {
             if(parser.next.of(TokenType.NUM)) return Number.construct(parser)
+            if(parser.next.has(Token.PRIMARY_KEYWORDS)) return PrimaryKeyword.construct(parser)
             if(parser.next.has("(")) return ParentheseseExpression.construct(parser)
 
             val token = parser.take()
@@ -16,7 +17,7 @@ abstract class PrimaryExpression: Node() {
 
 
 class Number(token: Token, val imag: Token?): PrimaryNode(token) {
-    override val parts: Parts = listOf(token, imag).filterNotNull()
+    override val parts: Parts = listOf(token, imag)
 
     override fun tree(prefix: String): String {
         return "${this::class.simpleName} ── $token" + if(imag != null) " $imag" else ""
@@ -41,6 +42,24 @@ class Number(token: Token, val imag: Token?): PrimaryNode(token) {
         return expression
     }
 }
+
+
+class PrimaryKeyword(token: Token): PrimaryNode(token) {
+    companion object: Node.CompanionObject {
+        override fun construct(parser: Parser): Node {
+            return PrimaryKeyword(parser.expectingHas(Token.PRIMARY_KEYWORDS))
+        }
+    }
+
+    override fun transpile(transpiler: Transpiler): TExpression {
+        if(token.string in listOf("true", "false")) {
+            return TExpression("Bool", token.string)
+        }
+
+        return TExpression(TType(nullable = true), string = "NULL")
+    }
+}
+
 
 class ParentheseseExpression(val expression: Node): Node() {
     override val parts: Parts = listOf(expression)

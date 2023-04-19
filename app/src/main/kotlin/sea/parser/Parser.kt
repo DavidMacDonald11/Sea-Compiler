@@ -18,7 +18,7 @@ data class Parser(val faults: Faults, val tokens: ArrayList<Token>) {
         get() = tokens[if(i > tokens.size - 1) tokens.size - 1 else i]
 
     fun ahead(pos: Int): Token {
-        i = this.i + pos
+        val i = this.i + pos
         return tokens[if(i > tokens.size - 1) tokens.size - 1 else i]
     }
 
@@ -39,8 +39,17 @@ data class Parser(val faults: Faults, val tokens: ArrayList<Token>) {
         if(next.has(*values)) return take()
 
         val vals = values.joinToString(", ", "[", "]")
-        throw faults.fail(take(), "Expecting value of $vals")
+        throw faults.fail(take(), "Expecting value of $vals".replace("\n", "\\n"))
     }
+
+    fun expectingOf(c: Collection<TokenType>) = expectingOf(*c.toTypedArray())
+    fun expectingHas(c: Collection<String>) = expectingHas(*c.toTypedArray())
+
+    fun nextOrAfterHas(vararg values: String): Boolean {
+        return next.has(*values) or ahead(1).has(*values)
+    }
+
+    fun nextOrAfterHas(c: Collection<String>) = nextOrAfterHas(*c.toTypedArray())
 
     fun skipNewlines() {
         while(next.has("\n")) take()

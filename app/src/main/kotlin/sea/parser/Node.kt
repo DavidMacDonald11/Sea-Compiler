@@ -9,28 +9,34 @@ import sea.lexer.Token
 import sea.parser.Parser
 import sea.publisher.Publisher
 import sea.transpiler.Transpiler
+import sea.transpiler.TType
 import sea.transpiler.TExpression
 
 typealias Token = Token
 typealias TokenType = TokenType
 typealias KClass<T> = KClass<T>
-typealias Parts = List<Faults.Component>
+typealias NotNullParts = List<Faults.Component>
+typealias Parts = List<Faults.Component?>
 typealias Publisher = Publisher
 typealias Transpiler = Transpiler
+typealias TType = TType
 typealias TExpression = TExpression
 
 abstract class Node : Faults.Component {
     abstract val parts: Parts
+    val notNullParts: NotNullParts
+        get() = parts.filterNotNull()
+
     override fun toString(): String = tree("    ")
 
     override fun tree(prefix: String): String {
         var string = "${this::class.simpleName}"
         
-        for((i, node) in parts.withIndex()) {
-            val atLast = (i == parts.size - 1)
+        for((i, node) in notNullParts.withIndex()) {
+            val atLast = (i == notNullParts.size - 1)
             val symbol = if(atLast) "└──" else "├──"
 
-            val children = node.tree("$prefix${if(atLast) "" else "│"}    ")
+            val children = node.tree("$prefix${if(atLast) " " else "│"}   ")
             string += "\n$prefix$symbol $children"
         }
 
@@ -40,13 +46,12 @@ abstract class Node : Faults.Component {
     override fun lines(): List<SourceLine> {
         val lines = mutableSetOf<SourceLine>()
 
-        for(c in parts) {
+        for(c in notNullParts) {
             lines += c.lines().toSet()
         }
 
         return lines.toList().sortedBy { it.num }
     }
-
 
     override fun raw(): String {
         var string = "" 
@@ -55,7 +60,7 @@ abstract class Node : Faults.Component {
     }
 
     override fun mark() {
-        for(c in parts) c.mark()
+        for(c in notNullParts) c.mark()
     }
 
     interface CompanionObject {

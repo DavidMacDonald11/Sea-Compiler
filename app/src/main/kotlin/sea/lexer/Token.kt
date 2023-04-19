@@ -57,7 +57,9 @@ data class Token(val line: SourceLine, var type: TokenType) : Faults.Component {
     }
 
     fun of(vararg types: TokenType ): Boolean = type in types
+    fun of(c: Collection<TokenType>): Boolean = of(*c.toTypedArray())
     fun has(vararg strings: String): Boolean = (if(string == "") "EOF" else string) in strings
+    fun has(c: Collection<String>): Boolean = has(*c.toTypedArray())
     fun isInt(): Boolean = of(TokenType.NUM) && !("." in string)
     
     override fun toString(): String {
@@ -89,14 +91,13 @@ data class Token(val line: SourceLine, var type: TokenType) : Faults.Component {
 
         val PRIMARY_KEYWORDS = setOf("true", "false", "null")
         val VIS_KEYWORDS = setOf("public", "private")
-        val VAR_KEYWORDS = setOf("val", "var")
+        val VAR_KEYWORDS = setOf("val", "invar", "var")
         val TYPE_KEYWORDS = setOf("Bool", "Byte", "Char", 
             "Int16", "Int", "Int32", "Int64",
             "Nat16", "Nat", "Nat32", "Nat64",
             "Real32", "Real", "Real64",
             "Imag32", "Imag", "Imag64",
-            "Cplex32", "Cplex", "Cplex64",
-            "Str", "Array", "Matrix")
+            "Cplex32", "Cplex", "Cplex64")
         val FUN_KEYWORDS = setOf("fun", "inline", "deviant")
         val KEYWORDS = PRIMARY_KEYWORDS + VAR_KEYWORDS + VIS_KEYWORDS + TYPE_KEYWORDS + 
             FUN_KEYWORDS + setOf(
