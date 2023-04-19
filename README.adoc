@@ -1,0 +1,54 @@
+= Sea Programming Language
+
+The Sea language was born out of a desire to make C less annoying. 
+Originally, Sea was intended to be 100% C, with 100% Python-inspired syntax.
+Over the few years I have worked on this project, it has morphed.
+Now, Sea is a version of C with syntax derived from Kotlin and Python, and memory management inspired by Rust. 
+
+== File Extensions and Pronunciation
+
+With this language comes a few file extenstions:
+
+- `.sea`, equivalent to `.c`
+- `.seatmp`, used for temporary compiler data
+- `.seadebug`, used for generated debug info
+
+I have decided to pronounce "Sea" exactly as the English word; exactly as C. 
+I'm sorry.
+
+Being C, just written differently, the name makes perfect sense. 
+
+== Compiler Functionality
+
+This program includes the Sea compiler, which transpiles Sea to C.
+Then, you may use any C compiler to generate assembly or machine code.
+
+== Install Instructions
+
+TBD
+
+There will be releases containing the packaged jar file and `sea.bash` or `sea.bat`. 
+
+== Run Instructions
+
+TBD
+
+== Documentation, Syntax, and Grammar
+
+Check out the link:https://github.com/DavidMacDonald11/Sea-Compiler/tree/main/docs[Docs].
+
+=== Past Development
+
+If you are interested in the full development history of Sea, check out:
+
+- link:https://github.com/DavidMacDonald11/Sea-Programming-Language-LEGACY[]
+- link:https://github.com/DavidMacDonald11/Sea-Compiler-Legacy[]
+- link:https://github.com/DavidMacDonald11/Sea-Compiler/tree/cpp[]
+
+== Legal
+
+I am basing much of this code on David Callanan's BASIC interpreter written in Python which is licensed under MIT.
+
+Feel free to write your own program to interact with this code and absolutely feel free to use the Sea language. It is my intention for this language and code to be useful. If you think my current license is too strict to achieve that, let me know. See link:./LICENSE[LICENSE] for details.
+
+Feel free to use my code as a basis for your own compiler, programming language, etc!
