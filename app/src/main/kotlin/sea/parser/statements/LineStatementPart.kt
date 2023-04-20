@@ -21,6 +21,9 @@ data class LineStatementPart(val part: Node): Node() {
     }
 
     override fun transpile(transpiler: Transpiler): TExpression {
-        return part.transpile(transpiler).setShowtype()
+        val result = part.transpile(transpiler)
+        if(part !is VarDeclaration) result.dropImag(transpiler).setShowType()
+        
+        return result
     }
 }

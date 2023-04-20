@@ -1,6 +1,5 @@
-expression ::= nullCoalescingExpression
+expression ::= conditionalExpression
 
-nullCoalescingExpression ::= conditionalExpression ["?:" nullCoalescingExpression]
 conditionalExpression ::= logicalOrExpression ["if" expression "else" conditionalExpression]
 
 logicalOrExpression ::= logicalXorExpression ["or" logicalOrExpression]
@@ -26,7 +25,6 @@ unaryExpression ::= postfixExpression | (unaryOperator unaryExpression)
 
 postfixExpression ::= postfixExpression ["!!"]
                     | postfixExpression ["." IDENTIFIER]
-                    | postfixExpression ["?." IDENTIFIER]
                     | postfixExpression ["[" expression "]"] 
                     | primaryExpression
 

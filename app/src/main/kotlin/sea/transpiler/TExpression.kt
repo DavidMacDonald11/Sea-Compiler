@@ -67,12 +67,16 @@ data class TType(var string: String = "Any", var dynamic: Boolean = false, var n
 data class TExpression(var type: TType = TType(), var string: String = "") {
     private var showType = false
     private var finished = false
-    var constant = true
+    private var parent: TExpression? = null
+    var isConstant = true
+    var isValue = true
 
     constructor(type: String, string: String = ""): this(TType(type), string)
 
-    override fun toString() = "$string"
-    fun setShowtype(): TExpression { showType = true; return this }
+    override fun toString(): String {
+        val result = parent?.toString()?: ""
+        return "$result$string"
+    }
 
     fun replace(string: String): TExpression { 
         this.string = string 
@@ -123,8 +127,17 @@ data class TExpression(var type: TType = TType(), var string: String = "") {
         return this.castUp()
     }
 
+    fun new(type: TType = TType(), string: String = ""): TExpression {
+        val expression = TExpression(type, string)
+        expression.parent = this
+        return expression
+    }
+
+    fun setShowType(): TExpression { showType = true; return this }
+
     fun finish(transpiler: Transpiler, semicolons: Boolean = true): TExpression {
         if(finished) return this
+        parent?.finish(transpiler, semicolons)
         finished = true
 
         val indent = "    ".repeat(transpiler.context.indents)

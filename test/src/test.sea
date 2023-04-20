@@ -1,5 +1,2 @@
-val PI = 3.14
-public var x = 4
-public invar y = 5
-var bool: Bool
-var name: Bool? = null
+var x1: Bool? = null
+var x2: Bool? = true

@@ -32,6 +32,11 @@ class SymbolTable(val transpiler: Transpiler) {
     }
 
     fun newVal(name: String, type: TType): Symbol {
+        if(type.nullable) {
+            val node = transpiler.context.node!!
+            transpiler.faults.error(node, "Cannot declare nullable value")
+        }
+
         @Suppress("UNCHECKED_CAST")
         return newSymbol(name, Value::class as SClass, Value(type, name))
     }

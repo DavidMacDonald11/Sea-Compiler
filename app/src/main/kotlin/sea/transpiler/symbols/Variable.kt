@@ -10,6 +10,7 @@ open class Variable(type: TType, name: String): Value(type, name) {
     var transfered = false
 
     override val cName = "__sea_var_${name}__"
+    open val cValName = "__sea_var_${name}_value__"
 
     override fun access(transpiler: Transpiler): TExpression {
         val node = transpiler.context.node!!
@@ -17,7 +18,7 @@ open class Variable(type: TType, name: String): Value(type, name) {
         if(transfered) 
             transpiler.faults.error(node, "Cannot use dead identifier after ownership swap")
 
-        val expression = TExpression(type, cName)
+        val expression = TExpression(type, "*cName")
         if(initialized) return expression
 
         transpiler.faults.error(node, "Cannot access uninitialized identifier '$name'")
@@ -31,8 +32,6 @@ open class Variable(type: TType, name: String): Value(type, name) {
             transpiler.faults.error(node, "Cannot use dead identifier after ownership swap")
     
         initialized = true
-
-        if("Imag" in type) expression.dropImag(transpiler)
-        return expression
+        return expression.dropImag(transpiler)
     }
 }

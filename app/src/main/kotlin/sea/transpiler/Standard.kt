@@ -7,6 +7,7 @@ fun createStandard(outDir: String) {
     val file = OutputFile(outDir, "__sea_std__.h")
 
     file.include("limits")
+    file.include("stddef")
     file.include("stdint")
     file.include("stdbool")
 
