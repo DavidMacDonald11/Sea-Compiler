@@ -69,7 +69,6 @@ data class TExpression(var type: TType = TType(), var string: String = "") {
     private var finished = false
     private var parent: TExpression? = null
     var isConstant = true
-    var isValue = true
 
     constructor(type: String, string: String = ""): this(TType(type), string)
 
