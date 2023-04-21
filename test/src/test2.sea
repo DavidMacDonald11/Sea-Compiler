@@ -1,13 +1,10 @@
-15 + 2 * 2 / 3
-5i * 2
-5.0i * 2i
-2.3 % 1
-2.0 % 1i
-3.14i % 2
-3.14i % 2i
+var num1: Int? = 5
+var num2 = num1!!
 
-(1 + 2i) % 2
+2i * 2i
 
-true
-true + false
-null
+var im = 2i
+var im2 = im
+var cp: Cplex = im as Cplex
+
+var num3 = num1 as Bool?

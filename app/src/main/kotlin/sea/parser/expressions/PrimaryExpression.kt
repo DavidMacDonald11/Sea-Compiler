@@ -1,11 +1,13 @@
 package sea.grammar
 
 import sea.parser.*
+import sea.transpiler.symbols.Value
 
 abstract class PrimaryExpression: Node() {
     companion object: Node.CompanionObject {
         override fun construct(parser: Parser): Node {
             if(parser.next.of(TokenType.NUM)) return Number.construct(parser)
+            if(parser.next.of(TokenType.IDENTIFIER)) return Identifier.construct(parser)
             if(parser.next.has(Token.PRIMARY_KEYWORDS)) return PrimaryKeyword.construct(parser)
             if(parser.next.has("(")) return ParentheseseExpression.construct(parser)
 
@@ -25,7 +27,7 @@ class Number(token: Token, val imag: Token?): PrimaryNode(token) {
 
     companion object: Node.CompanionObject {
         override fun construct(parser: Parser): Node {
-            val num = parser.take()
+            val num = parser.expectingOf(TokenType.NUM)
             val imag = if(parser.next.has("i")) parser.take() else null
             if(imag != null) imag.type = TokenType.PUNC
 
@@ -37,9 +39,28 @@ class Number(token: Token, val imag: Token?): PrimaryNode(token) {
         val expression = TExpression("", token.string)
 
         if(imag != null) expression.cast("Imag").add(after = "j")
-        else expression.cast(if("." in token.string) "Real" else "Nat")
+        else expression.cast(if("." in token.string) "Real" else "Int")
 
         return expression
+    }
+}
+
+
+class Identifier(token: Token): PrimaryNode(token) {
+    override val parts: Parts = listOf(token)
+
+    companion object: Node.CompanionObject {
+        override fun construct(parser: Parser): Node {
+            return Identifier(parser.expectingOf(TokenType.IDENTIFIER))
+        }
+    }
+
+    override fun transpile(transpiler: Transpiler): TExpression {
+        return transpiler.nodeContext(this) {
+            val name = token.string 
+            val symbol = transpiler.symbols[name]
+            (symbol as Value).access(transpiler)
+        }
     }
 }
 

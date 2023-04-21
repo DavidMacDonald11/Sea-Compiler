@@ -1,2 +1,7 @@
 var x1: Bool? = null
 var x2: Bool? = true
+
+var x3: Bool? = x2
+
+var x4 = 3.14
+var x5 = x4

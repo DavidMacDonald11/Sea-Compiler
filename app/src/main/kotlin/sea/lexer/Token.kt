@@ -73,7 +73,7 @@ data class Token(val line: SourceLine, var type: TokenType) : Faults.Component {
     override fun mark() = line.mark(this)
 
     companion object {
-        val POSTFIX_OPS = setOf("?.", "!!")
+        val POSTFIX_OPS = setOf("!!")
         val PREFIX_UNARY_OPS = setOf("+", "-", "!", "&", "$")
         val BINARY_OPS = setOf("*", "/", "%", "+", "-", "<<", ">>", "&", "$", "|")
         val COMPARE_OPS = setOf("<", ">", "<=", ">=", "==", "!=")

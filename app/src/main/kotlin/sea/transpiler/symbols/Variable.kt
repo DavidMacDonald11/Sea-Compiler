@@ -13,11 +13,11 @@ open class Variable(type: TType, name: String): Value(type, name) {
     open val cValName = "__sea_var_${name}_value__"
 
     override fun declare(transpiler: Transpiler, expression: TExpression?): TExpression {
-        initialized = (expression == null)
+        initialized = (expression != null)
 
         val cType = type.cName
-        expression?.dropImag(transpiler)
-        
+        if("Cplex" !in type) expression?.dropImag(transpiler)
+
         if(!type.nullable) {
             val result = TExpression(type, "$cType $cName")
             if(expression != null) result.add(after = expression.add(" = ").string)
@@ -35,7 +35,15 @@ open class Variable(type: TType, name: String): Value(type, name) {
             return result.new(type, "$cType *$cName = NULL").setShowType()
 
         val expr = expression.string
-        result = result.new(type, "$cType *$cName = ($expr)? ($cValName = *$expr")
+
+        if(expression.delayedCast == null) {
+            result = result.new(type, "$cType *$cName = ($expr)? ($cValName = *$expr")
+        } else {
+            val name = expression.delayedCast!!.string
+            result = result.new(type, "$cType *$cName = ($name)? ($cValName = $expr")
+        }
+
+        
         return result.add(after = ", &$cValName) : NULL").setShowType()
     }
 
@@ -45,6 +53,8 @@ open class Variable(type: TType, name: String): Value(type, name) {
         if(transfered) 
             transpiler.faults.error(node, "Cannot use dead identifier after ownership swap")
     
+        TType.resolveAssign(transpiler, type, expression.type)
+
         initialized = true
         return expression.dropImag(transpiler)
     }
@@ -55,7 +65,10 @@ open class Variable(type: TType, name: String): Value(type, name) {
         if(transfered) 
             transpiler.faults.error(node, "Cannot use dead identifier after ownership swap")
 
-        val expression = TExpression(type, "*cName")
+        val expression = TExpression(type.copy(), "$cName")
+        if("Imag" in type) expression.add("(", " * 1.0j)")
+        expression.isConstant = false
+
         if(initialized) return expression
 
         transpiler.faults.error(node, "Cannot access uninitialized identifier '$name'")

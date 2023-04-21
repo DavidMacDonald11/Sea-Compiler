@@ -1,18 +1,25 @@
 package sea.transpiler
 
-import kotlin.reflect.KClass
 import sea.transpiler.symbols.*
-
-typealias SClass = KClass<Symbol>
 
 class SymbolTable(val transpiler: Transpiler) {
     var parent: SymbolTable? = null
-    val symbols = mutableMapOf<String, Pair<SClass, Symbol>>()
+    val symbols = mutableMapOf<String, Symbol>()
     val num: Int
 
     init {
         num = count
         count += 1
+    }
+
+    operator fun get(key: String): Symbol {
+        val found = symbols[key]
+
+        if(found != null) return found
+        if(parent != null) return parent!![key]
+
+        val node = transpiler.context.node!!
+        throw transpiler.faults.fail(node, "Reference to undeclared identifier '$key'")
     }
 
     override fun toString(): String {
@@ -21,13 +28,13 @@ class SymbolTable(val transpiler: Transpiler) {
         return "$parent,\n    $num $symbols"
     }
 
-    private fun newSymbol(name: String, cls: SClass, symbol: Symbol): Symbol {
+    private fun newSymbol(name: String, symbol: Symbol): Symbol {
         if(name in symbols.keys) {
             val node = transpiler.context.node!!
             transpiler.faults.error(node, "Cannot declare identifier '$name' twice")
         }
 
-        symbols.put(name, Pair(cls, symbol))
+        symbols.put(name, symbol)
         return symbol
     }
 
@@ -37,19 +44,11 @@ class SymbolTable(val transpiler: Transpiler) {
             transpiler.faults.error(node, "Cannot declare nullable value")
         }
 
-        @Suppress("UNCHECKED_CAST")
-        return newSymbol(name, Value::class as SClass, Value(type, name))
+        return newSymbol(name, Value(type, name))
     }
 
-    fun newVar(name: String, type: TType): Symbol {
-        @Suppress("UNCHECKED_CAST")
-        return newSymbol(name, Variable::class as SClass, Variable(type, name))
-    }
-
-    fun newInvar(name: String, type: TType): Symbol {
-        @Suppress("UNCHECKED_CAST")
-        return newSymbol(name, Invariable::class as SClass, Invariable(type, name))
-    }
+    fun newVar(name: String, type: TType) = newSymbol(name, Variable(type, name))
+    fun newInvar(name: String, type: TType) = newSymbol(name, Invariable(type, name))
 
     companion object {
         var count = 0

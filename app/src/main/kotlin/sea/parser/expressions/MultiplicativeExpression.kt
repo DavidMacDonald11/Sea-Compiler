@@ -1,7 +1,6 @@
 package sea.grammar
 
 import sea.parser.*
-import sea.grammar.PrimaryExpression
 
 class MultiplicativeExpression(left: Node, op: Token, right: Node) 
     : BinaryOperation(left, op ,right) {
@@ -11,7 +10,7 @@ class MultiplicativeExpression(left: Node, op: Token, right: Node)
             val cls = MultiplicativeExpression::class as BinOpClass
             val hasList = listOf("*", "/", "%", "mod")
 
-            return construct(parser, hasList, PrimaryExpression::construct, cls)
+            return construct(parser, hasList, PostfixExpression::construct, cls)
         }
     }
 
@@ -25,7 +24,7 @@ class MultiplicativeExpression(left: Node, op: Token, right: Node)
             val right = right.transpile(transpiler).arithmeticOp(transpiler)
             val result = TExpression.resolveType(left, right)
 
-            if(TExpression.realAndImag(left, right))result.castReplace("Imag")
+            if(TExpression.realAndImag(left, right)) result.castReplace("Imag")
             if("Imag" in left.type && "Imag" in right.type) result.castReplace("Real")
         
             result.replace("$left ${op.string} $right")

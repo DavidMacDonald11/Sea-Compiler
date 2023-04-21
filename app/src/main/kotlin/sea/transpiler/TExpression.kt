@@ -43,19 +43,22 @@ data class TType(var string: String = "Any", var dynamic: Boolean = false, var n
 
             if("None" in inferred) {
                 transpiler.faults.error(node, "Cannot assign to None-type value")
+                return given ?: inferred
             }
 
             if(given == null) {
                 if("Any" in inferred) transpiler.faults.error(node, "Cannot infer type")
                 return inferred
             }
+
+            if(!given.nullable && inferred.nullable) {
+                val nType = "nullable type"
+                transpiler.faults.error(node, "Cannot assign $nType $inferred to non-$nType $given")
+                return given
+            }
             
             if(resolve(given, inferred) != given) {
                 transpiler.faults.error(node, "Cannot assign type $inferred to type $given")
-            }
-
-            if(!given.nullable && inferred.nullable) {
-                transpiler.faults.error(node, "Cannot assign nullable type $inferred to type $given")
             }
 
             return given
@@ -68,6 +71,7 @@ data class TExpression(var type: TType = TType(), var string: String = "") {
     private var showType = false
     private var finished = false
     private var parent: TExpression? = null
+    var delayedCast: TExpression? = null
     var isConstant = true
 
     constructor(type: String, string: String = ""): this(TType(type), string)
@@ -105,8 +109,10 @@ data class TExpression(var type: TType = TType(), var string: String = "") {
     fun dropImag(transpiler: Transpiler): TExpression {
         if("Imag" !in type) return this
 
+        val cName = type.cName
         transpiler.include("tgmath")
-        return add("cimag(", ")")
+
+        return add("cimag(($cName)(", "))")
     }
 
     fun isReal(): Boolean {
@@ -148,7 +154,9 @@ data class TExpression(var type: TType = TType(), var string: String = "") {
 
     companion object {
         fun resolveType(left: TExpression, right: TExpression): TExpression {
-            return TExpression(TType.resolve(left.type, right.type).copy())
+            val result = TExpression(TType.resolve(left.type, right.type).copy())
+            result.isConstant = left.isConstant && right.isConstant
+            return result
         }
 
         fun realAndImag(left: TExpression, right: TExpression): Boolean {
