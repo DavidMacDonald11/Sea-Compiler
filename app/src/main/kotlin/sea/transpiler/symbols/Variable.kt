@@ -13,29 +13,43 @@ open class Variable(type: TType, name: String, val storage: String?): Value(type
     open val cValName = "__sea_var_${name}_value__"
 
     override fun declare(transpiler: Transpiler, expression: TExpression?): TExpression {
-        val node = transpiler.context.node!!
         initialized = (expression != null)
 
-        var cType = type.cName
-        if("Cplex" !in type) expression?.dropImag()
+        val cType = verifyStorage(transpiler, expression)
+    
+        if(type.dynamic) {
+            transpiler.include("stdlib")
+            var result = TExpression(type, "$cType *$cName = malloc(sizeof($cType))")
+            
+            if(!type.nullable || expression == null || !expression.type.nullable) {
+                if(expression == null) {
+                    if(type.nullable) return TExpression(type, "$cType *$cName").setShowType()
+                    return result.setShowType()
+                }
 
-        var storage = storage?.plus(" ") ?: ""
+                result.setShowType()
+                result = result.new(string = "*$cName = ").add(after = expression.string)
+                
+                return result
+            }
 
-        if(transpiler.symbols.isGlobal) {
-            if(this.storage != "static")
-                //transpiler.faults.error(node, "Global variables must be static")
-            else storage = ""
+            if(expression.isConstant) 
+                return TExpression(type, "$cType *$cName = NULL").setShowType()
+
+            if(expression.type.dynamic) expression.add("&(", ")")
+            var expr = expression.string
+
+            if(expression.delayedCast == null) {
+                val setVal = "$cName = (malloc(sizeof($cType)), *$cName = *$expr, $cName)"
+                expr = "($expr)? ($setVal) : NULL"
+            } else {
+                val name = expression.delayedCast!!.string
+                val setVal = "$cName = (malloc(sizeof($cType)), *$cName = $expr, $cName)"
+                expr = "($name)? ($setVal) : NULL"
+            }
+
+            return result.replace("$cType *$cName = $expr").setShowType()
         }
-
-        if(this.storage == "static" && expression?.isConstant?.not() ?: false) {
-            transpiler.faults.error(node, "Initial value of static variable must be constant")
-        }
-
-        if(this.storage == "cpu" && type.nullable) {
-            transpiler.faults.error(node, "Cannot declare nullable cpu variable")
-        }
-
-        cType = storage.replace("cpu", "register") + "$cType"
 
         if(!type.nullable) {
             val result = TExpression(type, "$cType $cName")
@@ -53,6 +67,7 @@ open class Variable(type: TType, name: String, val storage: String?): Value(type
         if(expression.isConstant) 
             return result.new(type, "$cType *$cName = NULL").setShowType()
 
+        if(expression.type.dynamic) expression.add("&(", ")")
         val expr = expression.string
 
         if(expression.delayedCast == null) {
@@ -83,13 +98,45 @@ open class Variable(type: TType, name: String, val storage: String?): Value(type
         if(transfered) 
             transpiler.faults.error(node, "Cannot use dead identifier after ownership swap")
 
-        val expression = TExpression(type.copy(), "$cName")
-        if("Imag" in type) expression.add("(", " * 1.0j)")
-        expression.isConstant = false
+        val eType = type.copy()
+        eType.dynamic = true
 
+        val expression = TExpression(eType, "$cName")
+
+        if(type.dynamic) expression.add("(*", ")")
+        if("Imag" in type) expression.add("(", " * 1.0j)")
+
+        expression.isConstant = false
         if(initialized) return expression
 
         transpiler.faults.error(node, "Cannot access uninitialized identifier '$name'")
         return expression
+    }
+
+    private fun verifyStorage(transpiler: Transpiler, expression: TExpression?): String {
+        val node = transpiler.context.node!!
+        var storage = storage?.plus(" ") ?: ""
+        val cType = type.cName
+
+        if("Cplex" !in type) expression?.dropImag()
+
+        if(transpiler.symbols.isGlobal) {
+            if(this.storage != "static")
+                //transpiler.faults.error(node, "Global variables must be static")
+            else storage = ""
+        }
+
+        if(this.storage == "static" && expression?.isConstant?.not() ?: false) 
+            transpiler.faults.error(node, "Initial value of static variable must be constant")
+        
+        if(this.storage == "cpu") {
+            if(type.nullable) 
+                transpiler.faults.error(node, "Cannot declare nullable cpu variable")
+            
+            if(type.dynamic)
+                transpiler.faults.error(node, "Cannot declare dynamic cpu variable")
+        }
+                    
+        return storage.replace("cpu", "register") + "$cType"
     }
 }

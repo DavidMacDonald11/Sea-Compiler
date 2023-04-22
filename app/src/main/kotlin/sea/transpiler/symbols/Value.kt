@@ -9,10 +9,12 @@ open class Value(type: TType, name: String): Symbol(type, name) {
     override val cName = "__sea_val_${name}__"
 
     open fun declare(transpiler: Transpiler, expression: TExpression?): TExpression {
+        val node = transpiler.context.node!!
         val initial = expression!!.dropImag().add(" ")
 
-        val node = transpiler.context.node!!
-        if(!initial.isConstant) transpiler.faults.error(node, "Can only create constant values")
+        if(initial.type.nullable) transpiler.faults.error(node, "Cannot declare nullable value")
+        if(initial.type.dynamic) transpiler.faults.error(node, "Cannot declare dynamic value")
+        if(!initial.isConstant) transpiler.faults.error(node, "Value must be constant")
 
         val result = TExpression(type, "#define $cName").add(after = initial.string)
         return result.setShowType().finish(transpiler, false)
@@ -20,5 +22,9 @@ open class Value(type: TType, name: String): Symbol(type, name) {
 
     open fun access(transpiler: Transpiler): TExpression {
         return TExpression(type, cName)
+    }
+
+    open fun free(transpiler: Transpiler): TExpression {
+        return TExpression("None", "#undef $cName").finish(transpiler, false)
     }
 }

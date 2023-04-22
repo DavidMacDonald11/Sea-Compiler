@@ -50,6 +50,6 @@ data class NotNullExpression(val token: Token): PostfixExpression() {
         }
 
         result.type.nullable = false
-        return result.add("*(", ")")
+        return if(result.type.dynamic) result else result.add("*(", ")")
     }
 }

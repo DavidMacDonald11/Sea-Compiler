@@ -1,2 +1,7 @@
-static var x = 5
-static var y = 2
+static var a: #Int
+static var b: #Int?
+static var x: #Int = 5
+static var y: #Int? = 10
+
+var num2: #Int? = y
+var num3: #Int? = y!! + 5

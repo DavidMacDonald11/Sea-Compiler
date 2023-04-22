@@ -1,8 +1,9 @@
 var x1: Bool? = null
 var x2: Bool? = true
+var x3: Bool? = x2
 
-static var x3 = 3 as Imag
-static var x4 = 4i as Imag
-static var x5 = 5i + 5 as Imag
+static var x4 = 3 as Imag
+static var x5 = 4i as Imag
+static var x6 = 5i + 5 as Imag
 
 var inf = infinity

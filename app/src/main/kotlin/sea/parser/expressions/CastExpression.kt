@@ -28,6 +28,11 @@ data class CastExpression(val expression: Node, val type: Node): Node() {
 
         val type = type.transpile(transpiler)
 
+        if(type.type.dynamic) {
+            transpiler.faults.error(this, "Cannot cast into dynamic type")
+            return result
+        }
+
         if(!result.type.nullable && type.type.nullable) {
             transpiler.faults.error(this, "Cannot cast non-nullable into nullable type")
             return result

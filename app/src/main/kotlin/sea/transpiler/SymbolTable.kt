@@ -40,15 +40,7 @@ class SymbolTable(val transpiler: Transpiler) {
         return symbol
     }
 
-    fun newVal(name: String, type: TType): Symbol {
-        if(type.nullable) {
-            val node = transpiler.context.node!!
-            transpiler.faults.error(node, "Cannot declare nullable value")
-        }
-
-        return newSymbol(name, Value(type, name))
-    }
-
+    fun newVal(name: String, type: TType): Symbol = newSymbol(name, Value(type, name))
     fun newVar(name: String, type: TType, storage: String?) = newSymbol(name, Variable(type, name, storage))
     fun newInvar(name: String, type: TType, storage: String?) = newSymbol(name, Invariable(type, name, storage))
 
