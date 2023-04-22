@@ -97,7 +97,7 @@ data class TExpression(var type: TType = TType(), var string: String = "") {
     }
 
     fun castReplace(type: String): TExpression {
-        this.type.string = type.replaceFirst("\\w+", type)
+        this.type.string = this.type.string.replaceFirst("[a-zA-Z]+".toRegex(), type)
         return this
     }
 
