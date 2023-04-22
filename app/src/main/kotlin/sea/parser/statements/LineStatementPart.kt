@@ -8,7 +8,7 @@ data class LineStatementPart(val part: Node): Node() {
 
     companion object: Node.CompanionObject {
         override fun construct(parser: Parser): Node {
-            if(parser.nextOrAfterHas(Token.VAR_KEYWORDS)) {
+            if(parser.nextOrAfterHas(Token.VAR_KEYWORDS + Token.STORAGE_KEYWORDS)) {
                 return LineStatementPart(VarDeclaration.construct(parser))
             }
 
@@ -22,7 +22,7 @@ data class LineStatementPart(val part: Node): Node() {
 
     override fun transpile(transpiler: Transpiler): TExpression {
         val result = part.transpile(transpiler)
-        if(part !is VarDeclaration) result.dropImag(transpiler).setShowType()
+        if(part !is VarDeclaration) result.dropImag().setShowType()
         
         return result
     }

@@ -36,4 +36,4 @@ primaryExpression ::= NUMBER
                     | primaryKeyword
                     | "(" expression ")"
     fileIdentifier ::= IDENTIFIER "::" IDENTIFIER
-    primaryKeyword ::= "true" | "false" | "null"
+    primaryKeyword ::= "true" | "false" | "null" | "infinity" | "nan"

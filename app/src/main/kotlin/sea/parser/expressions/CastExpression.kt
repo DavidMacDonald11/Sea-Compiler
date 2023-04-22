@@ -7,7 +7,7 @@ data class CastExpression(val expression: Node, val type: Node): Node() {
 
     companion object: Node.CompanionObject {
         override fun construct(parser: Parser): Node {
-            var node = MultiplicativeExpression.construct(parser)
+            var node = AdditiveExpression.construct(parser)
 
             while(parser.next.has("as")) {
                 parser.take()
@@ -42,20 +42,17 @@ data class CastExpression(val expression: Node, val type: Node): Node() {
         }
 
         val cName = type.type.cName
-        result.cast(type.type)
 
         if("Imag" in type.type) {
-            return result.dropImag(transpiler).add("($cName)(", ")")
+            transpiler.include("tgmath")
+            return result.add("(($cName)__imag__(", ") * 1j)").cast(type.type)
         }
 
         if("Imag" in result.type && "Cplex" !in type.type) {
-            val oldCName = result.type.cName
             transpiler.include("tgmath")
-
-            return result.add("($cName)creal(($oldCName)(", "))")
+            return result.add("($cName)__real__(", ")").cast(type.type)
         }
 
         return result.add("($cName)(", ")")
     }
 }
-

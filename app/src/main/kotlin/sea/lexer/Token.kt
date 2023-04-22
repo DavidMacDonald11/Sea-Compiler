@@ -89,8 +89,9 @@ data class Token(val line: SourceLine, var type: TokenType) : Faults.Component {
         val IDENTIFIER_START_SYMBOLS = "_" +  UPPERCASE_LETTERS + LOWERCASE_LETTERS
         val IDENTIFIER_SYMBOLS = IDENTIFIER_START_SYMBOLS + "0123456789"
 
-        val PRIMARY_KEYWORDS = setOf("true", "false", "null")
+        val PRIMARY_KEYWORDS = setOf("true", "false", "null", "infinity", "nan")
         val VIS_KEYWORDS = setOf("public", "private")
+        val STORAGE_KEYWORDS = setOf("static", "cpu")
         val VAR_KEYWORDS = setOf("val", "invar", "var")
         val TYPE_KEYWORDS = setOf("Bool", "Byte", "Char", 
             "Int16", "Int", "Int32", "Int64",

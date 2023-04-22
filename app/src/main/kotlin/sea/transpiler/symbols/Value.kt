@@ -9,7 +9,7 @@ open class Value(type: TType, name: String): Symbol(type, name) {
     override val cName = "__sea_val_${name}__"
 
     open fun declare(transpiler: Transpiler, expression: TExpression?): TExpression {
-        val initial = expression!!.dropImag(transpiler).add(" ")
+        val initial = expression!!.dropImag().add(" ")
 
         val node = transpiler.context.node!!
         if(!initial.isConstant) transpiler.faults.error(node, "Can only create constant values")

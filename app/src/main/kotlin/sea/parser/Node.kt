@@ -88,7 +88,7 @@ abstract class BinaryOperation(var left: Node, var op: Token, var right: Node) :
         fun construct(parser: Parser, hasList: List<String>, makeChild: ConstructFun, Type: BinOpClass): Node {
             var node = makeChild(parser)
 
-            while(parser.next.has(*hasList.toTypedArray())) {
+            while(parser.next.has(hasList)) {
                 val op = parser.take()
                 val right = makeChild(parser)
                 node = Type.primaryConstructor!!.call(node, op, right)

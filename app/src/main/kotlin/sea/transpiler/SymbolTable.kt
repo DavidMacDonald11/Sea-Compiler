@@ -7,6 +7,8 @@ class SymbolTable(val transpiler: Transpiler) {
     val symbols = mutableMapOf<String, Symbol>()
     val num: Int
 
+    val isGlobal get() = (parent == null)
+
     init {
         num = count
         count += 1
@@ -47,8 +49,8 @@ class SymbolTable(val transpiler: Transpiler) {
         return newSymbol(name, Value(type, name))
     }
 
-    fun newVar(name: String, type: TType) = newSymbol(name, Variable(type, name))
-    fun newInvar(name: String, type: TType) = newSymbol(name, Invariable(type, name))
+    fun newVar(name: String, type: TType, storage: String?) = newSymbol(name, Variable(type, name, storage))
+    fun newInvar(name: String, type: TType, storage: String?) = newSymbol(name, Invariable(type, name, storage))
 
     companion object {
         var count = 0

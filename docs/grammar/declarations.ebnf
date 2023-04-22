@@ -14,11 +14,12 @@ parameterList ::= parameter | (parameter "," parameterList)
 parameter ::= ["invar" | "var"] ["&"] IDENTIFIER ":" type
 
 
-varDeclaration ::= [visKeyword] varKeyword varDeclarator
+varDeclaration ::= [visKeyword] [storageKeyword] varKeyword varDeclarator
 varDeclarator ::= IDENTIFIER [":" type] "=" expression
                 | IDENTIFIER ":" type ["=" expression]
 
 varKeyword ::= "val" | "invar" | "var"
+storageKeyword ::= "static" | "cpu"
 visKeyword ::= "public" | "private"
 
 type ::= ["#"] typeName ["?"]

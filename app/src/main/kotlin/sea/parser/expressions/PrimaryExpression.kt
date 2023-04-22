@@ -77,6 +77,11 @@ class PrimaryKeyword(token: Token): PrimaryNode(token) {
             return TExpression("Bool", token.string)
         }
 
+        if(token.string in listOf("infinity", "nan")) {
+            transpiler.include("tgmath")
+            return TExpression("Real", if(token.has("nan")) "NAN" else "INFINITY")
+        }
+
         return TExpression(TType(nullable = true), string = "NULL")
     }
 }

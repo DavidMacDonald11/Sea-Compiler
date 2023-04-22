@@ -52,17 +52,17 @@ class MultiplicativeExpression(left: Node, op: Token, right: Node)
         }
 
         if("Imag" !in left.type && "Imag" in right.type) {
-            right.dropImag(transpiler)
+            right.dropImag()
             return result.castReplace("Real").replace("fmod($left, $right)")
         }
 
         if("Imag" in left.type && "Imag" !in right.type) {
-            left.dropImag(transpiler)
+            left.dropImag()
             return result.castReplace("Imag").replace("1.0j * fmod($left, $right)")
         }
 
-        left.dropImag(transpiler)
-        right.dropImag(transpiler)
+        left.dropImag()
+        right.dropImag()
         return result.castReplace("Imag").replace("1.0j * fmod($left, $right)")
     }
 

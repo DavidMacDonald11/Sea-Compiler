@@ -5,7 +5,7 @@ import sea.transpiler.Transpiler
 import sea.transpiler.TType
 import sea.transpiler.TExpression
 
-open class Invariable(type: TType, name: String): Variable(type, name) {
+open class Invariable(type: TType, name: String, storage: String?): Variable(type, name, storage) {
     override val cName = "__sea_invar_${name}__"
     override val cValName = "__sea_invar_${name}_value__"
 

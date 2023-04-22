@@ -8,3 +8,4 @@ var im2 = im
 var cp: Cplex = im as Cplex
 
 var num3 = num1 as Bool?
+cpu var x = 10

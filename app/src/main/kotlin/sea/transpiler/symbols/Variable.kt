@@ -5,7 +5,7 @@ import sea.transpiler.Transpiler
 import sea.transpiler.TType
 import sea.transpiler.TExpression
 
-open class Variable(type: TType, name: String): Value(type, name) {
+open class Variable(type: TType, name: String, val storage: String?): Value(type, name) {
     var initialized = false
     var transfered = false
 
@@ -13,10 +13,25 @@ open class Variable(type: TType, name: String): Value(type, name) {
     open val cValName = "__sea_var_${name}_value__"
 
     override fun declare(transpiler: Transpiler, expression: TExpression?): TExpression {
+        val node = transpiler.context.node!!
         initialized = (expression != null)
 
-        val cType = type.cName
-        if("Cplex" !in type) expression?.dropImag(transpiler)
+        var cType = type.cName
+        if("Cplex" !in type) expression?.dropImag()
+
+        var storage = storage?.plus(" ") ?: ""
+
+        if(transpiler.symbols.isGlobal) {
+            if(this.storage != "static")
+                //transpiler.faults.error(node, "Global variables must be static")
+            else storage = ""
+        }
+
+        if(this.storage == "cpu" && type.nullable) {
+            transpiler.faults.error(node, "Cannot declare nullable cpu variable")
+        }
+
+        cType = storage.replace("cpu", "register") + "$cType"
 
         if(!type.nullable) {
             val result = TExpression(type, "$cType $cName")
@@ -43,7 +58,6 @@ open class Variable(type: TType, name: String): Value(type, name) {
             result = result.new(type, "$cType *$cName = ($name)? ($cValName = $expr")
         }
 
-        
         return result.add(after = ", &$cValName) : NULL").setShowType()
     }
 
@@ -56,7 +70,7 @@ open class Variable(type: TType, name: String): Value(type, name) {
         TType.resolveAssign(transpiler, type, expression.type)
 
         initialized = true
-        return expression.dropImag(transpiler)
+        return expression.dropImag()
     }
 
     override fun access(transpiler: Transpiler): TExpression {

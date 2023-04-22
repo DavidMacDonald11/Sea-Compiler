@@ -106,13 +106,9 @@ data class TExpression(var type: TType = TType(), var string: String = "") {
         return this
     }
 
-    fun dropImag(transpiler: Transpiler): TExpression {
+    fun dropImag(): TExpression {
         if("Imag" !in type) return this
-
-        val cName = type.cName
-        transpiler.include("tgmath")
-
-        return add("cimag(($cName)(", "))")
+        return add("((", ") / 1j)")
     }
 
     fun isReal(): Boolean {
