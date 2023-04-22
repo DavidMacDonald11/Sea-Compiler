@@ -5,3 +5,9 @@ static var y: #Int? = 10
 
 var num2: #Int? = y
 var num3: #Int? = y!! + 5
+
+var b1: Int? = 5
+var b2: Int? = b1
+
+var c1: #Int? = 1
+var c2: #Int? = c1 as Int?

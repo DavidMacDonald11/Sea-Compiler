@@ -39,9 +39,9 @@ data class CastExpression(val expression: Node, val type: Node): Node() {
         }
 
         if(result.type.nullable) {
-            if(type.type.nullable) {
+            if(type.type.nullable) 
                 result.delayedCast = result.delayedCast ?: TExpression(string = result.string)
-            }
+            else result.type.nullable = false
         
             result.add("*(", ")")
         }

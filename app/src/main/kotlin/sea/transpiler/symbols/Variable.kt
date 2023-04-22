@@ -14,42 +14,9 @@ open class Variable(type: TType, name: String, val storage: String?): Value(type
 
     override fun declare(transpiler: Transpiler, expression: TExpression?): TExpression {
         initialized = (expression != null)
-
         val cType = verifyStorage(transpiler, expression)
-    
-        if(type.dynamic) {
-            transpiler.include("stdlib")
-            var result = TExpression(type, "$cType *$cName = malloc(sizeof($cType))")
-            
-            if(!type.nullable || expression == null || !expression.type.nullable) {
-                if(expression == null) {
-                    if(type.nullable) return TExpression(type, "$cType *$cName").setShowType()
-                    return result.setShowType()
-                }
 
-                result.setShowType()
-                result = result.new(string = "*$cName = ").add(after = expression.string)
-                
-                return result
-            }
-
-            if(expression.isConstant) 
-                return TExpression(type, "$cType *$cName = NULL").setShowType()
-
-            if(expression.type.dynamic) expression.add("&(", ")")
-            var expr = expression.string
-
-            if(expression.delayedCast == null) {
-                val setVal = "$cName = (malloc(sizeof($cType)), *$cName = *$expr, $cName)"
-                expr = "($expr)? ($setVal) : NULL"
-            } else {
-                val name = expression.delayedCast!!.string
-                val setVal = "$cName = (malloc(sizeof($cType)), *$cName = $expr, $cName)"
-                expr = "($name)? ($setVal) : NULL"
-            }
-
-            return result.replace("$cType *$cName = $expr").setShowType()
-        }
+        if(type.dynamic) return declareDynamic(transpiler, expression, cType)
 
         if(!type.nullable) {
             val result = TExpression(type, "$cType $cName")
@@ -67,17 +34,16 @@ open class Variable(type: TType, name: String, val storage: String?): Value(type
         if(expression.isConstant) 
             return result.new(type, "$cType *$cName = NULL").setShowType()
 
-        if(expression.type.dynamic) expression.add("&(", ")")
-        val expr = expression.string
+        var expr = expression.string
 
         if(expression.delayedCast == null) {
-            result = result.new(type, "$cType *$cName = ($expr)? ($cValName = *$expr")
+            expr = "($expr)? ($cValName = *$expr, &$cValName) : NULL"
         } else {
             val name = expression.delayedCast!!.string
-            result = result.new(type, "$cType *$cName = ($name)? ($cValName = $expr")
+            expr = "($name)? ($cValName = $expr, &$cValName) : NULL"
         }
 
-        return result.add(after = ", &$cValName) : NULL").setShowType()
+        return result.new(type, "$cType *$cName = $expr").setShowType()
     }
 
     open fun assign(transpiler: Transpiler, expression: TExpression): TExpression {
@@ -103,7 +69,7 @@ open class Variable(type: TType, name: String, val storage: String?): Value(type
 
         val expression = TExpression(eType, "$cName")
 
-        if(type.dynamic) expression.add("(*", ")")
+        if(type.dynamic && !type.nullable) expression.add("(*", ")")
         if("Imag" in type) expression.add("(", " * 1.0j)")
 
         expression.isConstant = false
@@ -138,5 +104,35 @@ open class Variable(type: TType, name: String, val storage: String?): Value(type
         }
                     
         return storage.replace("cpu", "register") + "$cType"
+    }
+
+    private fun declareDynamic(transpiler: Transpiler, expression: TExpression?, cType: String): TExpression {
+        transpiler.include("stdlib")
+        var result = TExpression(type, "$cType *$cName = malloc(sizeof($cType))").setShowType()
+        
+        if(!type.nullable || expression == null || !expression.type.nullable) {
+            if(expression == null) {
+                if(type.nullable) return result.replace("$cType *$cName")
+                return result
+            }
+
+            return result.new(string = "*$cName = ").add(after = expression.string)
+        }
+
+        if(expression.isConstant) 
+            return result.replace("$cType *$cName = NULL")
+
+        var expr = expression.string
+
+        if(expression.delayedCast == null) {
+            val setVal = "$cName = (malloc(sizeof($cType)), *$cName = *$expr, $cName)"
+            expr = "($expr)? ($setVal) : NULL"
+        } else {
+            val name = expression.delayedCast!!.string
+            val setVal = "$cName = (malloc(sizeof($cType)), *$cName = $expr, $cName)"
+            expr = "($name)? ($setVal) : NULL"
+        }
+
+        return result.replace("$cType *$cName = $expr")
     }
 }
