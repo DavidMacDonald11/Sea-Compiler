@@ -23,19 +23,6 @@ Being C, just written differently, the name makes perfect sense.
 This program includes the Sea compiler, which transpiles Sea to C.
 Then, you may use any C compiler to generate assembly or machine code.
 
-Note that there are some features that are only possible using GCC extenstions:
-
-=== Static Assignments of `Imag` types
-
-- `static var x = 2i`
-- `static var x = 5 as Imag`
-
-Static variables require compile-time constant initializers.
-`Imag` values are calculated as `Cplex` expressions and stored as `Real` to minimize memory usage.
-
-Thus, there must be a conversion from `Cplex` to `Real` when utilizing `Imag` types. 
-This can only be done at runtime without the `\\__imag__` and `\\__real__` GCC extensions.
-
 == Install Instructions
 
 TBD

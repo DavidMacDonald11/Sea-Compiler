@@ -31,14 +31,4 @@ fun createStandard(outDir: String) {
     file.alias("_Complex float", "Cplex32")
     file.alias("_Complex double", "Cplex")
     file.alias("_Complex long double", "Cplex64")
-
-    file.write("""
-        |
-        |#ifndef __imag__
-        |   #define __imag__(X) cimag((X))
-        |#endif
-        |#ifndef __real__
-        |   #define __real__(X) creal((X))
-        |#endif
-    """.trimMargin())
 }

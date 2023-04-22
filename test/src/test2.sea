@@ -1,11 +1,2 @@
-var num1: Int? = 5
-var num2 = num1!!
-
-2i * 2i
-
-var im = 2i
-var im2 = im
-var cp: Cplex = im as Cplex
-
-var num3 = num1 as Bool?
-cpu var x = 10
+static var x = 5
+static var y = 2

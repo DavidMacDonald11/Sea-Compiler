@@ -27,6 +27,10 @@ open class Variable(type: TType, name: String, val storage: String?): Value(type
             else storage = ""
         }
 
+        if(this.storage == "static" && expression?.isConstant?.not() ?: false) {
+            transpiler.faults.error(node, "Initial value of static variable must be constant")
+        }
+
         if(this.storage == "cpu" && type.nullable) {
             transpiler.faults.error(node, "Cannot declare nullable cpu variable")
         }

@@ -44,13 +44,20 @@ data class CastExpression(val expression: Node, val type: Node): Node() {
         val cName = type.type.cName
 
         if("Imag" in type.type) {
-            transpiler.include("tgmath")
-            return result.add("(($cName)__imag__(", ") * 1j)").cast(type.type)
+            if("Imag" in result.type) 
+                return result.dropImag().add("($cName)(", ") * 1j").cast(type.type)
+
+            if("Cplex" !in result.type) 
+                return result.replace("($cName)0").cast(type.type)
+
+            val name = result.type.cName.replace("Cplex", "Real")
+            val thing = result.string
+
+            return result.add("($cName)(((", ") - ($name)($thing)) / 1j) * 1j").cast(type.type)
         }
 
         if("Imag" in result.type && "Cplex" !in type.type) {
-            transpiler.include("tgmath")
-            return result.add("($cName)__real__(", ")").cast(type.type)
+            return result.add("($cName)(", ")").cast(type.type)
         }
 
         return result.add("($cName)(", ")")
