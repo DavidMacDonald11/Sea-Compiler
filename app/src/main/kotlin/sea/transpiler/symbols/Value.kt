@@ -14,6 +14,7 @@ open class Value(type: TType, name: String): Symbol(type, name) {
 
         if(initial.type.nullable) transpiler.faults.error(node, "Cannot declare nullable value")
         if(initial.type.dynamic) transpiler.faults.error(node, "Cannot declare dynamic value")
+        if(initial.transfer != null) transpiler.faults.error(node, "Cannot transfer/borrow into value")
         if(!initial.isConstant) transpiler.faults.error(node, "Value must be constant")
 
         val result = TExpression(type, "#define $cName").add(after = initial.string)
@@ -21,6 +22,12 @@ open class Value(type: TType, name: String): Symbol(type, name) {
     }
 
     open fun access(transpiler: Transpiler): TExpression {
+        return TExpression(type, cName)
+    }
+
+    open fun transfer(transpiler: Transpiler, expression: TExpression, value: Value): TExpression {
+        val node = transpiler.context.node!!
+        transpiler.faults.error(node, "Cannot transfer/borrow value")
         return TExpression(type, cName)
     }
 

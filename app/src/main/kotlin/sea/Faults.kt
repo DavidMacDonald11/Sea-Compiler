@@ -26,7 +26,7 @@ class Faults {
 
     fun warn(c: Component, message: String) { warnings.add(act(c, message, "Warning")) }
     fun error(c: Component, message: String) { errors.add(act(c, message, "Error")) }
-    
+
     fun fail(c: Component, message: String): CompilerFailure {
         failure = act(c, message, "Failure")
         return CompilerFailure()

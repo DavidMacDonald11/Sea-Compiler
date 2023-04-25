@@ -4,7 +4,7 @@ import sea.parser.*
 import sea.publisher.Publisher
 
 data class LineStatementPart(val part: Node): Node() {
-    override val parts: Parts = listOf(part)    
+    override val parts: Parts = listOf(part)
 
     companion object: Node.CompanionObject {
         override fun construct(parser: Parser): Node {
@@ -22,8 +22,12 @@ data class LineStatementPart(val part: Node): Node() {
 
     override fun transpile(transpiler: Transpiler): TExpression {
         val result = part.transpile(transpiler)
+
+        if(part is OwnershipExpression)
+            transpiler.faults.error(part, "Must transfer/borrow into variable or function")
+
         if(part !is VarDeclaration) result.dropImag().setShowType()
-        
+
         return result
     }
 }

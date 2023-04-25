@@ -11,10 +11,19 @@ open class Invariable(type: TType, name: String, storage: String?): Variable(typ
 
     override fun assign(transpiler: Transpiler, expression: TExpression): TExpression {
         val node = transpiler.context.node!!
-        
+
         if(initialized)
             transpiler.faults.error(node, "Cannot reassign invariable")
 
         return super.assign(transpiler, expression)
+    }
+
+    override fun transfer(transpiler: Transpiler, expression: TExpression, value: Value): TExpression {
+        val node = transpiler.context.node!!
+
+        if(value !is Invariable)
+            transpiler.faults.error(node, "Cannot transfer/borrow invar into var")
+
+        return super.transfer(transpiler, expression, value)
     }
 }

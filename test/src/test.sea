@@ -7,3 +7,5 @@ static var x5 = 4i as Imag
 static var x6 = 5i + 5 as Imag
 
 var inf = infinity
+var neg = -(5 as Nat16)
+var nothing = null as Real?

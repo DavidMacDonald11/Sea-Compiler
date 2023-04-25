@@ -11,3 +11,10 @@ var b2: Int? = b1
 
 var c1: #Int? = 1
 var c2: #Int? = c1 as Int?
+
+var c3: #Int? = $c2
+var c4 = c3
+
+invar d1: Real = 10
+d1
+invar d2 = $d1

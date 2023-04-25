@@ -5,7 +5,7 @@ import sea.transpiler.symbols.*
 
 data class VarDeclaration(val visibility: Token?, val storage: Token?, val varKeyword: Token, val declarator: Node): Node() {
     override val parts: Parts = listOf(visibility, storage, varKeyword, declarator)
-    
+
     companion object: Node.CompanionObject {
         override fun construct(parser: Parser): Node {
             val visibility = if(parser.next.has(Token.VIS_KEYWORDS)) parser.take() else null
@@ -42,7 +42,7 @@ data class VarDeclaration(val visibility: Token?, val storage: Token?, val varKe
 
             val given = declarator.type?.transpile(transpiler)?.type
             val expression = declarator.expression?.transpile(transpiler)
-            val type = TType.resolveAssign(transpiler, given, expression?.type)
+            var type = TType.resolveAssign(transpiler, given, expression?.type)
 
             val symbol = when(varKeyword.string) {
                 "val" -> transpiler.symbols.newVal(name, type)

@@ -10,7 +10,7 @@ class MultiplicativeExpression(left: Node, op: Token, right: Node)
             val cls = MultiplicativeExpression::class as BinOpClass
             val hasList = listOf("*", "/", "%", "mod")
 
-            return construct(parser, hasList, PostfixExpression::construct, cls)
+            return construct(parser, hasList, UnaryExpression::construct, cls)
         }
     }
 

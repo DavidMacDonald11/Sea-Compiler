@@ -39,20 +39,28 @@ data class CastExpression(val expression: Node, val type: Node): Node() {
         }
 
         if(result.type.nullable) {
-            if(type.type.nullable) 
+            if(result.isConstant) {
+                if(!type.type.nullable) {
+                    transpiler.faults.error(this, "Cannot cast null to non-nullable type")
+                }
+
+                return result.cast(type.type)
+            }
+
+            if(type.type.nullable)
                 result.delayedCast = result.delayedCast ?: TExpression(string = result.string)
             else result.type.nullable = false
-        
+
             result.add("*(", ")")
         }
 
         val cName = type.type.cName
 
         if("Imag" in type.type) {
-            if("Imag" in result.type) 
+            if("Imag" in result.type)
                 return result.dropImag().add("($cName)(", ") * 1j").cast(type.type)
 
-            if("Cplex" !in result.type) 
+            if("Cplex" !in result.type)
                 return result.replace("($cName)0").cast(type.type)
 
             val name = result.type.cName.replace("Cplex", "Real")
@@ -65,6 +73,6 @@ data class CastExpression(val expression: Node, val type: Node): Node() {
             return result.add("($cName)(", ")").cast(type.type)
         }
 
-        return result.add("($cName)(", ")")
+        return result.add("($cName)(", ")").cast(type.type)
     }
 }

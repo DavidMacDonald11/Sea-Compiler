@@ -3,8 +3,8 @@ package sea.transpiler
 import sea.transpiler.Transpiler
 
 data class TType(var string: String = "Any", var dynamic: Boolean = false, var nullable: Boolean = false) {
-    val cName get() = "__sea_type_${string}__" 
-    
+    val cName get() = "__sea_type_${string}__"
+
     override fun toString(): String {
         var result = string
 
@@ -56,7 +56,7 @@ data class TType(var string: String = "Any", var dynamic: Boolean = false, var n
                 transpiler.faults.error(node, "Cannot assign $nType $inferred to non-$nType $given")
                 return given
             }
-            
+
             if(resolve(given, inferred) != given) {
                 transpiler.faults.error(node, "Cannot assign type $inferred to type $given")
             }
@@ -72,6 +72,7 @@ data class TExpression(var type: TType = TType(), var string: String = "") {
     private var finished = false
     private var parent: TExpression? = null
     var delayedCast: TExpression? = null
+    var transfer: Pair<String, String>? = null
     var isConstant = true
 
     constructor(type: String, string: String = ""): this(TType(type), string)
@@ -81,16 +82,16 @@ data class TExpression(var type: TType = TType(), var string: String = "") {
         return "$result$string"
     }
 
-    fun replace(string: String): TExpression { 
-        this.string = string 
-        return this 
+    fun replace(string: String): TExpression {
+        this.string = string
+        return this
     }
 
     fun cast(type: TType): TExpression {
         this.type = type
         return this
     }
-    
+
     fun cast(type: String): TExpression {
         this.type.string = type
         return this
@@ -115,15 +116,17 @@ data class TExpression(var type: TType = TType(), var string: String = "") {
         return "Imag" !in type && "Cplex" !in type && type.string != "None"
     }
 
-    fun add(before: String = "", after: String = ""): TExpression { 
+    fun add(before: String = "", after: String = ""): TExpression {
         string = "$before$string$after"
         return this
     }
 
     fun arithmeticOp(transpiler: Transpiler): TExpression {
         val node = transpiler.context.node!!
+
         if(type.string == "None") transpiler.faults.error(node, "Cannot operate on None type")
         if(type.nullable) transpiler.faults.error(node, "Cannot operate on nullable type")
+        if(transfer != null) transpiler.faults.error(node, "Cannot operate on ownership expression")
 
         return this.castUp()
     }
