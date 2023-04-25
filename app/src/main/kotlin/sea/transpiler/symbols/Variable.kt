@@ -164,6 +164,9 @@ open class Variable(type: TType, name: String, val storage: String?): Value(type
         if(storage == "cpu")
             transpiler.faults.error(node, "Cannot transfer/borrow cpu variable")
 
+        if((value as Variable).storage == "static" && storage != "static")
+            transpiler.faults.error(node, "Cannot transfer/borrow non-static var into static var")
+
         return if(!value.type.nullable) expression.add("&") else expression
     }
 }
