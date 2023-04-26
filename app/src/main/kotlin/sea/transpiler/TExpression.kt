@@ -3,7 +3,8 @@ package sea.transpiler
 import sea.transpiler.Transpiler
 
 data class TType(var string: String = "Any", var dynamic: Boolean = false, var nullable: Boolean = false) {
-    val cName get() = "__sea_type_${string}__"
+    val rawCName get() = "__sea_type_${string}__"
+    val cName get() = if(nullable) "__sea_type_Nullable${string}__" else rawCName
 
     override fun toString(): String {
         var result = string
@@ -71,9 +72,10 @@ data class TExpression(var type: TType = TType(), var string: String = "") {
     private var showType = false
     private var finished = false
     private var parent: TExpression? = null
-    var delayedCast: TExpression? = null
     var transfer: Pair<String, String>? = null
     var isConstant = true
+
+    val isNull get() = isConstant && type.nullable
 
     constructor(type: String, string: String = ""): this(TType(type), string)
 
@@ -137,6 +139,16 @@ data class TExpression(var type: TType = TType(), var string: String = "") {
         return expression
     }
 
+    fun store(): TExpression {
+        val const = if(isConstant) "const " else ""
+        val cType = type.cName
+        val name = "__sea_temp_${temps++}__"
+
+        val result = add("$const$cType $name = ").new(type, name)
+        result.isConstant = isConstant
+        return result
+    }
+
     fun setShowType(): TExpression { showType = true; return this }
 
     fun finish(transpiler: Transpiler, semicolons: Boolean = true): TExpression {
@@ -152,6 +164,8 @@ data class TExpression(var type: TType = TType(), var string: String = "") {
     }
 
     companion object {
+        var temps = 0
+
         fun resolveType(left: TExpression, right: TExpression): TExpression {
             val result = TExpression(TType.resolve(left.type, right.type).copy())
             result.isConstant = left.isConstant && right.isConstant

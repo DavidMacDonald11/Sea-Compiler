@@ -57,7 +57,7 @@ class Identifier(token: Token): PrimaryNode(token) {
 
     override fun transpile(transpiler: Transpiler): TExpression {
         return transpiler.nodeContext(this) {
-            val name = token.string 
+            val name = token.string
             val symbol = transpiler.symbols[name]
             (symbol as Value).access(transpiler)
         }
@@ -82,7 +82,7 @@ class PrimaryKeyword(token: Token): PrimaryNode(token) {
             return TExpression("Real", if(token.has("nan")) "NAN" else "INFINITY")
         }
 
-        return TExpression(TType(nullable = true), string = "NULL")
+        return TExpression(TType(nullable = true))
     }
 }
 

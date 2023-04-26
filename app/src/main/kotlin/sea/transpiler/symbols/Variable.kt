@@ -11,21 +11,36 @@ open class Variable(type: TType, name: String, val storage: String?): Value(type
     var transfer: String? = null
 
     override val cName = "__sea_var_${name}__"
-    open val cValName = "__sea_var_${name}_value__"
 
     override fun declare(transpiler: Transpiler, expression: TExpression?): TExpression {
         initialized = (expression != null)
-        val cType = verifyStorage(transpiler, expression)
+        val s = verifyStorage(transpiler, expression)
+        if(expression?.transfer != null) return declareTransfer(transpiler, expression, s)
 
-        if(expression?.transfer != null) return declareTransfer(transpiler, expression, cType)
-        if(type.dynamic) return declareDynamic(transpiler, expression, cType)
-        return declareNonDynamic(expression, cType)
+        val cType = type.cName
+        var result = TExpression(type, "$s$cType ")
+
+        if(!type.dynamic) result.add(after = "$cName").setShowType()
+        else result.add(after = "*$cName = malloc(sizeof($cType))")
+
+        if(expression == null) return result
+        if(type.dynamic) result = result.new(type, "*$cName").setShowType()
+
+        val expr = expression.string
+        val eType = expression.type
+        val typesMatch = (type.nullable == eType.nullable && type.string == eType.string)
+
+        if(expression.isNull) return result.add(after = " = ($cType){true}")
+        if(!type.nullable || typesMatch) return result.add(after = " = $expr")
+        if(!eType.nullable) return result.add(after = " = ($cType){false, $expr}")
+
+        val rawCType = type.rawCName
+        return result.add(after = " = ($cType){$expr.isNull, ($rawCType)$expr.value}")
     }
 
     private fun verifyStorage(transpiler: Transpiler, expression: TExpression?): String {
         val node = transpiler.context.node!!
         var storage = storage?.plus(" ") ?: ""
-        val cType = type.cName
 
         if("Cplex" !in type) expression?.dropImag()
 
@@ -38,76 +53,18 @@ open class Variable(type: TType, name: String, val storage: String?): Value(type
         if(this.storage == "static" && expression?.isConstant?.not() ?: false)
             transpiler.faults.error(node, "Initial value of static variable must be constant")
 
-        return storage + "$cType"
+        return storage
     }
 
-    private fun declareTransfer(transpiler: Transpiler, expression: TExpression, cType: String): TExpression {
+    private fun declareTransfer(transpiler: Transpiler, expression: TExpression, s: String): TExpression {
+        val cType = type.cName
         transfer = expression.transfer!!.first
 
         val transfer = expression.transfer!!
         val variable = transpiler.symbols[transfer.second]
         val expr = (variable as Value).transfer(transpiler, expression, this)
 
-        return expr.add("$cType *$cName = ").setShowType()
-    }
-
-    private fun declareDynamic(transpiler: Transpiler, expression: TExpression?, cType: String): TExpression {
-        transpiler.include("stdlib")
-        var result = TExpression(type, "$cType *$cName = malloc(sizeof($cType))").setShowType()
-
-        if(!type.nullable || expression == null || !expression.type.nullable) {
-            if(expression == null) {
-                if(type.nullable) return result.replace("$cType *$cName")
-                return result
-            }
-
-            return result.new(string = "*$cName = ").add(after = expression.string)
-        }
-
-        if(expression.isConstant)
-            return result.replace("$cType *$cName = NULL")
-
-        var expr = expression.string
-
-        if(expression.delayedCast == null) {
-            val setVal = "$cName = (malloc(sizeof($cType)), *$cName = *$expr, $cName)"
-            expr = "($expr)? ($setVal) : NULL"
-        } else {
-            val name = expression.delayedCast!!.string
-            val setVal = "$cName = (malloc(sizeof($cType)), *$cName = $expr, $cName)"
-            expr = "($name)? ($setVal) : NULL"
-        }
-
-        return result.replace("$cType *$cName = $expr")
-    }
-
-    private fun declareNonDynamic(expression: TExpression?, cType: String): TExpression {
-        if(!type.nullable) {
-            val result = TExpression(type, "$cType $cName")
-            if(expression != null) result.add(after = expression.add(" = ").string)
-            return result.setShowType()
-        }
-
-        var result = TExpression(type, "$cType $cValName")
-
-        if(expression == null || !expression.type.nullable) {
-            if(expression != null) result.add(after = expression.add(" = ").string)
-            return result.new(type, "$cType *$cName = &$cValName")
-        }
-
-        if(expression.isConstant)
-            return result.new(type, "$cType *$cName = NULL").setShowType()
-
-        var expr = expression.string
-
-        if(expression.delayedCast == null) {
-            expr = "($expr)? ($cValName = *$expr, &$cValName) : NULL"
-        } else {
-            val name = expression.delayedCast!!.string
-            expr = "($name)? ($cValName = $expr, &$cValName) : NULL"
-        }
-
-        return result.new(type, "$cType *$cName = $expr").setShowType()
+        return expr.add("$s$cType *$cName = ").setShowType()
     }
 
     override fun access(transpiler: Transpiler): TExpression {
@@ -121,7 +78,7 @@ open class Variable(type: TType, name: String, val storage: String?): Value(type
 
         val expression = TExpression(eType, "$cName")
 
-        if(!type.nullable && (type.dynamic || transfer != null)) expression.add("(*", ")")
+        if(type.dynamic || transfer != null) expression.add("(*", ")")
         if("Imag" in type) expression.add("(", " * 1.0j)")
 
         expression.isConstant = false

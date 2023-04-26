@@ -19,60 +19,54 @@ data class CastExpression(val expression: Node, val type: Node): Node() {
     }
 
     override fun transpile(transpiler: Transpiler): TExpression {
-        val result = expression.transpile(transpiler)
+        var result = expression.transpile(transpiler)
 
         if("None" in result.type.string) {
-            transpiler.faults.error(this, "Cannot cast from None-type")
+            transpiler.faults.error(this, "Cannot cast from 'None' type")
             return result
         }
 
-        val type = type.transpile(transpiler)
+        val type = type.transpile(transpiler).type
+        val cType = type.cName
 
-        if(type.type.dynamic) {
-            transpiler.faults.error(this, "Cannot cast into dynamic type")
-            return result
+        if(type.dynamic) result.type.dynamic = true
+        if(result.type == type) return result
+
+        if(!result.type.nullable && type.nullable) {
+            return result.add("($cType){false, ", "}").cast(type)
         }
 
-        if(!result.type.nullable && type.type.nullable) {
-            transpiler.faults.error(this, "Cannot cast non-nullable into nullable type")
-            return result
+        if(result.isNull) {
+            if(!type.nullable)
+                transpiler.faults.error(this, "Cannot cast null to non-nullable type")
+
+            return result.cast(type)
         }
 
-        if(result.type.nullable) {
-            if(result.isConstant) {
-                if(!type.type.nullable) {
-                    transpiler.faults.error(this, "Cannot cast null to non-nullable type")
-                }
+        if(!result.type.nullable) return castValue(result, type)
 
-                return result.cast(type.type)
-            }
+        if(!type.nullable) result.type.nullable = false
+        val name = result.string
 
-            if(type.type.nullable)
-                result.delayedCast = result.delayedCast ?: TExpression(string = result.string)
-            else result.type.nullable = false
+        result.type.nullable = false
+        result.add(after = ".value")
+        result = castValue(result, type)
 
-            result.add("*(", ")")
-        }
+        return result.add("($cType){$name.isNull, ", "}").cast(type)
+    }
 
-        val cName = type.type.cName
+    private fun castValue(result: TExpression, type: TType): TExpression {
+        val cType = type.rawCName
+        if("Imag" !in type) return result.add("($cType)(", ")").cast(type)
 
-        if("Imag" in type.type) {
-            if("Imag" in result.type)
-                return result.dropImag().add("($cName)(", ") * 1j").cast(type.type)
+        val cplexType = cType.replace("Imag", "Cplex")
 
-            if("Cplex" !in result.type)
-                return result.replace("($cName)0").cast(type.type)
+        if("Imag" in result.type) return result.add("($cplexType)(", ")").cast(type)
+        if("Cplex" !in result.type) return result.replace("($cplexType)0").cast(type)
 
-            val name = result.type.cName.replace("Cplex", "Real")
-            val thing = result.string
+        val realType = result.type.cName.replace("Cplex", "Real")
+        val name = result.string
 
-            return result.add("($cName)(((", ") - ($name)($thing)) / 1j) * 1j").cast(type.type)
-        }
-
-        if("Imag" in result.type && "Cplex" !in type.type) {
-            return result.add("($cName)(", ")").cast(type.type)
-        }
-
-        return result.add("($cName)(", ")").cast(type.type)
+        return result.replace("($cplexType)(($name) - ($realType)($name))").cast(type)
     }
 }

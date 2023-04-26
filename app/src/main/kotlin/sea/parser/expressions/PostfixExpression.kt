@@ -44,12 +44,12 @@ data class NotNullExpression(val token: Token): PostfixExpression() {
             return result
         }
 
-        if(result.isConstant) {
+        if(result.isNull) {
             transpiler.faults.error(this, "'null' cannot be asserted not-null")
             return result
         }
 
         result.type.nullable = false
-        return if(result.type.dynamic) result else result.add("*(", ")")
+        return result.add("(", ").value")
     }
 }

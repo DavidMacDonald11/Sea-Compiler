@@ -1,6 +1,7 @@
 package sea.transpiler
 
 import kotlin.math.pow
+import sea.lexer.Token
 import sea.transpiler.OutputFile
 
 fun createStandard(outDir: String) {
@@ -10,6 +11,7 @@ fun createStandard(outDir: String) {
     file.include("stddef")
     file.include("stdint")
     file.include("stdbool")
+    file.include("stdlib")
 
     for(i in 4..6) {
         val bits = 2.toDouble().pow(i).toInt()
@@ -31,4 +33,22 @@ fun createStandard(outDir: String) {
     file.alias("_Complex float", "Cplex32")
     file.alias("_Complex double", "Cplex")
     file.alias("_Complex long double", "Cplex64")
+
+    createNullableTypes(file)
+}
+
+fun createNullableTypes(file: OutputFile) {
+    file.write("""
+        |typedef struct { bool isNull: 1; __sea_type_Bool__ value: 1; }
+        | __sea_type_NullableBool__;
+    """.trimMargin().replace("\n", ""))
+
+    for(type in Token.TYPE_KEYWORDS) {
+        if(type == "Bool") continue
+
+        file.write("""
+            |typedef struct { bool isNull: 1; __sea_type_${type}__ value; }
+            | __sea_type_Nullable${type}__;
+        """.trimMargin().replace("\n", ""))
+    }
 }

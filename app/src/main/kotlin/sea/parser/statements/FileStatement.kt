@@ -11,6 +11,9 @@ class FileStatement : Node() {
 
     fun makeTree(parser: Parser) {
         while(!parser.next.has("EOF")) {
+            parser.skipNewlines()
+            if(parser.next.has("EOF")) break
+
             statements.add(LineStatement.construct(parser))
         }
     }
@@ -20,7 +23,7 @@ class FileStatement : Node() {
     }
 
     override fun transpile(transpiler: Transpiler): TExpression {
-        statements.forEach { statement -> 
+        statements.forEach { statement ->
             transpiler.write(statement.transpile(transpiler).toString(), "")
         }
 

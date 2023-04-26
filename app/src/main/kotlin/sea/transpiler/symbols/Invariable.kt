@@ -7,7 +7,6 @@ import sea.transpiler.TExpression
 
 open class Invariable(type: TType, name: String, storage: String?): Variable(type, name, storage) {
     override val cName = "__sea_invar_${name}__"
-    override val cValName = "__sea_invar_${name}_value__"
 
     override fun assign(transpiler: Transpiler, expression: TExpression): TExpression {
         val node = transpiler.context.node!!

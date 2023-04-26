@@ -6,7 +6,7 @@ import sea.grammar.LineStatementPart
 import sea.publisher.Publisher
 
 data class LineStatement(val statement: Node) : Node() {
-    override val parts: Parts = listOf(statement)    
+    override val parts: Parts = listOf(statement)
 
     companion object : Node.CompanionObject {
         override fun construct(parser: Parser): Node {
