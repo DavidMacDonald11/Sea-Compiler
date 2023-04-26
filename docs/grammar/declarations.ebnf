@@ -19,7 +19,7 @@ varDeclarator ::= IDENTIFIER [":" type] "=" expression
                 | IDENTIFIER ":" type ["=" expression]
 
 varKeyword ::= "val" | "invar" | "var"
-storageKeyword ::= "static" | "cpu"
+storageKeyword ::= "static"
 visKeyword ::= "public" | "private"
 
 type ::= ["#"] typeName ["?"]
@@ -28,8 +28,8 @@ typeName ::= typeKeyword | IDENTIFIER | fileIdentifier
            | "Array" "<" typeName "," INTEGER ">"
            | "Matrix" "<" typeName "," INTEGER "," INTEGER ">"
 
-typeKeyword ::= "Bool" | "Byte" | "Char" 
-              | "Int16" | "Int" | "Int32" | "Int64" 
+typeKeyword ::= "Bool" | "Byte" | "Char"
+              | "Int16" | "Int" | "Int32" | "Int64"
               | "Nat16" | "Nat" | "Nat32" | "Nat64"
               | "Real32" | "Real" | "Real64"
               | "Imag32" | "Imag" | "Imag64"

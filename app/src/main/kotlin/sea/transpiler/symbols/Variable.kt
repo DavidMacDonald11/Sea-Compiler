@@ -38,18 +38,7 @@ open class Variable(type: TType, name: String, val storage: String?): Value(type
         if(this.storage == "static" && expression?.isConstant?.not() ?: false)
             transpiler.faults.error(node, "Initial value of static variable must be constant")
 
-        if(this.storage == "cpu") {
-            if(type.nullable)
-                transpiler.faults.error(node, "Cannot declare nullable cpu variable")
-
-            if(type.dynamic)
-                transpiler.faults.error(node, "Cannot declare dynamic cpu variable")
-
-            if(expression?.transfer != null)
-                transpiler.faults.error(node, "Cannot transfer/borrow into cpu variable")
-        }
-
-        return storage.replace("cpu", "register") + "$cType"
+        return storage + "$cType"
     }
 
     private fun declareTransfer(transpiler: Transpiler, expression: TExpression, cType: String): TExpression {
@@ -160,9 +149,6 @@ open class Variable(type: TType, name: String, val storage: String?): Value(type
 
         if(type != value.type)
             transpiler.faults.error(node, "Cannot transfer/borrow into variable with different type")
-
-        if(storage == "cpu")
-            transpiler.faults.error(node, "Cannot transfer/borrow cpu variable")
 
         if((value as Variable).storage == "static" && storage != "static")
             transpiler.faults.error(node, "Cannot transfer/borrow non-static var into static var")

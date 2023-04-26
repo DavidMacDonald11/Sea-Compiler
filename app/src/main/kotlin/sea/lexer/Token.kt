@@ -8,16 +8,16 @@ import sea.lexer.SourceLine
 val UPPERCASE_LETTERS = ('A'..'Z').joinToString("")
 val LOWERCASE_LETTERS = ('a'..'z').joinToString("")
 
-enum class TokenType(val data: Pair<Char, String>) { 
-    PUNC(Pair('P', "Puncuator")), NUM(Pair('N', "Number")), 
-    OP(Pair('O', "Operator")), CHAR(Pair('C', "Character")), 
-    STR(Pair('S', "String")), IDENTIFIER(Pair('I', "Identifier")), 
+enum class TokenType(val data: Pair<Char, String>) {
+    PUNC(Pair('P', "Puncuator")), NUM(Pair('N', "Number")),
+    OP(Pair('O', "Operator")), CHAR(Pair('C', "Character")),
+    STR(Pair('S', "String")), IDENTIFIER(Pair('I', "Identifier")),
     KEYWORD(Pair('K', "Keyword")), NONE(Pair('?', "None"));
 
-    val label: Char 
+    val label: Char
         get() = data.first
 
-    val word: String 
+    val word: String
         get() = data.second
 }
 
@@ -37,7 +37,7 @@ data class Token(val line: SourceLine, var type: TokenType) : Faults.Component {
         if(base < 2) throw faults.fail(this, "Numeric base must be at least 2")
 
         val num = string.substring(string.indexOf("b") + 1)
-        
+
         var (int, frac) = num.split(".").let { Pair(it[0], it.getOrElse(1){ "" }) }
         var result = 0.0
 
@@ -61,7 +61,7 @@ data class Token(val line: SourceLine, var type: TokenType) : Faults.Component {
     fun has(vararg strings: String): Boolean = (if(string == "") "EOF" else string) in strings
     fun has(c: Collection<String>): Boolean = has(*c.toTypedArray())
     fun isInt(): Boolean = of(TokenType.NUM) && !("." in string)
-    
+
     override fun toString(): String {
         var string = if(string == "") "EOF" else string.replace("\n", "\\n")
         return "${type.label}'$string'"
@@ -79,7 +79,7 @@ data class Token(val line: SourceLine, var type: TokenType) : Faults.Component {
         val COMPARE_OPS = setOf("<", ">", "<=", ">=", "==", "!=")
         val ASSIGN_OPS = setOf("*=", "/=", "%=", "+=", "-=", "<<=", ">>=", "&=", "$=", "|=", "?:=", "=")
         val PUNC_OPS = setOf(":", "::", "->", "?")
-        val OPERATORS = POSTFIX_OPS + PREFIX_UNARY_OPS + BINARY_OPS + COMPARE_OPS + ASSIGN_OPS + 
+        val OPERATORS = POSTFIX_OPS + PREFIX_UNARY_OPS + BINARY_OPS + COMPARE_OPS + ASSIGN_OPS +
             PUNC_OPS + setOf("?:")
 
         val PUNC_SYMBOLS = "{}[](),;#@"
@@ -91,18 +91,18 @@ data class Token(val line: SourceLine, var type: TokenType) : Faults.Component {
 
         val PRIMARY_KEYWORDS = setOf("true", "false", "null", "infinity", "nan")
         val VIS_KEYWORDS = setOf("public", "private")
-        val STORAGE_KEYWORDS = setOf("static", "cpu")
+        val STORAGE_KEYWORDS = setOf("static")
         val VAR_KEYWORDS = setOf("val", "invar", "var")
-        val TYPE_KEYWORDS = setOf("Bool", "Byte", "Char", 
+        val TYPE_KEYWORDS = setOf("Bool", "Byte", "Char",
             "Int16", "Int", "Int32", "Int64",
             "Nat16", "Nat", "Nat32", "Nat64",
             "Real32", "Real", "Real64",
             "Imag32", "Imag", "Imag64",
             "Cplex32", "Cplex", "Cplex64")
         val FUN_KEYWORDS = setOf("fun", "inline", "deviant")
-        val KEYWORDS = PRIMARY_KEYWORDS + VAR_KEYWORDS + VIS_KEYWORDS + TYPE_KEYWORDS + 
+        val KEYWORDS = PRIMARY_KEYWORDS + VAR_KEYWORDS + VIS_KEYWORDS + TYPE_KEYWORDS +
             FUN_KEYWORDS + setOf(
-            "not", "and", "xor", "or", 
+            "not", "and", "xor", "or",
             "mod", "as", "if", "else", "while", "do",
             "pass", "return")
 
