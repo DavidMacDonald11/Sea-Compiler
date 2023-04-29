@@ -1,3 +1,0 @@
-var x: Int? = 5
-var y = x
-var z = x as #Int?

@@ -20,11 +20,12 @@ open class Variable(type: TType, name: String, val storage: String?): Value(type
         val cType = type.cName
         var result = TExpression(type, "$s$cType ")
 
+        if(type.dynamic && storage == "static") return result.add(after = "*$cName")
         if(!type.dynamic) result.add(after = "$cName").setShowType()
         else result.add(after = "*$cName = malloc(sizeof($cType))")
 
         if(expression == null) return result
-        if(type.dynamic) result = result.new(type, "*$cName").setShowType()
+        if(type.dynamic) result.new(type, "*$cName").setShowType()
 
         val expr = expression.string
         val eType = expression.type
@@ -46,12 +47,15 @@ open class Variable(type: TType, name: String, val storage: String?): Value(type
 
         if(transpiler.symbols.isGlobal) {
             if(this.storage != "static")
-                //transpiler.faults.error(node, "Global variables must be static")
+                // TODO: transpiler.faults.error(node, "Global variables must be static")
             else storage = ""
         }
 
         if(this.storage == "static" && expression?.isConstant?.not() ?: false)
             transpiler.faults.error(node, "Initial value of static variable must be constant")
+
+        if(this.storage == "static" && type.dynamic && expression != null)
+            transpiler.faults.error(node, "Cannot give static dynamic variable an initial value")
 
         return storage
     }
@@ -79,7 +83,7 @@ open class Variable(type: TType, name: String, val storage: String?): Value(type
         val expression = TExpression(eType, "$cName")
 
         if(type.dynamic || transfer != null) expression.add("(*", ")")
-        if("Imag" in type) expression.add("(", " * 1.0j)")
+        if(!type.nullable && "Imag" in type) expression.add("(", " * 1.0j)")
 
         expression.isConstant = false
         if(initialized) return expression

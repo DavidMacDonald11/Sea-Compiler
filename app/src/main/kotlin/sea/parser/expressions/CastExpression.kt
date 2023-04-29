@@ -16,6 +16,21 @@ data class CastExpression(val expression: Node, val type: Node): Node() {
 
             return node
         }
+
+        internal fun castValue(result: TExpression, type: TType): TExpression {
+            val cType = type.rawCName
+            if("Imag" !in type) return result.add("($cType)(", ")").cast(type)
+
+            val cplexType = cType.replace("Imag", "Cplex")
+
+            if("Imag" in result.type) return result.add("($cplexType)(", ")").cast(type)
+            if("Cplex" !in result.type) return result.replace("($cplexType)0").cast(type)
+
+            val realType = result.type.cName.replace("Cplex", "Real")
+            val name = result.string
+
+            return result.replace("($cplexType)(($name) - ($realType)($name))").cast(type)
+        }
     }
 
     override fun transpile(transpiler: Transpiler): TExpression {
@@ -48,25 +63,10 @@ data class CastExpression(val expression: Node, val type: Node): Node() {
         if(!type.nullable) result.type.nullable = false
         val name = result.string
 
-        result.type.nullable = false
         result.add(after = ".value")
+        if("Imag" in result.type) result.add(after = " * 1j")
         result = castValue(result, type)
 
-        return result.add("($cType){$name.isNull, ", "}").cast(type)
-    }
-
-    private fun castValue(result: TExpression, type: TType): TExpression {
-        val cType = type.rawCName
-        if("Imag" !in type) return result.add("($cType)(", ")").cast(type)
-
-        val cplexType = cType.replace("Imag", "Cplex")
-
-        if("Imag" in result.type) return result.add("($cplexType)(", ")").cast(type)
-        if("Cplex" !in result.type) return result.replace("($cplexType)0").cast(type)
-
-        val realType = result.type.cName.replace("Cplex", "Real")
-        val name = result.string
-
-        return result.replace("($cplexType)(($name) - ($realType)($name))").cast(type)
+        return result.add("($cType){$name.isNull, ", "}")
     }
 }

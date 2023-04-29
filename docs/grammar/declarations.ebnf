@@ -1,8 +1,7 @@
-funDeclaration ::= [visKeyword] [funOptimizer] "fun" IDENTIFIER "(" [parameters] ")" [funReturn]
+funDeclaration ::= [visKeyword] [funModifier] "fun" IDENTIFIER "(" [parameters] ")" [funReturn]
     funReturn ::= "->" type
 
-funOptimizer ::= "inline" ["deviant"]
-               | "deviant" ["inline"]
+funModifier ::= "entry" | "egress"
 
 parameters ::= parameterList
              | parameterList "," defualtParameterList

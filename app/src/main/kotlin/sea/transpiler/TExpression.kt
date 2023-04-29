@@ -71,7 +71,7 @@ data class TType(var string: String = "Any", var dynamic: Boolean = false, var n
 data class TExpression(var type: TType = TType(), var string: String = "") {
     private var showType = false
     private var finished = false
-    private var parent: TExpression? = null
+    private var previous = ArrayList<TExpression>()
     var transfer: Pair<String, String>? = null
     var isConstant = true
 
@@ -80,7 +80,7 @@ data class TExpression(var type: TType = TType(), var string: String = "") {
     constructor(type: String, string: String = ""): this(TType(type), string)
 
     override fun toString(): String {
-        val result = parent?.toString()?: ""
+        val result = previous.joinToString(separator = "")
         return "$result$string"
     }
 
@@ -134,27 +134,37 @@ data class TExpression(var type: TType = TType(), var string: String = "") {
     }
 
     fun new(type: TType = TType(), string: String = ""): TExpression {
-        val expression = TExpression(type, string)
-        expression.parent = this
-        return expression
+        val expression = this.copy()
+        previous.add(expression)
+        return cast(type).replace(string)
     }
 
-    fun store(): TExpression {
-        val const = if(isConstant) "const " else ""
-        val cType = type.cName
-        val name = "__sea_temp_${temps++}__"
+    // fun store(): TExpression {
+    //     val name = "__sea_temp_${temps++}__"
+    //     return add("#define $name ").new(type, name)
+    // }
 
-        val result = add("$const$cType $name = ").new(type, name)
-        result.isConstant = isConstant
-        return result
+    // fun memStore(): TExpression {
+    //     val const = if(isConstant) "const " else ""
+    //     val cType = type.cName
+    //     val name = "__sea_temp_${temps++}__"
+
+    //     return add("$const$cType $name = ").new(type, name)
+    // }
+
+    fun mergePrevious(vararg expressions: TExpression) {
+        expressions.forEach {
+            previous.addAll(it.previous)
+        }
     }
 
     fun setShowType(): TExpression { showType = true; return this }
 
     fun finish(transpiler: Transpiler, semicolons: Boolean = true): TExpression {
         if(finished) return this
-        parent?.finish(transpiler, semicolons)
         finished = true
+
+        previous.forEach { it.finish(transpiler, semicolons) }
 
         val indent = "    ".repeat(transpiler.context.indents)
         var end = if(semicolons) ";" else ""

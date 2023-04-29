@@ -22,12 +22,13 @@ data class SourceLine(val num: Int, val string: String) {
     }
 
     fun raw(): String {
-        var col1 = 0
-        var col2 = 0
+        var col1 = -1
+        var col2 = -1
 
         for(locale in marks) {
-            if(col1 == 0 || locale[0] < col1) col1 = locale[0]
-            if(col2 == 0 || locale[1] > col2) col2 = locale[1]
+            println(locale)
+            if(col1 == -1 || locale[0] < col1) col1 = locale[0]
+            if(col2 == -1 || locale[1] > col2) col2 = locale[1]
         }
 
         var underline = ""
