@@ -21,14 +21,22 @@ data class CastExpression(val expression: Node, val type: Node): Node() {
     override fun transpile(transpiler: Transpiler): TExpression {
         var result = expression.transpile(transpiler)
 
-        if("None" in result.type.string) {
-            transpiler.faults.error(this, "Cannot cast from 'None' type")
+        if("None" in result.type) {
+            transpiler.faults.error(this, "Cannot cast None type")
+            return result
+        }
+
+        if("Array" in result.type) {
+            transpiler.faults.error(this, "Cannot cast Array type")
             return result
         }
 
         val type = type.transpile(transpiler).type
         val cType = type.cName
-        val rawCType = type.rawCName
+
+        if("Array" in type) {
+            transpiler.faults.error(this, "Cannot cast to Array type")
+        }
 
         if(type.dynamic) result.type.dynamic = true
         if(result.type == type) return result
@@ -41,10 +49,11 @@ data class CastExpression(val expression: Node, val type: Node): Node() {
         }
 
         if(!result.type.nullable) {
-            if(!type.nullable) return result.add("($rawCType)(", ")").cast(type)
-            return result.add("($cType){false, ($rawCType)(", ")}").cast(type)
+            if(!type.nullable) return result.add("($cType)(", ")").cast(type)
+            return result.add("($cType){false, ", "}").cast(type)
         }
 
-        return result.add("__sea_macro_castNullable__($rawCType, ", ")").cast(type)
+        val name = result.string
+        return result.replace("($cType){($name).isNull, ($name).value}").cast(type)
     }
 }

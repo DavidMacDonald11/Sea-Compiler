@@ -26,23 +26,40 @@ data class ArrayInitializer(val tokens: Pair<Token, Token>, val expressions: Lis
 
     override fun transpile(transpiler: Transpiler): TExpression {
         var eType = TType()
-        var result = ""
+        var items = ArrayList<TExpression>()
 
-        expressions.forEach {
+        for(it in expressions) {
             val expression = it.transpile(transpiler)
-            eType = TType.resolve(eType, expression.type)
 
-            if(result != "") result += ", "
-            result += "${expression.string}"
+            eType = TType.resolve(eType, expression.type).copy()
+            if(expression.type.nullable) eType.nullable = true
+
+            if(eType.arrayDim != expression.type.arrayDim) {
+                transpiler.faults.error(this, "Cannot mismatch array dimensions")
+                break
+            }
+
+            items.add(expression)
         }
 
-        // TODO nullables
-        // TODO list of expr, then cast after type deduced
+        // TODO fix 2d+ array type
+        // TODO heap array
 
         var type = TType("Array")
         type.arrayType = eType
-        type.arraySize = expressions.size.toLong()
 
-        return TExpression(type, "{ $result }")
+        var elems = items.joinToString(", ") {
+            if(!eType.nullable) it.string else {
+                if(it.isNull) "{true}"
+                else if(!it.type.nullable) "{false, ${it.string}}"
+                else "{(${it.string}).isNull, (${it.string}).value}"
+            }
+        }
+
+        elems = "(${eType.cName}[]){$elems}"
+        val result = TExpression(type, "(__sea_type_Array__){${items.size}, $elems}")
+        result.isConstant = items.all { it.isConstant }
+
+        return result
     }
 }

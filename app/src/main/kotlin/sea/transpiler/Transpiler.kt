@@ -32,7 +32,7 @@ data class Transpiler(val faults: Faults, val tree: Node, val oFile: OutputFile)
     }
 
     fun include(header: String, lib: Boolean = true) = oFile.include(header, lib)
-    
+
     fun includeUtil(util: String, type: TType, makeUtil: (String, String) -> String): String {
         val name = "${util}_$type"
         if(name !in utils) header(makeUtil("__sea_util_${name}__", "__sea_type_${type}__"))

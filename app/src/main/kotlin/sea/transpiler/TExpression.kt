@@ -9,8 +9,7 @@ data class TExpression(var type: TType = TType(), var string: String = "") {
     private var previous = ArrayList<TExpression>()
     var transfer: Pair<String, String>? = null
     var isConstant = true
-
-    val isNull get() = isConstant && type.nullable
+    var isNull = false
 
     constructor(type: String, string: String = ""): this(TType(type), string)
 
@@ -69,19 +68,6 @@ data class TExpression(var type: TType = TType(), var string: String = "") {
         previous.add(expression)
         return cast(type).replace(string)
     }
-
-    // fun store(): TExpression {
-    //     val name = "__sea_temp_${temps++}__"
-    //     return add("#define $name ").new(type, name)
-    // }
-
-    // fun memStore(): TExpression {
-    //     val const = if(isConstant) "const " else ""
-    //     val cType = type.cName
-    //     val name = "__sea_temp_${temps++}__"
-
-    //     return add("$const$cType $name = ").new(type, name)
-    // }
 
     fun mergePrevious(vararg expressions: TExpression) {
         expressions.forEach {

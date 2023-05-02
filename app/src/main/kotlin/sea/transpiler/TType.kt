@@ -6,7 +6,14 @@ data class TType(var string: String = "Any", var dynamic: Boolean = false, var n
     val rawCName get() = "__sea_type_${string}__"
     val cName get() = if(nullable) "__sea_type_Nullable${string}__" else rawCName
     var arrayType: TType? = null
-    var arraySize: Long? = null
+
+    val arrayDim: Int get() = if(arrayType != null) arrayType!!.arrayDim + 1 else 0
+
+    fun copy(): TType {
+        val result = TType(string, dynamic, nullable)
+        result.arrayType = arrayType?.copy()
+        return result
+    }
 
     override fun toString(): String {
         var result = string

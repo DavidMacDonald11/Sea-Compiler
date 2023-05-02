@@ -83,7 +83,9 @@ class PrimaryKeyword(token: Token): PrimaryNode(token) {
             return TExpression("Real", if(token.has("nan")) "NAN" else "INFINITY")
         }
 
-        return TExpression(TType(nullable = true))
+        val result = TExpression(TType(nullable = true))
+        result.isNull = true
+        return result
     }
 }
 

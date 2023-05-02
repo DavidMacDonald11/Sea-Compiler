@@ -50,10 +50,4 @@ fun createNullableTypes(file: OutputFile) {
             | __sea_type_Nullable${type}__;
         """.trimMargin().replace("\n", ""))
     }
-
-    file.write("""
-        |
-        |#define __sea_macro_castNullable__(Type, X) \
-        |   (__sea_type_NullableType##Type##__){(X).isNull, (__sea_type_##Type##__)(X).value}
-    """.trimMargin())
 }

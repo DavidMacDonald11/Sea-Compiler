@@ -35,17 +35,19 @@ class NullCoalescingExpression(left: Node, op: Token, right: Node)
         if(!result.type.nullable) return result.add(after = "(${right.string}) : ($name).value")
 
         val cType = result.type.cName
-        val rawCType = result.type.rawCName
-
         if(right.isNull) return result.add(after = "($cType){true} : ($name)")
 
         if(left.type.string != result.type.string) {
-            left.add("__sea_macro_castNullable__($rawCType, ", ")")
+            name = left.string
+            left.replace("($cType){($name).isNull, ($name).value}")
         }
 
         if(right.type.string != result.type.string) {
             if(!right.type.nullable) right.add("($cType){false, ", "}")
-            else right.add("__sea_macro_castNullable__($rawCType, ", ")")
+            else {
+                name = right.string
+                right.replace("($cType){($name).isNull, ($name).value}")
+            }
         }
 
         return result.add(after = "(${right.string}) : (${left.string})")

@@ -24,7 +24,7 @@ visKeyword ::= "public" | "private"
 type ::= ["#"] typeName ["?"]
 
 typeName ::= typeKeyword | IDENTIFIER | fileIdentifier | arrayType
-arrayType ::= "Array" "<" typeName ["," expression] ">"
+arrayType ::= "Array" "<" typeName ">"
 
 typeKeyword ::= "Bool" | "Byte" | "Char"
               | "Int16" | "Int" | "Int32" | "Int64"
