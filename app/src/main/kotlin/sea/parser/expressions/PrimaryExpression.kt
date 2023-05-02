@@ -10,6 +10,7 @@ abstract class PrimaryExpression: Node() {
             if(parser.next.of(TokenType.IDENTIFIER)) return Identifier.construct(parser)
             if(parser.next.has(Token.PRIMARY_KEYWORDS)) return PrimaryKeyword.construct(parser)
             if(parser.next.has("(")) return ParentheseseExpression.construct(parser)
+            if(parser.next.has("[")) return ArrayInitializer.construct(parser)
 
             val token = parser.take()
             throw parser.faults.fail(token, "PrimaryExpression error; unexpected token $token")

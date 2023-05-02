@@ -10,7 +10,7 @@ logicalAndExpression ::= logicalNotExpression ["and" logicalAndExpression]
 logicalNotExpression ::= comparativeExpression | ("not" logicalNotExpression)
 
 comparativeExpression ::= castExpression [comparisonOperator comparativeExpression]
-    comparisonOperator ::= "<" | ">" | "<=" | ">=" | "==" | "!="
+comparisonOperator ::= "<" | ">" | "<=" | ">=" | "==" | "!="
 
 castExpression ::= bitwiseOrExpression | (castExpression "as" type)
 
@@ -23,7 +23,7 @@ additiveExpression ::= multiplicativeExpression [("+" | "-") additiveExpression]
 multiplicativeExpression ::= unaryExpression [("*" | "/" | "%" | "mod") multiplicativeExpression]
 
 unaryExpression ::= postfixExpression | (unaryOperator unaryExpression)
-    unaryOperator ::= "+" | "-" | "!" | "&" | "$"
+unaryOperator ::= "+" | "-" | "!" | "&" | "$"
 
 postfixExpression ::= postfixExpression ["!!"]
                     | postfixExpression ["." IDENTIFIER]
@@ -36,6 +36,9 @@ primaryExpression ::= NUMBER
                     | IDENTIFIER
                     | fileIdentifier
                     | primaryKeyword
+                    | arrayInitializer
                     | "(" expression ")"
-    fileIdentifier ::= IDENTIFIER "::" IDENTIFIER
-    primaryKeyword ::= "true" | "false" | "null" | "infinity" | "nan"
+fileIdentifier ::= IDENTIFIER "::" IDENTIFIER
+primaryKeyword ::= "true" | "false" | "null" | "infinity" | "nan"
+arrayInitializer ::= "[" [arrayInitializerElements] "]"
+arrayInitializerElements ::= expression ["," [arrayInitializerElements]]

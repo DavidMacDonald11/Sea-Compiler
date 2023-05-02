@@ -12,6 +12,7 @@ fun createStandard(outDir: String) {
     file.include("stdint")
     file.include("stdbool")
     file.include("stdlib")
+    file.write("")
 
     for(i in 4..6) {
         val bits = 2.toDouble().pow(i).toInt()
@@ -25,15 +26,13 @@ fun createStandard(outDir: String) {
     file.alias("unsigned int", "Nat")
     file.alias("int", "Int")
     file.alias("float", "Real32")
-    file.alias("float", "Imag32")
     file.alias("double", "Real")
-    file.alias("double", "Imag")
     file.alias("long double", "Real64")
-    file.alias("long double", "Imag64")
     file.alias("_Complex float", "Cplex32")
     file.alias("_Complex double", "Cplex")
     file.alias("_Complex long double", "Cplex64")
 
+    file.write("typedef struct { size_t size; void *data; } __sea_type_Array__;")
     createNullableTypes(file)
 }
 
@@ -51,4 +50,10 @@ fun createNullableTypes(file: OutputFile) {
             | __sea_type_Nullable${type}__;
         """.trimMargin().replace("\n", ""))
     }
+
+    file.write("""
+        |
+        |#define __sea_macro_castNullable__(Type, X) \
+        |   (__sea_type_NullableType##Type##__){(X).isNull, (__sea_type_##Type##__)(X).value}
+    """.trimMargin())
 }

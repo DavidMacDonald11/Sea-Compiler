@@ -67,6 +67,6 @@ data class CastExpression(val expression: Node, val type: Node): Node() {
         if("Imag" in result.type) result.add(after = " * 1j")
         result = castValue(result, type)
 
-        return result.add("($cType){$name.isNull, ", "}")
+        return result.add("__sea_macro_castNullable__(${result.type.string}, $name, ", ")")
     }
 }

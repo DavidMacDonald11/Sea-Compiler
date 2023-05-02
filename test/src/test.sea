@@ -1,5 +1,8 @@
-var x: Int? = 5
-var y: Real? = null
-var z: Imag? = 2i
+val x = 0
+val y = 0
 
-var a = x ?: y ?: z
+x + y
+
+var z: Real? = 3.14
+z as Int? as Real?
+

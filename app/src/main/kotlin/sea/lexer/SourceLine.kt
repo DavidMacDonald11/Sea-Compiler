@@ -26,7 +26,6 @@ data class SourceLine(val num: Int, val string: String) {
         var col2 = -1
 
         for(locale in marks) {
-            println(locale)
             if(col1 == -1 || locale[0] < col1) col1 = locale[0]
             if(col2 == -1 || locale[1] > col2) col2 = locale[1]
         }
