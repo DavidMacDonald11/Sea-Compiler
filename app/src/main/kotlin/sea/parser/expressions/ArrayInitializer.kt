@@ -32,14 +32,10 @@ data class ArrayInitializer(val tokens: Pair<Token, Token>, val expressions: Lis
             val expression = it.transpile(transpiler)
             eType = TType.resolve(eType, expression.type)
 
-            if(TExpression.realAndImag(TExpression(eType), expression))
-                eType.string = eType.string.replaceFirst("[a-zA-Z]+".toRegex(), "Cplex")
-
             if(result != "") result += ", "
             result += "${expression.string}"
         }
 
-        // TODO drop imag
         // TODO nullables
         // TODO list of expr, then cast after type deduced
 

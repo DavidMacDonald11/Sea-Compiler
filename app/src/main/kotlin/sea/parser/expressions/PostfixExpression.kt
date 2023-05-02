@@ -50,8 +50,6 @@ data class NotNullExpression(val token: Token): PostfixExpression() {
         }
 
         result.type.nullable = false
-        result.add("(", ").value")
-
-        return if("Imag" in result.type) result.add(after = " * 1j") else result
+        return result.add("(", ").value")
     }
 }

@@ -32,33 +32,22 @@ class NullCoalescingExpression(left: Node, op: Token, right: Node)
         val result = TExpression.resolveType(left, right).replace("($name).isNull? ")
         result.type.nullable = right.type.nullable
 
-        if(TExpression.realAndImag(left, right)) result.castReplace("Cplex")
         if(!result.type.nullable) return result.add(after = "(${right.string}) : ($name).value")
 
         val cType = result.type.cName
+        val rawCType = result.type.rawCName
+
         if(right.isNull) return result.add(after = "($cType){true} : ($name)")
 
-        var newLeft = left
-        var newRight = right
-
         if(left.type.string != result.type.string) {
-            name = newLeft.string
-            if(newLeft.type.nullable) newLeft.add("(", ").value")
-            if("Imag" in newLeft.type) newLeft.add("(", ") * 1j")
-
-            newLeft = CastExpression.castValue(newLeft, result.type)
-            newLeft.add("($cType){($name).isNull, ", "}")
+            left.add("__sea_macro_castNullable__($rawCType, ", ")")
         }
 
         if(right.type.string != result.type.string) {
-            name = newRight.string
-            if(newRight.type.nullable) newRight.add("(", ").value")
-            if("Imag" in newRight.type) newRight.add("(", ") * 1j")
-
-            newRight = CastExpression.castValue(newRight, result.type)
-            newRight.add("($cType){($name).isNull, ", "}")
+            if(!right.type.nullable) right.add("($cType){false, ", "}")
+            else right.add("__sea_macro_castNullable__($rawCType, ", ")")
         }
 
-        return result.add(after = "(${newRight.string}) : (${newLeft.string})")
+        return result.add(after = "(${right.string}) : (${left.string})")
     }
 }

@@ -26,7 +26,7 @@ data class LineStatementPart(val part: Node): Node() {
         if(part is OwnershipExpression)
             transpiler.faults.error(part, "Must transfer/borrow into variable or function")
 
-        if(part !is VarDeclaration) result.dropImag().setShowType()
+        if(part !is VarDeclaration) result.setShowType()
 
         return result
     }

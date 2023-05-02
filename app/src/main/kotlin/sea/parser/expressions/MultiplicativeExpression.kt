@@ -24,9 +24,6 @@ class MultiplicativeExpression(left: Node, op: Token, right: Node)
             val right = right.transpile(transpiler).arithmeticOp(transpiler)
             val result = TExpression.resolveType(left, right)
 
-            if(TExpression.realAndImag(left, right)) result.castReplace("Imag")
-            if("Imag" in left.type && "Imag" in right.type) result.castReplace("Real")
-
             result.replace("$left ${op.string} $right")
         }
     }
@@ -46,24 +43,8 @@ class MultiplicativeExpression(left: Node, op: Token, right: Node)
             return result.replace("fmod($left, $right)")
         }
 
-        if("Cplex" in result.type) {
-            val util = transpiler.includeUtil("cmod", result.type, ::cplexModUtil)
-            return result.replace("$util($left, $right)")
-        }
-
-        if("Imag" !in left.type && "Imag" in right.type) {
-            right.dropImag()
-            return result.castReplace("Real").replace("fmod($left, $right)")
-        }
-
-        if("Imag" in left.type && "Imag" !in right.type) {
-            left.dropImag()
-            return result.castReplace("Imag").replace("1.0j * fmod($left, $right)")
-        }
-
-        left.dropImag()
-        right.dropImag()
-        return result.castReplace("Imag").replace("1.0j * fmod($left, $right)")
+        val util = transpiler.includeUtil("cmod", result.type, ::cplexModUtil)
+        return result.replace("$util($left, $right)")
     }
 
     fun cplexModUtil(util: String, type: String): String {

@@ -16,21 +16,6 @@ data class CastExpression(val expression: Node, val type: Node): Node() {
 
             return node
         }
-
-        internal fun castValue(result: TExpression, type: TType): TExpression {
-            val cType = type.rawCName
-            if("Imag" !in type) return result.add("($cType)(", ")").cast(type)
-
-            val cplexType = cType.replace("Imag", "Cplex")
-
-            if("Imag" in result.type) return result.add("($cplexType)(", ")").cast(type)
-            if("Cplex" !in result.type) return result.replace("($cplexType)0").cast(type)
-
-            val realType = result.type.cName.replace("Cplex", "Real")
-            val name = result.string
-
-            return result.replace("($cplexType)(($name) - ($realType)($name))").cast(type)
-        }
     }
 
     override fun transpile(transpiler: Transpiler): TExpression {
@@ -43,13 +28,10 @@ data class CastExpression(val expression: Node, val type: Node): Node() {
 
         val type = type.transpile(transpiler).type
         val cType = type.cName
+        val rawCType = type.rawCName
 
         if(type.dynamic) result.type.dynamic = true
         if(result.type == type) return result
-
-        if(!result.type.nullable && type.nullable) {
-            return result.add("($cType){false, ", "}").cast(type)
-        }
 
         if(result.isNull) {
             if(!type.nullable)
@@ -58,15 +40,11 @@ data class CastExpression(val expression: Node, val type: Node): Node() {
             return result.cast(type)
         }
 
-        if(!result.type.nullable) return castValue(result, type)
+        if(!result.type.nullable) {
+            if(!type.nullable) return result.add("($rawCType)(", ")").cast(type)
+            return result.add("($cType){false, ($rawCType)(", ")}").cast(type)
+        }
 
-        if(!type.nullable) result.type.nullable = false
-        val name = result.string
-
-        result.add(after = ".value")
-        if("Imag" in result.type) result.add(after = " * 1j")
-        result = castValue(result, type)
-
-        return result.add("__sea_macro_castNullable__(${result.type.string}, $name, ", ")")
+        return result.add("__sea_macro_castNullable__($rawCType, ", ")").cast(type)
     }
 }

@@ -21,7 +21,6 @@ class AdditiveExpression(left: Node, op: Token, right: Node)
                 val right = right.transpile(transpiler).arithmeticOp(transpiler)
                 val result = TExpression.resolveType(left, right)
 
-                if(TExpression.realAndImag(left, right)) result.castReplace("Cplex")
                 result.replace("$left ${op.string} $right")
             }
          }

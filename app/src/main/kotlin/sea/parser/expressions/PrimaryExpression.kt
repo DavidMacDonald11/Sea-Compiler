@@ -39,7 +39,7 @@ class Number(token: Token, val imag: Token?): PrimaryNode(token) {
     override fun transpile(transpiler: Transpiler): TExpression {
         val expression = TExpression("", token.string)
 
-        if(imag != null) expression.cast("Imag").add(after = "j")
+        if(imag != null) expression.cast("Cplex").add(after = "j")
         else expression.cast(if("." in token.string) "Real" else "Int")
 
         return expression

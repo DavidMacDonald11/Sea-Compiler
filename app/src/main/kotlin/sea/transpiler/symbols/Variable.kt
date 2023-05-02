@@ -43,8 +43,6 @@ open class Variable(type: TType, name: String, val storage: String?): Value(type
         val node = transpiler.context.node!!
         var storage = storage?.plus(" ") ?: ""
 
-        if("Cplex" !in type) expression?.dropImag()
-
         if(transpiler.symbols.isGlobal) {
             if(this.storage != "static")
                 // TODO: transpiler.faults.error(node, "Global variables must be static")
@@ -81,9 +79,7 @@ open class Variable(type: TType, name: String, val storage: String?): Value(type
         eType.dynamic = type.dynamic
 
         val expression = TExpression(eType, "$cName")
-
         if(type.dynamic || transfer != null) expression.add("(*", ")")
-        if(!type.nullable && "Imag" in type) expression.add("(", " * 1.0j)")
 
         expression.isConstant = false
         if(initialized) return expression
@@ -101,7 +97,7 @@ open class Variable(type: TType, name: String, val storage: String?): Value(type
         TType.resolveAssign(transpiler, type, expression.type)
 
         initialized = true
-        return expression.dropImag()
+        return expression
     }
 
     override fun transfer(transpiler: Transpiler, expression: TExpression, value: Value): TExpression {

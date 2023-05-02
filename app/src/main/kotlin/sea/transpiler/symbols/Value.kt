@@ -10,7 +10,7 @@ open class Value(type: TType, name: String): Symbol(type, name) {
 
     open fun declare(transpiler: Transpiler, expression: TExpression?): TExpression {
         val node = transpiler.context.node!!
-        val initial = expression!!.dropImag().add(" ")
+        val initial = expression!!.add(" ")
 
         if(initial.type.nullable) transpiler.faults.error(node, "Cannot declare nullable value")
         if(initial.type.dynamic) transpiler.faults.error(node, "Cannot declare dynamic value")

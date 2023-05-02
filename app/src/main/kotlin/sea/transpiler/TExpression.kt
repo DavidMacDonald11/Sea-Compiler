@@ -44,15 +44,6 @@ data class TExpression(var type: TType = TType(), var string: String = "") {
         return this
     }
 
-    fun dropImag(): TExpression {
-        if("Imag" !in type) return this
-        return add("((", ") / 1j)")
-    }
-
-    fun isReal(): Boolean {
-        return "Imag" !in type && "Cplex" !in type && type.string != "None"
-    }
-
     fun add(before: String = "", after: String = ""): TExpression {
         string = "$before$string$after"
         return this
@@ -115,11 +106,6 @@ data class TExpression(var type: TType = TType(), var string: String = "") {
             val result = TExpression(TType.resolve(left.type, right.type).copy())
             result.isConstant = left.isConstant && right.isConstant
             return result
-        }
-
-        fun realAndImag(left: TExpression, right: TExpression): Boolean {
-            if(left.isReal() && "Imag" in right.type) return true
-            return "Imag" in left.type && right.isReal()
         }
     }
 }

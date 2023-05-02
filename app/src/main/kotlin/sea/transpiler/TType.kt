@@ -32,9 +32,7 @@ data class TType(var string: String = "Any", var dynamic: Boolean = false, var n
             "Nat" to 4.0, "Int" to 4.5,
             "Nat32" to 5.0, "Int32" to 5.5,
             "Nat64" to 6.0, "Int64" to 6.5,
-            "Real32" to 7.0, "Imag32" to 7.0,
-            "Real" to 8.0, "Imag" to 8.0,
-            "Real64" to 9.0, "Imag64" to 9.0,
+            "Real32" to 7.0, "Real" to 8.0, "Real64" to 9.0,
             "Cplex32" to 10.0, "Cplex" to 11.0, "Cplex64" to 12.0,
             "Array" to 20.0
         )

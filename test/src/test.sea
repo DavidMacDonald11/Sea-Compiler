@@ -1,8 +1,5 @@
-val x = 0
-val y = 0
-
-x + y
-
 var z: Real? = 3.14
+var y: Bool? = true
 z as Int? as Real?
 
+z ?: y
