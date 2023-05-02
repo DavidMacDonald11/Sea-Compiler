@@ -40,11 +40,11 @@ class MultiplicativeExpression(left: Node, op: Token, right: Node)
         transpiler.include("tgmath")
 
         if("Real" in left.type && "Real" in right.type) {
-            return result.replace("fmod($left, $right)")
+            return result.replace("fmod($left, $right)").notConstant()
         }
 
         val util = transpiler.includeUtil("cmod", result.type, ::cplexModUtil)
-        return result.replace("$util($left, $right)")
+        return result.replace("$util($left, $right)").notConstant()
     }
 
     fun cplexModUtil(util: String, type: String): String {

@@ -81,7 +81,7 @@ open class Variable(type: TType, name: String, val storage: String?): Value(type
         val expression = TExpression(eType, "$cName")
         if(type.dynamic || transfer != null) expression.add("(*", ")")
 
-        expression.isConstant = false
+        expression.notConstant()
         if(initialized) return expression
 
         transpiler.faults.error(node, "Cannot access uninitialized identifier '$name'")

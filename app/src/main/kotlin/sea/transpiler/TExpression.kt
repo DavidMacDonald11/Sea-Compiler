@@ -19,6 +19,11 @@ data class TExpression(var type: TType = TType(), var string: String = "") {
         return "$result$string"
     }
 
+    fun notConstant(): TExpression {
+        isConstant = false
+        return this
+    }
+
     fun replace(string: String): TExpression {
         this.string = string
         return this
