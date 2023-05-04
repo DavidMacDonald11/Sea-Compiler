@@ -42,6 +42,7 @@ class Number(token: Token, val imag: Token?): PrimaryNode(token) {
         if(imag != null) expression.cast("Cplex").add(after = "j")
         else expression.cast(if("." in token.string) "Real" else "Int")
 
+        if("Int" in expression.type) expression.longValue = token.string.toLong()
         return expression
     }
 }
@@ -75,7 +76,9 @@ class PrimaryKeyword(token: Token): PrimaryNode(token) {
 
     override fun transpile(transpiler: Transpiler): TExpression {
         if(token.string in listOf("true", "false")) {
-            return TExpression("Bool", token.string)
+            val expression = TExpression("Bool", token.string)
+            expression.longValue = if(token.has("true")) 1 else 0
+            return expression
         }
 
         if(token.string in listOf("infinity", "nan")) {

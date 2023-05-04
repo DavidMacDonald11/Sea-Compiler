@@ -25,7 +25,8 @@ data class UnaryExpression(val op: Token, val expression: Node): Node() {
             val expression = expression.transpile(transpiler).arithmeticOp(transpiler)
 
             if(op.has("+")) expression else {
-                expression.add("-").castReplace("Int")
+                expression.longValue?.unaryMinus()
+                expression.add("-")
                 if("Nat" in expression.type) expression.castReplace("Int") else expression
             }
          }

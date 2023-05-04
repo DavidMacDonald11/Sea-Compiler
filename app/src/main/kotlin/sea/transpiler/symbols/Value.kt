@@ -7,10 +7,12 @@ import sea.transpiler.TExpression
 
 open class Value(type: TType, name: String): Symbol(type, name) {
     override val cName = "__sea_val_${name}__"
+    var longValue: Long? = null
 
     open fun declare(transpiler: Transpiler, expression: TExpression?): TExpression {
         val node = transpiler.context.node!!
         val initial = expression!!.add(" ")
+        longValue = expression.longValue
 
         if(initial.type.nullable) transpiler.faults.error(node, "Cannot declare nullable value")
         if(initial.type.dynamic) transpiler.faults.error(node, "Cannot declare dynamic value")
@@ -22,7 +24,9 @@ open class Value(type: TType, name: String): Symbol(type, name) {
     }
 
     open fun access(transpiler: Transpiler): TExpression {
-        return TExpression(type, cName)
+        val expression = TExpression(type, cName)
+        expression.longValue = longValue
+        return expression
     }
 
     open fun transfer(transpiler: Transpiler, expression: TExpression, value: Value): TExpression {

@@ -10,6 +10,7 @@ data class TExpression(var type: TType = TType(), var string: String = "") {
     var transfer: Pair<String, String>? = null
     var isConstant = true
     var isNull = false
+    var longValue: Long? = null
 
     constructor(type: String, string: String = ""): this(TType(type), string)
 

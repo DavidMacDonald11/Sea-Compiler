@@ -41,4 +41,5 @@ primaryExpression ::= NUMBER
 fileIdentifier ::= IDENTIFIER "::" IDENTIFIER
 primaryKeyword ::= "true" | "false" | "null" | "infinity" | "nan"
 arrayInitializer ::= "[" [arrayInitializerElements] "]"
-arrayInitializerElements ::= expression ["," [arrayInitializerElements]]
+arrayInitializerElements ::= arrayInitializerElement ["," [arrayInitializerElements]]
+arrayInitializerElement ::= [expression "of"] expression

@@ -21,6 +21,11 @@ class AdditiveExpression(left: Node, op: Token, right: Node)
                 val right = right.transpile(transpiler).arithmeticOp(transpiler)
                 val result = TExpression.resolveType(left, right)
 
+                if(left.longValue != null && right.longValue != null) {
+                    if(op.has("+")) result.longValue = left.longValue!! + right.longValue!!
+                    else result.longValue = left.longValue!! - right.longValue!!
+                }
+
                 result.replace("$left ${op.string} $right")
             }
          }

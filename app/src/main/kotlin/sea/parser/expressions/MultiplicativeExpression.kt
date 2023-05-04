@@ -24,6 +24,16 @@ class MultiplicativeExpression(left: Node, op: Token, right: Node)
             val right = right.transpile(transpiler).arithmeticOp(transpiler)
             val result = TExpression.resolveType(left, right)
 
+            if(left.longValue != null && right.longValue != null) {
+                if(op.has("*")) result.longValue = left.longValue!! * right.longValue!!
+                else {
+                    if(right.longValue!! == 0L) {
+                        transpiler.faults.error(this, "Cannot divide by 0")
+                        result.longValue = null
+                    } else result.longValue = left.longValue!! / right.longValue!!
+                }
+            }
+
             result.replace("$left ${op.string} $right")
         }
     }
@@ -34,6 +44,13 @@ class MultiplicativeExpression(left: Node, op: Token, right: Node)
         val result = TExpression.resolveType(left, right)
 
         if("Nat" in result.type || "Int" in result.type) {
+            if(left.longValue != null && right.longValue != null) {
+                if(right.longValue!! == 0L) {
+                    transpiler.faults.error(this, "Cannot divide by 0")
+                    result.longValue = null
+                } else result.longValue = left.longValue!! % right.longValue!!
+            }
+
             return result.replace("$left % $right")
         }
 

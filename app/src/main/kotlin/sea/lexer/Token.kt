@@ -97,12 +97,12 @@ data class Token(val line: SourceLine, var type: TokenType) : Faults.Component {
             "Int16", "Int", "Int32", "Int64",
             "Nat16", "Nat", "Nat32", "Nat64",
             "Real32", "Real", "Real64",
-            "Cplex32", "Cplex", "Cplex64", "Array")
+            "Cplex32", "Cplex", "Cplex64")
         val FUN_KEYWORDS = setOf("fun", "entry", "egress")
         val KEYWORDS = PRIMARY_KEYWORDS + VAR_KEYWORDS + VIS_KEYWORDS + TYPE_KEYWORDS +
             FUN_KEYWORDS + setOf(
             "not", "and", "xor", "or",
-            "mod", "as", "if", "else", "while", "do",
+            "mod", "as", "if", "of", "else", "while", "do",
             "pass", "return")
 
         val LINE_ENDS = setOf(";", "\n", "EOF")

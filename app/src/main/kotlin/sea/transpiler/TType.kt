@@ -3,15 +3,16 @@ package sea.transpiler
 import sea.transpiler.Transpiler
 
 data class TType(var string: String = "Any", var dynamic: Boolean = false, var nullable: Boolean = false) {
-    val rawCName get() = "__sea_type_${string}__"
-    val cName get() = if(nullable) "__sea_type_Nullable${string}__" else rawCName
+    val cName get() = if(nullable) "__sea_type_Nullable${string}__" else "__sea_type_${string}__"
     var arrayType: TType? = null
+    var arraySize: Long? = null
 
     val arrayDim: Int get() = if(arrayType != null) arrayType!!.arrayDim + 1 else 0
 
     fun copy(): TType {
         val result = TType(string, dynamic, nullable)
         result.arrayType = arrayType?.copy()
+        result.arraySize = arraySize
         return result
     }
 
@@ -20,7 +21,7 @@ data class TType(var string: String = "Any", var dynamic: Boolean = false, var n
 
         if(result == "Array") {
             val inner = arrayType!!.toString()
-            result = "Array<$inner>"
+            result = "[${arraySize!!} of ${inner}]"
         }
 
         if(dynamic) result = "#$result"

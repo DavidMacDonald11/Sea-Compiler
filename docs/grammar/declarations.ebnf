@@ -21,10 +21,11 @@ varKeyword ::= "val" | "invar" | "var"
 storageKeyword ::= "static"
 visKeyword ::= "public" | "private"
 
-type ::= ["#"] typeName ["?"]
+type ::= ["#"] typeName
 
-typeName ::= typeKeyword | IDENTIFIER | fileIdentifier | arrayType
-arrayType ::= "Array" "<" typeName ">"
+typeName ::= (typeKeyword | IDENTIFIER | fileIdentifier) ["?"]
+           | arrayType
+arrayType ::= "[" expression "of" typeName "]" ["?"]
 
 typeKeyword ::= "Bool" | "Byte" | "Char"
               | "Int16" | "Int" | "Int32" | "Int64"

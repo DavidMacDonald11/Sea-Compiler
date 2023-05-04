@@ -35,8 +35,7 @@ open class Variable(type: TType, name: String, val storage: String?): Value(type
         if(!type.nullable || typesMatch) return result.add(after = " = $expr")
         if(!eType.nullable) return result.add(after = " = ($cType){false, $expr}")
 
-        val rawCType = type.rawCName
-        return result.add(after = " = ($cType){$expr.isNull, ($rawCType)$expr.value}")
+        return result.add(after = " = ($cType){$expr.isNull, $expr.value}")
     }
 
     private fun verifyStorage(transpiler: Transpiler, expression: TExpression?): String {

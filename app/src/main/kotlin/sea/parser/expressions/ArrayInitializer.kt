@@ -47,6 +47,7 @@ data class ArrayInitializer(val tokens: Pair<Token, Token>, val expressions: Lis
 
         var type = TType("Array")
         type.arrayType = eType
+        type.arraySize = items.size.toLong()
 
         var elems = items.joinToString(", ") {
             if(!eType.nullable) it.string else {
@@ -56,8 +57,7 @@ data class ArrayInitializer(val tokens: Pair<Token, Token>, val expressions: Lis
             }
         }
 
-        elems = "(${eType.cName}[]){$elems}"
-        val result = TExpression(type, "(__sea_type_Array__){${items.size}, $elems}")
+        val result = TExpression(type, "(${eType.cName}[]){$elems}")
         result.isConstant = items.all { it.isConstant }
 
         return result

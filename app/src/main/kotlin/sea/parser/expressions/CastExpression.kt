@@ -49,6 +49,9 @@ data class CastExpression(val expression: Node, val type: Node): Node() {
         }
 
         if(!result.type.nullable) {
+            if(type.nullable || "Real" in type || "Cplex" in type)
+                result.longValue = null
+
             if(!type.nullable) return result.add("($cType)(", ")").cast(type)
             return result.add("($cType){false, ", "}").cast(type)
         }

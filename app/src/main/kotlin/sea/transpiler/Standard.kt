@@ -32,7 +32,6 @@ fun createStandard(outDir: String) {
     file.alias("_Complex double", "Cplex")
     file.alias("_Complex long double", "Cplex64")
 
-    file.write("typedef struct { size_t size; void *data; } __sea_type_Array__;")
     createNullableTypes(file)
 }
 
@@ -50,4 +49,8 @@ fun createNullableTypes(file: OutputFile) {
             | __sea_type_Nullable${type}__;
         """.trimMargin().replace("\n", ""))
     }
+
+    file.write("""
+        |typedef struct { bool isNull: 1; void *value; } __sea_type_NullableAny__;
+    """.trimMargin())
 }
