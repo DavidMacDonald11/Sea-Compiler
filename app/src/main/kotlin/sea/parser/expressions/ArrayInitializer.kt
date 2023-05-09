@@ -25,7 +25,15 @@ data class ArrayInitializer(val tokens: Pair<Token, Token>, val expressions: Lis
     }
 
     override fun transpile(transpiler: Transpiler): TExpression {
+        val oldType = transpiler.context.assignType
         var eType = TType()
+
+        if(transpiler.context.assignType != null) {
+            val aType = transpiler.context.assignType!!
+            transpiler.context.assignType = aType.arrayType
+            eType = aType.arrayType ?: TType()
+        }
+
         var items = ArrayList<TExpression>()
 
         for(it in expressions) {
@@ -39,11 +47,13 @@ data class ArrayInitializer(val tokens: Pair<Token, Token>, val expressions: Lis
                 break
             }
 
+            if(eType.arraySize != expression.type.arraySize) {
+                transpiler.faults.error(this, "Cannot mismatch array sizes")
+                break
+            }
+
             items.add(expression)
         }
-
-        // TODO fix 2d+ array type
-        // TODO heap array
 
         var type = TType("Array")
         type.arrayType = eType
@@ -57,9 +67,10 @@ data class ArrayInitializer(val tokens: Pair<Token, Token>, val expressions: Lis
             }
         }
 
-        val result = TExpression(type, "(${eType.cName}[]){$elems}")
+        val result = TExpression(type, "{$elems}")
         result.isConstant = items.all { it.isConstant }
 
+        transpiler.context.assignType = oldType
         return result
     }
 }

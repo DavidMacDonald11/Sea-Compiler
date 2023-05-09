@@ -39,18 +39,20 @@ data class VarDeclaration(val visibility: Token?, val storage: Token?, val varKe
 
         return transpiler.nodeContext(this) {
             val name = (declarator as VarDeclarator).identifier.string
-
             val given = declarator.type?.transpile(transpiler)?.type
-            val expression = declarator.expression?.transpile(transpiler)
-            var type = TType.resolveAssign(transpiler, given, expression?.type)
 
-            val symbol = when(varKeyword.string) {
-                "val" -> transpiler.symbols.newVal(name, type)
-                "var" -> transpiler.symbols.newVar(name, type, storage?.string)
-                else -> transpiler.symbols.newInvar(name, type, storage?.string)
+            transpiler.assignContext(given) {
+                val expression = declarator.expression?.transpile(transpiler)
+                var type = TType.resolveAssign(transpiler, given, expression?.type)
+
+                val symbol = when(varKeyword.string) {
+                    "val" -> transpiler.symbols.newVal(name, type)
+                    "var" -> transpiler.symbols.newVar(name, type, storage?.string)
+                    else -> transpiler.symbols.newInvar(name, type, storage?.string)
+                }
+
+                (symbol as Value).declare(transpiler, expression)
             }
-
-            (symbol as Value).declare(transpiler, expression)
         }
     }
 }

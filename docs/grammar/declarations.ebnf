@@ -1,5 +1,5 @@
 funDeclaration ::= [visKeyword] [funModifier] "fun" IDENTIFIER "(" [parameters] ")" [funReturn]
-    funReturn ::= "->" type
+funReturn ::= "->" type
 
 funModifier ::= "entry" | "egress"
 
@@ -25,7 +25,7 @@ type ::= ["#"] typeName
 
 typeName ::= (typeKeyword | IDENTIFIER | fileIdentifier) ["?"]
            | arrayType
-arrayType ::= "[" expression "of" typeName "]" ["?"]
+arrayType ::= "[" expression ":" typeName "]" ["?"]
 
 typeKeyword ::= "Bool" | "Byte" | "Char"
               | "Int16" | "Int" | "Int32" | "Int64"

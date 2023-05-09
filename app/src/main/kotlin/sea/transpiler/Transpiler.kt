@@ -6,6 +6,7 @@ import sea.parser.Node
 class Context {
     var nodes = ArrayList<Node>()
     var indents = 0
+    var assignType: TType? = null
 
     val node get() = if(nodes.size == 0) null else nodes[nodes.size - 1]
 }
@@ -48,6 +49,13 @@ data class Transpiler(val faults: Faults, val tree: Node, val oFile: OutputFile)
         context.nodes.add(node)
         val result = func()
         context.nodes.remove(node)
+        return result
+    }
+
+    fun assignContext(type: TType?, func: () -> TExpression): TExpression {
+        context.assignType = type
+        val result = func()
+        context.assignType = null
         return result
     }
 }

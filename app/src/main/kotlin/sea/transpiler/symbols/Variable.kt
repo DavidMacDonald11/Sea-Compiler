@@ -16,6 +16,7 @@ open class Variable(type: TType, name: String, val storage: String?): Value(type
         initialized = (expression != null)
         val s = verifyStorage(transpiler, expression)
         if(expression?.transfer != null) return declareTransfer(transpiler, expression, s)
+        if("Array" in type) return declareArray(transpiler, expression, s)
 
         val cType = type.cName
         var result = TExpression(type, "$s$cType ")
@@ -66,6 +67,47 @@ open class Variable(type: TType, name: String, val storage: String?): Value(type
         val expr = (variable as Value).transfer(transpiler, expression, this)
 
         return expr.add("$s$cType *$cName = ").setShowType()
+    }
+
+    private fun declareArray(transpiler: Transpiler, expression: TExpression?, s: String): TExpression {
+        val node = transpiler.context.node!!
+
+        val sizes = ArrayList<Long>()
+        val subTypes = mutableListOf(type)
+        var subType = type
+
+        while("Array" in subType) {
+            if(subType.nullable) transpiler.faults.error(node, "Cannot have nullable arrays (yet)")
+
+            sizes.add(subType.arraySize!!)
+            subType = subType.arrayType!!
+            subTypes.add(subType)
+        }
+
+        val result = TExpression(type, "$s${subType.cName}").setShowType()
+        if(type.dynamic) result.add(after = "*")
+        result.add(after = " $cName")
+
+        var product = 1L
+        var sizeBlocks = ""
+
+        sizes.forEach { size ->
+            product *= size
+            sizeBlocks += "[$size]"
+        }
+
+        val cSize = "sizeof(${subType.cName}) * $product"
+        if(!type.dynamic) result.add(after = sizeBlocks)
+
+        if(expression == null)
+            return if(type.dynamic) result.add(after = " = malloc($cSize)") else result
+
+        var expr = expression.string
+
+        if(!type.dynamic) return result.add(after = " = $expr")
+
+        expr = "(${subType.cName}$sizeBlocks)$expr"
+        return result.add(after = " = __sea_util_fill_alloc__($cSize, $expr)")
     }
 
     override fun access(transpiler: Transpiler): TExpression {

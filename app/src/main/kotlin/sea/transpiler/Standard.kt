@@ -12,6 +12,7 @@ fun createStandard(outDir: String) {
     file.include("stdint")
     file.include("stdbool")
     file.include("stdlib")
+    file.include("string")
     file.write("")
 
     for(i in 4..6) {
@@ -33,6 +34,14 @@ fun createStandard(outDir: String) {
     file.alias("_Complex long double", "Cplex64")
 
     createNullableTypes(file)
+
+    file.write("""
+        |
+        |inline void *__sea_util_fill_alloc__(size_t size, void *data) {
+        |   void *ptr = malloc(size);
+        |   return memcpy(ptr, data, size);
+        |}
+    """.trimMargin())
 }
 
 fun createNullableTypes(file: OutputFile) {

@@ -1,2 +1,9 @@
-val arrSize = 30
-var arr2: [5 of Int]
+var arr1: [2: Int?] = [3, 4]
+var arr2: [2: [3: Int?]] = [[1, 2, 3], [4, 5, 6]]
+
+var arr3: #[2: Int?] = [5, 6]
+var arr4: #[2: [5: Int]] = [[1, 2, 3, 4, 5], [0, 0, 0, 0, 0]]
+var arr5: #[10: [20: [30: Cplex?]]]
+
+var arr6 = [[1, 2], [3, 4], [null, 5]]
+// TODO fix

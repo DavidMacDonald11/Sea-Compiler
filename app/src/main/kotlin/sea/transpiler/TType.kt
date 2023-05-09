@@ -3,7 +3,11 @@ package sea.transpiler
 import sea.transpiler.Transpiler
 
 data class TType(var string: String = "Any", var dynamic: Boolean = false, var nullable: Boolean = false) {
-    val cName get() = if(nullable) "__sea_type_Nullable${string}__" else "__sea_type_${string}__"
+    val cName: String get() {
+        if(nullable) return "__sea_type_Nullable${if(string == "Array") "Any" else string}__"
+        return if(string == "Array") "${arrayType!!.cName}" else "__sea_type_${string}__"
+    }
+
     var arrayType: TType? = null
     var arraySize: Long? = null
 
@@ -21,7 +25,7 @@ data class TType(var string: String = "Any", var dynamic: Boolean = false, var n
 
         if(result == "Array") {
             val inner = arrayType!!.toString()
-            result = "[${arraySize!!} of ${inner}]"
+            result = "[${arraySize!!}: ${inner}]"
         }
 
         if(dynamic) result = "#$result"
@@ -57,6 +61,23 @@ data class TType(var string: String = "Any", var dynamic: Boolean = false, var n
             return if(lValue >= rValue) left else right
         }
 
+        fun resolveSizes(transpiler: Transpiler, given: TType, inferred: TType) {
+            if("Array" !in given) return
+
+            val node = transpiler.context.node!!
+
+            if(given.arraySize!! > inferred.arraySize!!) {
+                transpiler.faults.error(node, "Too few elements in assign of $inferred to $given")
+                return
+            }
+
+            if(given.arraySize!! < inferred.arraySize!!) {
+                transpiler.faults.warn(node, "Too many elements in assign of $inferred to $given")
+            }
+
+            resolveSizes(transpiler, given.arrayType!!, inferred.arrayType!!)
+        }
+
         fun resolveAssign(transpiler: Transpiler, given: TType?, inferred: TType?): TType {
             if(inferred == null) return given!!
             val node = transpiler.context.node!!
@@ -77,14 +98,24 @@ data class TType(var string: String = "Any", var dynamic: Boolean = false, var n
                 return given
             }
 
-            if(resolve(given, inferred) != given) {
-                transpiler.faults.error(node, "Cannot assign type $inferred to type $given")
+            if(given.nullable && inferred.nullable && "Any" in inferred) {
+                return given
             }
 
-            if("Array" in given && "Array" !in inferred) {
+            if(resolve(given, inferred) != given || "Array" in given && "Array" !in inferred) {
                 transpiler.faults.error(node, "Cannot assign type $inferred to type $given")
+                return given
             }
 
+            val i = inferred.arrayDim
+            val g = given.arrayDim
+
+            if(i != g) {
+                transpiler.faults.error(node, "Cannot assign $i-D array to $g-D array")
+                return given
+            }
+
+            resolveSizes(transpiler, given, inferred)
             return given
         }
     }

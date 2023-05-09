@@ -102,7 +102,7 @@ data class Token(val line: SourceLine, var type: TokenType) : Faults.Component {
         val KEYWORDS = PRIMARY_KEYWORDS + VAR_KEYWORDS + VIS_KEYWORDS + TYPE_KEYWORDS +
             FUN_KEYWORDS + setOf(
             "not", "and", "xor", "or",
-            "mod", "as", "if", "of", "else", "while", "do",
+            "mod", "as", "if", "else", "while", "do",
             "pass", "return")
 
         val LINE_ENDS = setOf(";", "\n", "EOF")

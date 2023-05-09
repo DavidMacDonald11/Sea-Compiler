@@ -9,7 +9,7 @@ data class ArrayType(val size: Node, val type: Node, val nullable: Token?): Node
         override fun construct(parser: Parser): Node {
             parser.expectingHas("[")
             val size = Expression.construct(parser)
-            parser.expectingHas("of")
+            parser.expectingHas(":")
             val type = TypeName.construct(parser)
             parser.expectingHas("]")
 
