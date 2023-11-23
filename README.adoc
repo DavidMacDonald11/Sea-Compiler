@@ -1,5 +1,8 @@
 = Sea Programming Language
 
+== OUTDATED
+This repo is outdated. Check out https://github.com/DavidMacDonald11/Zenith-Compiler/
+
 The Sea language was born out of a desire to make C less annoying. 
 Originally, Sea was intended to be 100% C, with 100% Python-inspired syntax.
 Over the few years I have worked on this project, it has morphed.
